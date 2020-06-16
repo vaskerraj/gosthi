@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><%- title %></title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="/vendor/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="/css/main.min.css">
+    <link rel="stylesheet" href="/vendor/toastr/toastr.min.css">
+    <link rel="stylesheet" href="/vendor/datatables/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    
+</head>
+<body class="<% if(loginPage) { %> login-page <% }else{ %> sidebar-mini <% } %>">
+  <div class="wrapper">
+    <%- include('partials/header')-%>
+    <div class="content-wrapper">
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Report of  <%=data.device.name%></h1>
+                    </div>
+                    <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item active"><a href="">Report</a></li>
+                        <li class="breadcrumb-item">Device List</li>
+                    </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content">
+          <div class="container-fluid">
+            <div class="col card ">
+              <div class="row filter_container marT25">
+                <div class="col-xs-3 d-none">
+                  <button class="btn btn-success btn-block " id="customHour">
+                    <i class="fa fa-calendar"></i>
+                    Hour Base
+                  </button>
+                </div><!--/.col-->
+                <div class="col-xs-3">
+                  <button class="btn btn-warning btn-block " id="customReport">
+                    <i class="fa fa-calendar"></i>
+                    Custom
+                  </button>
+                </div><!--/.col-->
+                <div class="col-xs-3">
+                  <a href="report.php?id=6512bd43d9caa6e02c990b0a82652dca&rel=today" class="btn btn-success btn-block btn-active" id="todayReport">
+                    <i class="fa fa-filter"></i>
+                    Today
+                  </a>
+                </div>
+                <div class="col-xs-2 d-none">
+                  <a href="report.php?id=6512bd43d9caa6e02c990b0a82652dca&rel=ytd" class="btn btn-google btn-block btn-lg " id="ytdReport">
+                    <i class="fa fa-filter"></i>
+                    Yesterday
+                  </a>
+                </div>
+                <div class="col-xs-2 d-none">
+                  <a href="report.php?id=6512bd43d9caa6e02c990b0a82652dca&rel=t3d" class="btn btn-github btn-block btn-lg " id="t3dReport">
+                    <i class="fa fa-filter"></i>
+                    This 3 Days
+                  </a>
+                </div>
+                <div class="col-xs-3">
+                  <a href="report.php?id=6512bd43d9caa6e02c990b0a82652dca&rel=tw" class="btn btn-primary btn-block " id="twReport">
+                    <i class="fa fa-filter"></i>
+                    This Week
+                  </a>
+                </div>
+                <div class="col-xs-3">
+                  <a href="report.php?id=6512bd43d9caa6e02c990b0a82652dca&rel=tm" class="btn btn-tumblr btn-block " id="tmReport">
+                    <i class="fa fa-filter"></i>
+                    This Month
+                  </a>
+                </div>
+              </div><!--/.filter_container-->
+              <div class="clearfix report_container">
+                <div class="clearfix reportTab marT15 marB15 hide hide" id="customHourSel">
+                  <form action="" method="get" class="clearfix text-left">
+                    <input type="hidden" name="id" value="6512bd43d9caa6e02c990b0a82652dca">
+                    <div class="col-md-5 col-sm-8 col-xs-12">
+                      <div class="clearfix marT20 mr">
+                        <input type="text" name="reportHourDate" class="form-controls " id="fromDate_report" value=""autocomplete="off">
+                        <label for="fromDate_report">From</label>
+                      </div>
+                      <input type="hidden" name="rel" value="custom">
+                      <div class="clearfix text-right marT20">
+                        <button type="submit" name="btn_customReport" class="btn btn-success">Search Report</button>
+                      </div>
+                    </div><!--/.col-->
+                  </form>
+                </div><!--/#customHourSel-->
+                <div class="clearfix reportTab marT15 marB15 hide" id="customReportSel">
+                  <form action="" method="get" class="clearfix text-left">
+                    <input type="hidden" name="id" value="6512bd43d9caa6e02c990b0a82652dca">
+                    <div class="col-md-5 col-sm-8 col-xs-12">
+                      <div class="clearfix marT20 mr">
+                        <input type="text" name="fromDate" class="form-controls " id="fromDate_report" value=""autocomplete="off">
+                        <label for="fromDate_report">From</label>
+                      </div>
+                      <div class="clearfix marT20 mr">
+                        <input type="text" name="toDate" class="form-controls " id="toDate_report" value="" autocomplete="off">
+                        <label for="toDate_report">To</label>
+                      </div>                      
+                      <input type="hidden" name="rel" value="custom">
+                      <div class="clearfix text-right marT20">
+                        <button type="submit" name="btn_customReport" class="btn btn-success">Search Report</button>
+                      </div>
+                    </div><!--/.col-->
+                  </form>
+                </div><!--/#customReportSel-->
+                                <div class="clearfix reportTable_container">
+                <div class='clearfix text-center text-muted marT15 marB15 font22'>NO DATA</div>                </div><!--/.reportTable_container-->
+              </div><!--/.report_container -->
+            </div><!--/.card-->
+          </div><!--/.container-->
+        </div>
+    </div>
+  </div>
+  <%-include('partials/js')-%>
+  <script src="/js/MQ.Graph.js"></script>
+  <script src="/js/listing-js.js"></script>
+</body>
+</html>

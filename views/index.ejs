@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><%- title %></title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="/vendor/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="/css/main.min.css">
+    <link rel="stylesheet" href="/vendor/toastr/toastr.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+</head>
+<body class="main <% if(loginPage) { %> login-page <% }else{ %> sidebar-mini <% } %>">
+  <div class="container">
+    <div class="row">
+      <!-- <img src="/img/indexpage.png" width="100%"> -->
+
+      <div class="col-md-8 col-xs-12">
+        <img src="/img/right.png" width="70%">
+      </div>
+      <div class="col-md-4 col-xs-12">
+        <div class="popup-container text-right">
+          <% if (currentUser != 'notLogin') { %>
+            <div class="clearfix marT15 marB30">
+              Welcome, <%-currentUser.first_name-%>
+              <a href="/logout" class="btn btn-danger btn-xs">
+                <span class="fa fa-power-off"></span>
+                Logout
+              </a>
+            </div>
+          <%} else{ %>
+          <label class="popup-button" for="login-popup"><img class="float-right" src="/img/login.png" width="150px"></label>
+          <input type="checkbox" id="login-popup" <% if (messages && currentUser == 'notLogin') { %> checked <% } %> >
+          <%}%>
+          <div class="popup">
+            <label for="login-popup" class="transparent-label"></label>
+            <div class="popup-inner">
+              <div class="popup-title">
+                <h6>Login</h6>
+                <label for="login-popup" class="popup-close-btn">
+                  <span class="fa fa-times"></span>
+                </label>
+              </div>
+              <% if (messages) { %>
+                <%- messages -%>
+              <% } %>
+              <div class="popup-content">
+                <form action="/login" method="POST">
+                  <ul>
+                    <li>
+                      <input type="text" name="username" placeholder="Username" autocomplete="off">
+                    </li>
+                    <li>
+                      <input type="password" name="password" class="marT10" placeholder="Password" autocomplete="off">
+                    </li>
+                    <li>
+                      <button type="submit" class="marT15">Log in</button>
+                    </li>
+                  </ul>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div><!--/.popup-container-->
+        <div class="clearfix">
+          <img src="/img/logo.png" width="100%">
+        </div>
+      </div>
+    </div>
+  </div>
+  <%-include('partials/js')-%>
+  <script src="/js/socket.io.js"></script>
+  <script>
+    if(performance.navigation.type == 2){
+      location.reload(true);
+    }
+        let date = new Date(),
+                year = date.getFullYear(),
+                month = date.getMonth(),
+                day = date.getDate();
+            let rearrangeDate = new Date(year, month, day);
+            console.log(rearrangeDate);
+        // socket.io
+        const socket = io.connect();
+        socket.on('new npk_data',function(npkData){
+            var npk_humidity = npkData.data.humidity,
+                npk_temp = npkData.data.temp,
+                totalActiveDevice = 2;
+            document.querySelector(".humidity_"+npkData.spot_name).innerText = npk_humidity+' %';
+            document.querySelector(".temperature_"+npkData.spot_name).innerText = npk_temp+' °C';
+            document.querySelector("#totalActiveDevice").innerText = totalActiveDevice;
+        });
+  </script>
+</body>
+</html>

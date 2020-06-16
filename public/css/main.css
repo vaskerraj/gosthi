@@ -1,0 +1,277 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  /* background: linear-gradient(120deg, #ffffff, #dd8e8e); */
+  background: #fafafa;
+  min-height: 100vh;
+}
+.marT3{margin-top:3px;}
+.marT5{margin-top:5px;}
+.marT7{margin-top:7px;}
+.marT10{margin-top:10px;}
+.marT15{margin-top:15px;}
+.marT18{margin-top:18px;}
+.marT20{margin-top:20px;}
+.marT25{margin-top:25px;}
+.marT30{margin-top:30px;}
+.marB5{margin-bottom:5px;}
+.marB10{margin-bottom:10px;}
+.marB15{margin-bottom:15px;}
+.marB20{margin-bottom:20px;}
+.marB30{margin-bottom:30px;}
+.marL4{margin-left:4px;}
+.marL10{margin-left:10px;}
+.marL15{margin-left:15px;}
+.marL25{margin-left:25px;}
+.marL30{margin-left:30px;}
+.marR4{margin-right:4px;}
+.marR10{margin-right:10px;}
+.marR15{margin-right:15px;}
+.marR30{margin-right:30px;}
+
+.padd0{padding:0px !important;}
+@media(max-width:767px){
+.paddLR2{padding-left:2px; padding-right:2px;}
+}
+.padd4{padding:4px !important;}
+.padd8{padding:8px !important;}
+.paddTB4{padding-top:4px; padding-bottom:4px;}
+.paddTB8{padding-top:8px; padding-bottom:8px;}
+.paddTB12{padding-top:12px; padding-bottom:12px;}
+.paddTB20{padding-top:20px; padding-bottom:20px;}
+.paddT30{padding:30px 0px;}
+
+.fL{float:left}
+.fR{float:right}
+.fW{width:100%}
+.W0{width:0px}
+.ilb{display: inline-block}
+
+.font8{font-size:8px;}
+.font9{font-size:9px;}
+.font10{font-size:10px;}
+.font11{font-size:11px;}
+.font13{font-size:13px;}
+.font15{font-size:15px !important;}
+.font16{font-size:16px;}
+.font18{font-size:18px !important;}
+.font20{font-size:20px;}
+.font22{font-size:22px;}
+.font26{font-size:26px;}
+.font35{font-size:35px;}
+.font30{font-size:30px;}
+.font75{font-size:155px;}
+.fontb{font-weight:bold;}
+.fontn{font-weight:normal;}
+.fontSsp{font-family: 'Source Sans Pro', sans-serif; }
+.fontORB {font-family: 'Orbitron', sans-serif;}
+.fonta{ font-family: Arial, Helvetica, sans-serif;}
+.fontTa{ font-family:Tahoma, Geneva, sans-serif;}
+/**** rem ****/
+.fontRo { font-family: 'Roboto Condensed', sans-serif; }
+.fontO {
+    font-family: 'open sans', arial, sans-serif;
+}
+.txtn{ font-style:normal;}
+.txtlt{ text-decoration:line-through;}
+.txtul{ text-decoration:underline;}
+
+.height45{  height: 43px; }
+
+.txt-ablack{color: #2F4F2F;}
+.txt-wht{color:#FFF;}
+@media(min-width:767px){
+.c-txt-wht{color:#FFF;}
+}
+@media(max-width:767px){
+.c-txt-wht{color:#878787;}
+}
+.txt-price{color:rgba(206, 67, 0, 1);}
+.txt-gray{color:#77838f !important;}
+.txt-dgray{color:rgba(170, 164, 164, 1) !important;}
+.txt-agray{color: rgb(213, 213, 213);}
+.txt-earn{color: rgb(94,148,53)}
+
+
+.bg-white{background-color:#FFF;}
+.bg-p-gray{background-color: rgba(213, 213, 213,0.2)}
+.bg-gray{background-color: #eaeaec;}
+.bg-agray{background-color: rgb(213, 213, 213);}
+
+.ltborder-pt{border-left:1px solid rgba(153,153,153,0.7);}
+.rtborder-pt{border-right:1px solid #FFF;}
+.borderR {
+	border-right:1px solid rgba(153,153,153,0.7);
+}.borderL {
+	border-left:1px solid rgba(153,153,153,0.7);
+}
+.borderT {
+	border-top:1px solid rgba(153,153,153,0.7);
+}
+.borderB {
+	border-bottom:1px solid rgba(153,153,153,0.7);
+}
+.borderTdm{
+    border-top:1px solid #e7e7e7;
+}
+.borderBdm{
+    border-bottom:1px solid #e7e7e7;
+}
+.box-border{
+    position: relative;
+    border-radius: 3px;
+    background: #ffffff;
+    border: 1px solid #d2d6de;
+    margin-bottom: 20px;
+    width: 100%;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+.box-boderNr{
+  border-radius: 3px;
+  border: 1px solid #d2d6de;
+}
+
+.mr{ position:  relative; }
+.mab{ position: absolute; }
+.cp{ cursor: pointer;}
+
+/* for express-messages & flash */
+
+#messages {
+  position: relative;    
+}
+#messages .error, 
+#messages .success {
+  text-align: left;
+  padding: 4px 5px;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+}
+#messages .error {
+  color: #fff;
+  background-color: #dd4b39 !important;
+  border-color: #d73925;
+}
+
+#messages .success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+#messages li {
+list-style: none;
+/* margin-left: -25px; */
+}
+
+.popup-container {
+  display: block;
+}
+.popup-container .popup-button {
+  line-height: 34px;
+  cursor: pointer;
+}
+.popup-container .popup-button:hover {
+  /* background: #444; */
+}
+.popup-container .popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.6);
+  z-index: 10;
+  opacity: 0;
+  visibility: hidden;
+  transition: 250ms all;
+}
+.popup-container .popup .popup-inner {
+  width: 400px;
+  box-sizing: border-box;
+  padding: 20px;
+  background: #fff;
+  position: absolute;
+  border: 3px solid #9b765b;
+  border-radius: 2px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  top: 150%;
+  transition: 250ms all;
+}
+.popup-container .popup .popup-inner .popup-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.popup-container .popup .popup-inner .popup-title h6 {
+  font-size: 18px;
+  font-weight: 500;
+}
+.popup-container .popup .popup-inner .popup-title .popup-close-btn {
+  cursor: pointer;
+  background: #eee;
+  display: block;
+  line-height: 30px;
+  padding: 0 15px;
+  font-size: 14px;
+  color: #222;
+  border-radius: 3px;
+}
+.popup-container .popup .popup-inner .popup-content ul li {
+  margin-bottom: 10px;
+  list-style: none;
+}
+.popup-container .popup .popup-inner .popup-content ul li:last-child {
+  margin-bottom: 0;
+}
+.popup-container .popup .popup-inner .popup-content ul li input {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  line-height: 34px;
+  padding: 5px 15px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+.popup-container .popup .popup-inner .popup-content ul li button {
+  width: 100%;
+  line-height: 34px;
+  background: #666;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 3px;
+  border: none;
+  font-size: 14px;
+}
+.popup-container .popup .popup-inner .popup-content ul li button:hover {
+  background: #444;
+}
+.popup-container .popup .transparent-label {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  cursor: pointer;
+}
+.popup-container > input {
+  display: none;
+}
+.popup-container > input:checked + .popup {
+  opacity: 1;
+  visibility: visible;
+}
+.popup-container > input:checked + .popup .popup-inner {
+  top: 50%;
+}
+
+.login_container {
+  position: absolute;
+  right: 15px;
+}
