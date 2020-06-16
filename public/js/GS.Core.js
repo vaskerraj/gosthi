@@ -7,7 +7,7 @@
     
     $.GSCore = {
         init : function() {
-            var inputFocusStateSel = $('.form-controls'),
+            var inputFocusStateSel = $('.form-control'),
                 $custommReportSelector = $('#customReport'),
                 $countSecondSelector = $("#countSecondTXT");
             $.GSCore.ppath();
