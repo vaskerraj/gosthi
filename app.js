@@ -16,6 +16,9 @@ const indexRoute = require('./route/index');
 const adminRoute = require('./route/admin');
 const loginRoute = require('./route/login');
 
+// superadmin
+const SARoute = require('./route/saMain');
+
 var app = express();
 
 app.use(bodyParser.json());
@@ -56,6 +59,9 @@ app.use(function (req, res, next) {
 app.use('/', indexRoute);
 app.use('/login',loginRoute);
 app.use('/admin', adminRoute);
+
+// superadmin
+app.use('/SA',SARoute);
 
 app.listen(process.env.PORT || 3000, ()=>{
     console.log("Server is running");

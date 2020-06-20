@@ -1,12 +1,20 @@
 var connection  = require('../db');
 
 module.exports = {
-    npkdata : (merchantId) => {
+    totalUsers : (adminId) => {
         return new Promise((reslove, reject) =>{
-            connection.query("SELECT * FROM iotdevice LEFT JOIN datatemphum ON iotdevice.id = datatemphum.deviceId  WHERE iotdevice.mId = ? GROUP BY iotdevice.name ORDER BY datatemphum.id DESC", [merchantId], (err, result) =>{
+            connection.query("SELECT id FROM users  WHERE admin_id = ?", [adminId], (err, result) =>{
                 if(err) throw err;
-                var row = JSON.parse(JSON.stringify(result));
-                reslove(row);
+                reslove(result.length);
+            });
+        });
+        
+    },
+    totalActiveUsers : (adminId) => {
+        return new Promise((reslove, reject) =>{
+            connection.query("SELECT id FROM users WHERE admin_id = ? AND status = ?", [adminId, 'active'], (err, activeResult) =>{
+                if(err) throw err;
+                reslove(activeResult.length);
             });
         });
         

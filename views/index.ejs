@@ -7,8 +7,7 @@
     <title><%- title %></title>
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="/vendor/fontawesome-free/css/all.min.css">
-    <link rel="stylesheet" href="/css/main.min.css">
-    <link rel="stylesheet" href="/vendor/toastr/toastr.min.css">
+    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/main.css">
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
@@ -77,22 +76,6 @@
     if(performance.navigation.type == 2){
       location.reload(true);
     }
-        let date = new Date(),
-                year = date.getFullYear(),
-                month = date.getMonth(),
-                day = date.getDate();
-            let rearrangeDate = new Date(year, month, day);
-            console.log(rearrangeDate);
-        // socket.io
-        const socket = io.connect();
-        socket.on('new npk_data',function(npkData){
-            var npk_humidity = npkData.data.humidity,
-                npk_temp = npkData.data.temp,
-                totalActiveDevice = 2;
-            document.querySelector(".humidity_"+npkData.spot_name).innerText = npk_humidity+' %';
-            document.querySelector(".temperature_"+npkData.spot_name).innerText = npk_temp+' °C';
-            document.querySelector("#totalActiveDevice").innerText = totalActiveDevice;
-        });
   </script>
 </body>
 </html>

@@ -8,7 +8,7 @@ var connection = require('../db');
 
 router.get('/', (req, res, next)=>{
     res.render('auth/login', {
-        title : "Login | Jhosti",
+        title : " Login || SA || Jhosti",
         loginPage : true,
         currentUser : req.user
     });

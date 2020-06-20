@@ -138,17 +138,17 @@ function doExport(selector, params) {
         var pageBaseUrl = getPageName(location.href);
         if(pageBaseUrl == 'viewGraph' || pageBaseUrl == ''){    
             var $deviceId = $("#iotDevice").val();       
-            _fireEnvTempHumMulti($deviceId);
+            // _fireEnvTempHumMulti($deviceId);
             //_fireSoilTempHumMulti();
         }else if(pageBaseUrl == 'compareReport'){
             $("#btn_getReport").on('click',function(){
-                _fireCompareReport();
+                // _fireCompareReport();
             });
            // _fireSlTempHumChart();
         }
 
-        function deleteDevice(el, id){
-            $.post('ajax/deleteDevice.php',{ id : id },
+        function deleteUser(el, id){
+            $.get('/../admin/deleteUser/'+id,
             function(data){
                 if(data == 'done'){
                     el.parents("tr").fadeOut();
@@ -177,8 +177,8 @@ function doExport(selector, params) {
                             },
                             Yes: function () {
                             confirmeds = true;
-                                if(cFunction == 'deleteDevice'){
-                                    deleteDevice(that,thatId);
+                                if(cFunction == 'deleteUser'){
+                                    deleteUser(that,thatId);
                                 }else if(cFunction == 'deleteOperator'){
                                     deleteOperator(that,thatId);
                                 }

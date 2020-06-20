@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="/vendor/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="/css/main.min.css">
     <link rel="stylesheet" href="/vendor/toastr/toastr.min.css">
-    <link rel="stylesheet" href="/css/jquery-confirm.min.css">
     <link rel="stylesheet" href="/vendor/datatables/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="/css/style.css">
 
@@ -56,7 +55,7 @@
                   data-dt_dropdown_search =""
                   data-dt_info="#dt_info"
                   data-dt_info_txt="Device(s)"
-                  data-dt_order_column="0"
+                  data-dt_order_column="1"
                   data-dt_order_colum_by="desc"
                   data-dt_nonorder_column="5"
                   data-dt_filter_url_connect="true"
@@ -78,12 +77,12 @@
                         <td><%=list.first_name+ ' '+list.last_name%></td>
                         <td><%=list.username%></td>
                         <td><%=list.email%></td>
-                        <td><%=list.mobile_no%></td>
+                        <td><%=list.mobile%></td>
                         <td>
-                          <button class="btn btn-info btn-sm">
+                          <button class="btn btn-info btn-xs">
                             <i class="fa fa-edit"></i>
                           </button>
-                          <button class="btn btn-sm btn-danger" data-confirm="ys" data-id=<%=list.id%> data-confirm-msg="Do you want to delete user '<%=list.first_name +' '+ list.last_name%>'?" data-confirm-function="deleteUser" data-toggle="tooltip" title="Delete">
+                          <button class="btn btn-danger btn-xs">
                             <i class="fa fa-trash-alt"></i>
                           </button>
                         </td>
@@ -121,7 +120,7 @@
                               </div>
                             </div><!--./col-->
                             <div class="col-md-6 col-xs-12 marT15">
-                              <div class="clearfix mr">
+                              <div class="clearfix">
                                 <input type='text' class="form-control" name='last_name' id="last_name" autocomplete="off" />
                                 <label for="li_name_name">Last name</label>
                               </div>
@@ -134,12 +133,18 @@
                                 <label for="email">Email</label>
                               </div>
                             </div><!--/.col-->
-                            <div class="col-md-6 col-xs-12 marT15">
+                            <div class="col-md-6 col-xs-12 mt-2">
                               <div class="clearfix mr">
-                                <input type='number' class="form-control" name='mobile_no' id="mobile_no" />
-                                <label for="mobile_no">Mobile No.</label>
+                                <input type='number' class="form-control" name='contactNo' id="contactNo" />
+                                <label for="contactNo">Contact No.</label>
                               </div>
-                            </div><!--/.col-->
+                            </div>
+                            <div class="col-md-12 col-xs-12 mt-2 mb-2">
+                              <div class="clearfix mr">
+                                <textarea class="form-control" name='address' id="address"></textarea>
+                                <label for="address">Address</label>
+                              </div>
+                            </div>
                           </div><!--/.row-->
                               
                           </div><!--/.col-->
@@ -150,14 +155,29 @@
                             <div class="clearfix mr marT15">
                               <i class="checking_username fa fa-spinner fa-spin mab" style="display: none"></i>
                               <i class="checking_username fa fa-check mab" style="display: none"></i>
-                              <input type='text' class="form-control" name="username" id="username" autocomplete="off" />
+                              <input type='text' class="form-control" name="username" id="username" />
                               <label for="username">Username</label>
                             </div><!--/.clearfix-->
                             <div class="clearfix mr marT15">
-                              <input type='text' class="form-control" name='password' id="user_pass" autocomplete="off" />
-                              <label for="user_pass">Password</label>
+                              <input type='text' class="form-control" name='password' id="merchant_pass" />
+                              <label for="merchant_pass">Password</label>
                             </div><!--/.clearfix-->
                           </div><!--/.col-->
+                          
+                          <div class="col-12 mt-3">
+                            <div class="col-12 borderB"><strong>Contact Person Details</strong></div>
+                            <div class="row">
+                              <div class="col-md-6 col-xs-12 mt-2">
+                                <input type="text" class="form-control" name='contactPerson' id="contactPerson" />
+                                <label for="contactPerson">Full Name</label>
+                              </div><!--/.col-->
+                              
+                              <div class="col-md-6 col-xs-12 mt-2">
+                                  <input type='number' class="form-control" name='contactPersonMobile' id="contactPersonMobile" />
+                                  <label for="contactPersonMobile">Mobile No.</label>
+                              </div><!--/.col-->
+                            </div><!--/.row-->
+                          </div>
                       </div><!--/.row-->
                       <div class="col mt-3 text-right">
                           <button type="submit" name="addNewMerchant" class="btn bg-gradient-success btn-sm">

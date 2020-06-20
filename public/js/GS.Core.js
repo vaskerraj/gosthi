@@ -15,7 +15,7 @@
             $.GSCore.inputMask();
             $.GSCore.notifiMsgHandler();
             $.GSCore.relaodDataInSec($countSecondSelector);
-            // $.GSCore.datepickerHandler();
+            $.GSCore.datepickerHandler();
 			$.GSCore.customReport($custommReportSelector);
 			$.GSCore._compareReport.init();
 
@@ -86,33 +86,33 @@
                 },3500);
             }
         },
-        // datepickerHandler : function(){
-        //     var $fromDateSel = $("#fromDate_report"),
-        //         $toDateSel = $("#toDate_report");
+        datepickerHandler : function(){
+            var $fromDateSel = $("#fromDate_report"),
+                $toDateSel = $("#toDate_report");
 
-        //     $fromDateSel.datepicker({
-        //         dateFormat: "yy-mm-dd",
-        //         changeYear: true,
-        //         changeMonth: true,
-        //         maxDate: 0,
-        //         onSelect: function(dateText, inst)
-        //         {
-        //             $fromDateSel.parent('div').find('label').addClass("active");
-        //         }
-        //     });
+            $fromDateSel.datepicker({
+                dateFormat: "yy-mm-dd",
+                changeYear: true,
+                changeMonth: true,
+                maxDate: 0,
+                onSelect: function(dateText, inst)
+                {
+                    $fromDateSel.parent('div').find('label').addClass("active");
+                }
+            });
 
-        //     $toDateSel.datepicker({
-        //         dateFormat: "yy-mm-dd",
-        //         changeYear: true,
-        //         changeMonth: true,
-        //         maxDate: 0,
-        //         onSelect: function(dateText, inst)
-        //         {
-        //             $toDateSel.parent('div').find('label').addClass("active");
-        //         }
-        //     });
+            $toDateSel.datepicker({
+                dateFormat: "yy-mm-dd",
+                changeYear: true,
+                changeMonth: true,
+                maxDate: 0,
+                onSelect: function(dateText, inst)
+                {
+                    $toDateSel.parent('div').find('label').addClass("active");
+                }
+            });
             
-        // },
+        },
         
         customReport : function($collection){
             if(!$collection.length) return;
