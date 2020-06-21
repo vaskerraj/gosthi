@@ -6,7 +6,7 @@ var {check, validationResult} = require('express-validator');
 var connection = require('../db');
 
 const { totalUsers, totalActiveUsers } = require('../models/dashboard');
-const { usersList } = require('../models/users');
+const { adminList } = require('../models/admins');
 
 function ensureAuthenticated(req, res, next){
     if(req.isAuthenticated()){
@@ -22,8 +22,8 @@ router.get('/', ensureAuthenticated, async (req, res, next)=>{
     ];
     Promise.all(dashbaordPromise).
         then((dashboardContent)=>{
-            res.render('admin/index', {
-                title: "Index | Admin",
+            res.render('SA/index', {
+                title: "Index | SA",
                 page : 'index',
                 loginPage : false,
                 currentUser : req.user,
@@ -35,113 +35,28 @@ router.get('/', ensureAuthenticated, async (req, res, next)=>{
         });
 });
 
-router.get('/users', ensureAuthenticated, async (req, res, next)=>{
+router.get('/admins', ensureAuthenticated, async (req, res, next)=>{
     console.log(req.user);
     let userPromise = [
-        usersList(req.user.relId)
+        adminList(req.user.relId)
     ];
 
     Promise.all(userPromise)
-        .then((userList)=>{
-            console.log(userList);
-            res.render('admin/users', {
-                title : "Users || Ghosti",
+        .then((adminList)=>{
+            res.render('SA/createAdmin', {
+                title : "Admins || Ghosti",
                 page : "users",
                 currentUser : req.user,
                 loginPage : false,
                 data : {
-                    users : userList[0]      
+                    admins : adminList[0]      
                 }
             });
         }).catch((err)=>{
             if(err) throw err;
         });
 });
-
-router.post('/users', ensureAuthenticated,
-    check("first_name", "Provide first name").not().isEmpty(),
-    check("username", "Provide username").not().isEmpty(),
-    check("password", "Provide password").not().isEmpty(),
-(req, res, next)=>{
-
-    var first_name = req.body.first_name,
-        last_name = req.body.last_name,
-        email = req.body.email,
-        mobileNo = req.body.mobile_no,
-        username = req.body.username,
-        password = req.body.password;
-
-    var errors = validationResult(req);
-    
-    if(!errors.isEmpty()){
-        let userPromise = [
-            usersList(req.user.relId)
-        ];
-        Promise.all(userPromise)
-            .then((userList)=>{
-                res.render('admin/users', {
-                    errors : errors['errors'],
-                    title : "Users || Ghosti",
-                    page : "users",
-                    currentUser : req.user,
-                    loginPage : false,
-                    data : {
-                        users : userList[0]      
-                    }
-                });
-            }).catch((err)=>{
-                if(err) throw err;
-            });
-    }else{
-        connection.query("INSERT INTO users SET admin_id = ?, first_name = ?, last_name = ?, email =?, mobile_no = ?, role = ?, created_date = ?, status = ?", [req.user.relId, first_name, last_name, email, mobileNo, 'user',  new Date(), 'active'], (err, results, fields)=>{
-            if(err) throw err;
-
-            // pass into varibale for bycrptjs
-            let loginHashData = {
-                users_admin_id : req.user.relId,
-                user_id : results.insertId,
-                username : username,
-                password : password,
-                role : 'user'
-            };
-            var loginData = loginHashData;
-            
-            bycrypt.hash(loginData.password, 10, (err, hash)=>{
-                if(err) throw err;
-                loginData.password = hash;
-
-                connection.query("INSERT INTO login SET ?", [loginData], (err, results)=>{
-                    if(err) throw err;
-                    console.log("login database");
-                });
-            });
-            console.log("successfully inserted at users database");
-        });
-        
-        // req.toastr.success("Successfully added new protfolio");
-        req.flash("success","Successfully added new users");
-
-        res.location('/admin/users');
-        res.redirect('/admin/users');
-    }
-
-});
-
-// delete users
-
-router.get('/deleteUser/:id', ensureAuthenticated, async(req, res, next) =>{
-    var userId = req.params.id;
-    connection.query("DELETE FROM users WHERE id = ?", [userId], (err, results)=>{
-        if(err) throw err;
-        connection.query("DELETE FROM login WHERE user_id = ?", [userId], (err, loginDeleteResults)=>{
-            if(err) throw err;
-            res.send("done");
-        })
-    });
-});
-
-//  for super admi purpose to create admin
-router.post('/spusers', ensureAuthenticated,
+router.post('/admins', ensureAuthenticated,
     check("first_name", "Provide first name").not().isEmpty(),
     check("email", "Provide email").not().isEmpty(),
     check("contactNo", "Provide contact number").not().isEmpty(),
@@ -164,33 +79,33 @@ router.post('/spusers', ensureAuthenticated,
     
     if(!errors.isEmpty()){
         let userPromise = [
-            usersList(req.user.userId)
+            adminList(req.user.userId)
         ];
         Promise.all(userPromise)
-            .then((userList)=>{
-                res.render('admin/users', {
+            .then((adminList)=>{
+                res.render('SA/createAdmin', {
                     errors : errors['errors'],
-                    title : "Users || Ghosti",
+                    title : "Admins || Ghosti",
                     page : "users",
                     currentUser : req.user,
                     loginPage : false,
                     data : {
-                        users : userList[0]      
+                        admins : adminList[0]      
                     }
                 });
             }).catch((err)=>{
                 if(err) throw err;
             });
     }else{
-        connection.query("INSERT INTO users SET  first_name = ?, last_name = ?, email =?, contact_no = ?, address = ?, contact_person = ?, role = ?, created_date = ?, status = ?", [first_name, last_name, email, contactNo, address, contactPerson, 'user',  new Date(), 'active'], (err, results, fields)=>{
+        connection.query("INSERT INTO admin_user SET  first_name = ?, last_name = ?, email =?, contact_no = ?, address = ?, contact_person = ?, contact_person_mobile = ?, role = ?, created_date = ?, status = ?", [first_name, last_name, email, contactNo, address, contactPerson, contactPersonMobile, 'admin',  new Date(), 'active'], (err, results, fields)=>{
             if(err) throw err;
 
             // pass into varibale for bycrptjs
             let loginHashData = {
-                user_id : req.user.userId,
+                users_admin_id : results.insertId,
                 username : username,
                 password : password,
-                role : 'user'
+                role : 'admin'
             };
             var loginData = loginHashData;
             
@@ -202,62 +117,28 @@ router.post('/spusers', ensureAuthenticated,
                     console.log("login database");
                 });
             });
-            console.log("successfully inserted at users database");
+            console.log("successfully inserted at admin database");
         });
         
-        // req.toastr.success("Successfully added new protfolio");
-        req.flash("success","Successfully added new users");
+        req.flash("success","Successfully added new admin");
 
-        res.location('/admin/users');
-        res.redirect('/admin/users');
+        res.location('/SA/admins');
+        res.redirect('/SA/admins');
     }
 
 });
 
-router.get('/category', ensureAuthenticated, async (req, res, next)=>{
+// manage admins
 
-    connection.query("SELECT * FROM category",(err, categories)=>{
+router.get('/manageAdmin/:id', ensureAuthenticated, async(req, res, next) =>{
+    var userId = req.params.id;
+    connection.query("DELETE FROM users WHERE id = ?", [userId], (err, results)=>{
         if(err) throw err;
-
-        res.render('admin/category', {
-            title : "Category",
-            categoryActiveClass : true,
-            currentUser : req.user,
-            loginPage : false,
-            page : 'category',
-            category : categories
-        });
-    });
-});
-
-router.post('/category', ensureAuthenticated,
-    check("category","Prrovide category").not().isEmpty(),
-(req,res, next) =>{ 
-    var category = req.body.category;
-
-    var categoryError = validationResult(req);
-
-    if(!categoryError.isEmpty()){
-
-        res.render('admin/category',{
-            errors : categoryError['errors'],
-            title : 'Category',
-            categoryActiveClass : true,
-            loginPage : false,
-            page : 'protfolio',
-            currentUser : req.user
-        });
-
-    }else{
-
-        connection.query("INSERT INTO users SET category = ?, created_at=?  ORDER BY id DESC", [category, new Date()], (err, results, fields)=>{
+        connection.query("DELETE FROM login WHERE user_id = ?", [userId], (err, loginDeleteResults)=>{
             if(err) throw err;
-        });
-        req.flash("success", "New category sucessfully added !!!");
-
-        res.location('/admin/category');
-        res.redirect('/admin/category');
-    }
+            res.send("done");
+        })
+    });
 });
 
 module.exports = router;
