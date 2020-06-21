@@ -255,6 +255,30 @@ input[type="file"] ~ label {
   box-shadow: 0 1px 0 0 #4285f4;
   border-bottom: 1px solid #4285f4;
 }
+.form-control.active ~ label{
+  font-size: 15px;
+  font-weight: 700;
+  -webkit-transform: translateY(-14px) scale(.8);
+  transform: translateY(-14px) scale(.8);
+}
+textarea.form-control.active ~ label{
+  -webkit-transform: translateY(-16px) scale(.8);
+  transform: translateY(-16px) scale(.8);
+}
+
+.form-control:placeholder-shown ~ label {
+  font-size: 15px;
+  font-weight: 700;
+  -webkit-transform: translateY(-14px) scale(.8);
+  transform: translateY(-14px) scale(.8);
+}
+
+.form-control.disabled ~ label {
+  font-size: 15px;
+  font-weight: 700;
+  -webkit-transform: translateY(-14px) scale(.8);
+  transform: translateY(-14px) scale(.8);
+}
 
 
 #form_updDevice .form-control ~ label{
@@ -263,8 +287,6 @@ input[type="file"] ~ label {
   -webkit-transform: translateY(-16px) scale(.8);
   transform: translateY(-16px) scale(.8);
 }
-
-
 
 .list-unstyled{
     margin-bottom: 0px;
