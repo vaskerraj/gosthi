@@ -23,7 +23,8 @@
         ppath : function(){
 			var pageloc = $("#pagelo").val();
 			return (pageloc == "n_parent" && !undefined) ? "../" : "";
-		},
+        },
+        // custom floating level
         inputFocusState : function($collection){
             if(!$collection.length) return;
 			$collection.each(function(){
