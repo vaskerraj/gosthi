@@ -14,17 +14,18 @@ const { npkdata, tempHumData, totalDevices } = require('../models/dashboard');
 router.get('/',  (req, res, next)=>{
     console.log(req.user);
     const meetingJoinId = req.originalUrl.split('join/')[1];
-    if(meetingJoinId === undefined){
-        res.render('index', {
-            title: "Index || Gosthi",
-            page : 'index',
-            loginPage : false,
-            currentUser : req.user || "notLogin",
-            rel : 'undefined'
-        });
-    }else{
-        // if not logged in
-        if(req.user === undefined){
+    // if not logged in
+    if(req.user === undefined){
+        // if have meeting join refere
+        if(meetingJoinId === undefined){
+            res.render('index', {
+                title: "Index || Gosthi",
+                page : 'index',
+                loginPage : false,
+                currentUser : req.user || "notLogin",
+                rel : 'undefined'
+            });
+        }else{
             res.render('index', {
                 title: "Index || Gosthi",
                 page : 'index',
@@ -32,18 +33,25 @@ router.get('/',  (req, res, next)=>{
                 currentUser : req.user || "notLogin",
                 rel: meetingJoinId
             });
+        }
+    }else{
+        if(meetingJoinId === undefined){
+            connection.query("SELECT * FROM meeting WHERE id = ?", [meetingJoinId], (err, relResultOnLoginIn)=>{
+                console.log(relResultOnLoginIn.length);
+                res.render('index', {
+                    title: "Index || Gosthi",
+                    page : 'index',
+                    loginPage : false,
+                    currentUser : req.user || "notLogin",
+                    rel: meetingJoinId,
+                    relData : relResultOnLoginIn[0]
+                });
+            });
         }else{
             connection.query("SELECT * FROM meeting WHERE id = ?", [meetingJoinId], (err, relResultOnLoginIn)=>{
                 console.log(relResultOnLoginIn.length);
                 if(relResultOnLoginIn.length){
-                    res.render('index', {
-                        title: "Index || Gosthi",
-                        page : 'index',
-                        loginPage : false,
-                        currentUser : req.user || "notLogin",
-                        rel: meetingJoinId,
-                        relData : relResultOnLoginIn[0]
-                    });
+                    res.redirect('https://15.206.115.114/'+relResultOnLoginIn[0].title);
                 }else{
                     res.redirect('/?error=meeting');
                 }
