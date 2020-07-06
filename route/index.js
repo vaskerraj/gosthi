@@ -2,29 +2,34 @@ var express = require('express');
 var router = express.Router();
 var {check, validationResult} = require('express-validator');
 var passport = require('passport');
-var localStrategy = require('passport-local').Strategy;
-var bcrypt = require('bcryptjs');
+
+const { ensureAuthenticated, checkRole  } = require('../config/auth');
 
 var connection = require('../db');
 
 const { npkdata, tempHumData, totalDevices } = require('../models/dashboard');
 // const { deviceList, deviceDetails, deviceReport } = require('../models/deviceList');
 
-function ensureAuthenticated(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    }
-    res.redirect('/login');
-}
 
 router.get('/',  (req, res, next)=>{
-    console.log(req.user);
-    res.render('index', {
-        title: "Index || Gosthi",
-        page : 'index',
-        loginPage : false,
-        currentUser : req.user || "notLogin"
-    });   
+    const meetingJoinId = req.originalUrl.split('join/')[1]
+    if(meetingJoinId === undefined){
+        res.render('index', {
+            title: "Index || Gosthi",
+            page : 'index',
+            loginPage : false,
+            currentUser : req.user || "notLogin",
+            rel : 'undefined'
+        });
+    }else{
+        res.render('index', {
+            title: "Index || Gosthi",
+            page : 'index',
+            loginPage : false,
+            currentUser : req.user || "notLogin",
+            rel: meetingJoinId
+        });
+    }
 });
 
 
@@ -43,74 +48,12 @@ router.post('/login',
         }
 });
 
-passport.serializeUser((user, done)=>{
-    return done(null, user.id);
-});
-
-passport.deserializeUser((id, done)=>{
-    // User.getUserById(id, (err, user)=>{
-    //     return done(err, user);
-    // });
-    connection.query('SELECT role FROM login WHERE id = '+id, (err, rows) => {
-        if(rows[0].role == "admin" || rows[0].role == "superadmin"){
-            var sqlQuery = "SELECT login.id, admin_user.id AS relId ,login.username, admin_user.first_name, admin_user.last_name, admin_user.email, admin_user.role FROM admin_user INNER JOIN login ON admin_user.id = login.users_admin_id WHERE login.id = "+id;
-        }else if(rows[0].role == "user"){
-            var sqlQuery = "SELECT login.id, users.id AS relId, login.username, users.first_name, users.last_name, users.email, users.role FROM users INNER JOIN login ON users.id = login.users_admin_id WHERE login.id = "+id;
-        }
-        connection.query(sqlQuery, (err, rows)=>{
-            if(err) throw err;
-            return done(err, rows[0]);
-        });
-     });
-});
-
-passport.use('local',new localStrategy( (username, password, done)=>{
-    connection.query("select * from login where username = ?", [username], (err, rows)=>{
-        if(err) return done(err);
-        if(!rows.length){
-            return done (null, false , { messages: "Username not found"});
-        }
-        bcrypt.compare(password, rows[0].password, (err, isMatch)=>{
-            if(isMatch){
-                return done(null, rows[0]);
-              }else{
-                return done(null, false, {messages : "Invalid password"});
-              }
-        });
-    });
-}));
-
-
-router.get('/logout', (req, res, next) => {
-    req.logout();
-    res.redirect('/');
-});
-
-router.get('/devices', ensureAuthenticated, async (req, res, next)=>{
-    let devicePromise = [
-        deviceList(req.user.id)
-    ];
-
-    Promise.all(devicePromise)
-        .then((devicesResult) =>{
-            res.render('deviceList', {
-                title : "Device List || IoT Dashboard",
-                page : deviceList,
-                currentUser : req.user,
-                loginPage : false,
-                page : 'devices',
-                data : {
-                    list : devicesResult[0]
-                }
-                
-            });
-    }).catch((err)=>{
-        console.log("device list reject");
-    });
-});
-
-router.get('/report/:id/:rel', ensureAuthenticated, async (req, res, next)=>{
+router.get('/join/:id', async (req, res, next)=>{
     // console.log(req.params.id);
+
+    return res.redirect('/?rel=join/'+req.params.id);
+
+
     let reportPromise = [
         deviceDetails(req.user.id, req.params.id),
         deviceReport(req.user.id, req.params.id, req.params.rel)
@@ -132,34 +75,9 @@ router.get('/report/:id/:rel', ensureAuthenticated, async (req, res, next)=>{
         });
 });
 
-router.post('/category', ensureAuthenticated,
-    check("category","Prrovide category").not().isEmpty(),
-(req,res, next) =>{ 
-    var category = req.body.category;
-
-    var categoryError = validationResult(req);
-
-    if(!categoryError.isEmpty()){
-
-        res.render('category',{
-            errors : categoryError['errors'],
-            title : 'Category',
-            categoryActiveClass : true,
-            loginPage : false,
-            page : 'protfolio',
-            currentUser : req.user
-        });
-
-    }else{
-
-        connection.query("INSERT INTO category SET category = ?, created_at=?  ORDER BY id DESC", [category, new Date()], (err, results, fields)=>{
-            if(err) throw err;
-        });
-        req.flash("success", "New category sucessfully added !!!");
-
-        res.location('/category');
-        res.redirect('/category');
-    }
+router.get('/logout', (req, res, next) => {
+    req.logout();
+    res.redirect('/');
 });
 
 module.exports = router;
