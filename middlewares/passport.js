@@ -31,7 +31,7 @@ module.exports = function(passport) {
             if(rows[0].role == "admin" || rows[0].role == "superadmin"){
                 var sqlQuery = "SELECT login.id, admin_user.id AS relId ,login.username, admin_user.first_name, admin_user.last_name, admin_user.email, admin_user.role FROM admin_user INNER JOIN login ON admin_user.id = login.admin_id WHERE login.id = "+id;
             }else if(rows[0].role == "user"){
-                var sqlQuery = "SELECT login.id, users.id AS relId, login.username, users.first_name, users.last_name, users.email, users.role FROM users INNER JOIN login ON users.id = login.user_id WHERE login.id = "+id;
+                var sqlQuery = "SELECT login.id, login.admin_id, users.id AS relId, login.username, users.first_name, users.last_name, users.email, users.role FROM users INNER JOIN login ON users.id = login.user_id WHERE login.id = "+id;
             }
             connection.query(sqlQuery, (error, rowss)=>{
                 if(error) throw error;
