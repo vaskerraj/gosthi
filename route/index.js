@@ -75,7 +75,7 @@ router.post('/login',
             // if user
            console.log(`meeing rel: ${req.body.joinRel}`);
             // if having meeting room refere
-            if(req.body.joinRel !== undefined){
+            if(req.body.joinRel !== 'undefined'){
                 connection.query("SELECT title FROM meeting WHERE id =?", [req.body.joinRel], (err, relResult)=>{
                     console.log(relResult);
                     if(relResult.length){
@@ -92,29 +92,19 @@ router.post('/login',
 
 router.get('/join/:id', async (req, res, next)=>{
     // console.log(req.params.id);
-
-    return res.redirect('/?rel=join/'+req.params.id);
-
-
-    let reportPromise = [
-        deviceDetails(req.user.id, req.params.id),
-        deviceReport(req.user.id, req.params.id, req.params.rel)
-    ];
-    Promise.all(reportPromise).
-        then((deviceReport) => {
-            res.render('report', {
-                title : "Report of "+deviceReport[0].name+" || IoT Dashboard",
-                loginPage: false,
-                currentUser : req.user,
-                page : 'devices',
-                data : {
-                    device : deviceReport[0],
-                    report : deviceReport[1]
-                }
-            });
-        }).catch((err)=>{
-            console.log("report Promise reject");
+    console.log(`is auth: ${ensureAuthenticated}`);
+    if(req.user !==  undefined){
+        connection.query("SELECT title FROM meeting WHERE id =?", [req.params.id], (err, relResultOnJoin)=>{
+            if(err) throw err;
+            if(relResultOnJoin.length){
+                res.redirect('https://15.206.115.114/'+relResultOnJoin[0].title);
+            }else{
+                res.redirect('/?error=meeting');
+            }
         });
+    }else{
+        return res.redirect('/?rel=join/'+req.params.id);
+    }
 });
 
 router.get('/logout', (req, res, next) => {
