@@ -15,6 +15,7 @@
 <body class="main <% if(loginPage) { %> login-page <% }else{ %> sidebar-mini <% } %>">
   <div class="container">
     <div class="row">
+      <%-rel%>
       <!-- <img src="/img/indexpage.png" width="100%"> -->
 
       <div class="col-md-8 col-xs-12">
@@ -32,7 +33,7 @@
             </div>
           <%} else{ %>
           <label class="popup-button" for="login-popup"><img class="float-right" src="/img/login.png" width="150px"></label>
-          <input type="checkbox" id="login-popup" <% if (messages && currentUser == 'notLogin') { %> checked <% } %> >
+          <input type="checkbox" id="login-popup" <% if ((messages && currentUser == 'notLogin') || rel !== 'undefined') { %> checked <% } %> >
           <%}%>
           <div class="popup">
             <label for="login-popup" class="transparent-label"></label>
@@ -56,6 +57,7 @@
                       <input type="password" name="password" class="marT10" placeholder="Password" autocomplete="off">
                     </li>
                     <li>
+                      <input type="text" name="joinRel" value="<%=rel%>">
                       <button type="submit" class="marT15">Log in</button>
                     </li>
                   </ul>
