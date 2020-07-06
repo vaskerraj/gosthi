@@ -167,6 +167,25 @@ list-style: none;
 /* margin-left: -25px; */
 }
 
+/* for modal */
+@media (min-width: 576px){
+  #meetingRefereModal .modal-dialog {
+    max-width: 550px;
+    min-height: calc(100vh - 40px);
+  }
+}
+.modal .modal-content{
+box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 10px 0px;
+border-radius: 4px;
+border-top-style: solid;
+border-top-color: #96bd30;
+border-top-width: 5px;
+}
+
+.modal .modal-header .close:focus{
+outline: none;
+}
+
 .popup-container {
   display: block;
 }
