@@ -52,9 +52,8 @@ router.get('/',  (req, res, next)=>{
         }
     }else{
         if(meetingJoinId === undefined){
-            console.log(req.user);
-            console.log(`admin_id : ${req.user.admin_id}`);
-            connection.query("SELECT * FROM meeting WHERE admin_id = ?", [req.user.admin_id], (err, relResultOnLoginIn)=>{
+            const adminIdAfterLoginAsUser = req.user.admin_id;
+            connection.query("SELECT * FROM meeting WHERE admin_id = ?",[ adminIdAfterLoginAsUser ], (err, relResultOnLoginIn)=>{
                 console.log(`relResultOnLoginIn : ${relResultOnLoginIn}`);
                 res.render('index', {
                     title: "Index || Gosthi",
