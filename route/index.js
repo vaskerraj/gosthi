@@ -12,8 +12,22 @@ const { npkdata, tempHumData, totalDevices } = require('../models/dashboard');
 
 
 router.get('/',  (req, res, next)=>{
-    console.log(req.user);
-    const meetingJoinId = req.originalUrl.split('join/')[1];
+    const refereUrlTitle = req.originalUrl.split('=')[0];
+    const refereUrlSeond = req.originalUrl.split('=')[1];
+    console.log(refereUrlTitle);
+    if(refereUrlTitle === "/?rel"){
+        var relOrError = "rel";
+        var meetingJoinId = refereUrlSeond.split('/')[1];
+    }else if(refereUrlTitle === "/?error"){
+        var relOrError = "error";
+        var meetingJoinId = undefined;
+    }else{
+        var relOrError = "";
+        var meetingJoinId = undefined;
+    }
+    console.log(`meetingJoinId : ${meetingJoinId}`);
+    console.log(`relOrError : ${relOrError}`);
+
     // if not logged in
     if(req.user === undefined){
         // if have meeting join refere
@@ -23,6 +37,7 @@ router.get('/',  (req, res, next)=>{
                 page : 'index',
                 loginPage : false,
                 currentUser : req.user || "notLogin",
+                relOrError : relOrError,
                 rel : 'undefined'
             });
         }else{
@@ -31,20 +46,24 @@ router.get('/',  (req, res, next)=>{
                 page : 'index',
                 loginPage : false,
                 currentUser : req.user || "notLogin",
+                relOrError : relOrError,
                 rel: meetingJoinId
             });
         }
     }else{
         if(meetingJoinId === undefined){
-            connection.query("SELECT * FROM meeting WHERE id = ?", [meetingJoinId], (err, relResultOnLoginIn)=>{
-                console.log(relResultOnLoginIn.length);
+            console.log(req.user);
+            console.log(`admin_id : ${req.user.admin_id}`);
+            connection.query("SELECT * FROM meeting WHERE admin_id = ?", [req.user.admin_id], (err, relResultOnLoginIn)=>{
+                console.log(`relResultOnLoginIn : ${relResultOnLoginIn}`);
                 res.render('index', {
                     title: "Index || Gosthi",
                     page : 'index',
                     loginPage : false,
                     currentUser : req.user || "notLogin",
+                    relOrError : relOrError,
                     rel: meetingJoinId,
-                    relData : relResultOnLoginIn[0]
+                    relData : relResultOnLoginIn
                 });
             });
         }else{
