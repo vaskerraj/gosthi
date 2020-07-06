@@ -358,6 +358,9 @@ div.dataTables_wrapper div.dataTables_info{
   padding: 7px 0;
   height: 290px;
 }
+
+/* meeting card */
+
 .meeting-date{
   display: inline-block;
   color: rgb(91, 100, 111);

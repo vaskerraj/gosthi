@@ -7,6 +7,7 @@
     <title><%- title %></title>
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="/vendor/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="/vendor/fontawesome-free/css/v4-shims.min.css">
     <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/main.css">
 
@@ -78,28 +79,50 @@
     <div class="modal-dialog" role="document">
           <div class="modal-content">
               <div class="modal-header">
-              <h5 class="modal-title" id="newMeetingTitle">Meetings</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span class="fa fa-window-close-o" aria-hidden="true"></span>
-              </button>
+                <h5 class="modal-title" id="newMeetingTitle">Meetings</h5>
               </div>
               <div class="modal-body">
-                <div class="meeting-scroll">
-                  <ul class="list-unstyled">
+                <div class="container" id="mettingRooms">
+                  <div class="row">
+                    <div class="tags col-md-7 mt-2">
+                      <div>Filter by:</div>
+                      <div class="tag filter" data-filter="normal">Rooms</div>
+                      <div class="tag filter" data-filter="schedule">Schedule</div>
+                    </div>
+                    <div class="col-md-5">
+                      <input class="search" placeholder="Search" id="meetingRoomSearch" />
+                    </div>
+                  </div>
+                  
+                  <div class="controls d-none">
+                    <div>Sort by:</div><a class="sort" href="#" data-sort="date">Date</a>
+                  </div>      
+                  <div class="meeting-search-items d-none border-top pt-2 font18 fontb text-secondary text-center" style="font-weight: 500;"></div>
+                  <div class="list" id="meeting-scroll">
                     <% relData.forEach((list, index) => { %>
-                    <li class="meeting-card" data-id="<%=list.id%>">
-                      <div class="d-flex">
-                          <div class="d-inline mt-2 mr-3">
-                              <span class="fa fa-calendar-o text-black font26"></span>
+                      <li class="meeting-card row" data-id="<%=list.id%>">
+                        <div class="col-md-8 col-8">
+                          <div class="row">
+                            <div class="col-md-2 col-2 mt-2 text-right mt-2">
+                                <span class="fa fa-calendar-o text-black font26"></span>
+                            </div>
+                            <div class="col-md-10 col-10">
+                                <div class="meeting-card-title d-block"><%= list.title%></div>
+                                <div class="meeting-card-desc">ID : <%= list.id%></div>
+                                <div class="meetingType d-none"><%= list.type%></div>
+                                <div class="date d-none"><%= list.id%></div>
+                            </div>
                           </div>
-                          <div class="d-inline fW">
-                              <div class="meeting-card-title d-block"><%= list.title%></div>
-                              <div class="meeting-card-desc">ID : <%= list.id%></div>
-                          </div>
-                      </div>
-                    </li>
-                    <% }); %>
-                  </ul>
+                        </div>
+                        <div class="col-md-4 col-4 text-right">
+                          <a href="https://15.206.115.114/<%= list.title %>" target="_blank" class="btn btn-warning btn-sm mr-3 mt-2">
+                            JOIN
+                          </a>
+                        </div>
+                      </li>
+                    <%});%>
+                  </div>
+                
                 </div>
               </div>
           </div>
@@ -108,7 +131,46 @@
   <div class="modal-backdrop fade show"></div>
   <% } %>
   <%-include('partials/js')-%>
+  <script src="/vendor/listjs/list.min.js"></script>
   <script>
+    // Create the List
+    var options = {
+      valueNames: [ 'meeting-card-title', 'date', 'meetingType' ]
+    };
+
+    // Run the list with default sort
+    var mettingRooms = new List('mettingRooms', options);
+    mettingRooms.sort("meeting-card-title", {
+      order: "asc"
+    })
+
+    // Create Filters
+    $('.filter').on('click',function(){
+      var $q = $(this).attr('data-filter');
+      if($(this).hasClass('active')){
+        mettingRooms.filter();
+        $('.filter').removeClass('active');
+      } else {
+        mettingRooms.filter(function(item) {
+          return (item.values().meetingType == $q);
+        });
+        $('.filter').removeClass('active');
+        $(this).addClass('active');
+      }
+    });
+
+    // Return # of items
+    var $count = $('.meeting-search-items')
+    $count.append(mettingRooms.size());
+    mettingRooms.on('searchComplete', function(){
+      var totalMeetingRooms = mettingRooms.update().matchingItems.length;
+      if(totalMeetingRooms === 0){
+        $count.removeClass('d-none').html("There aren't any meetings as you search");
+      }else{
+        $count.addClass('d-none');
+      }
+    });
+
     if(performance.navigation.type == 2){
       location.reload(true);
     }
