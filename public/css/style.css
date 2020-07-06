@@ -438,7 +438,9 @@ div.dataTables_wrapper div.dataTables_info{
   /* margin-left: -25px; */
 }
 
-/* for express-messages & flash */
+/* / for express-messages & flash */
+
+/* for modals */
 
 @media (min-width: 576px){
     #addNewUser .modal-dialog {
