@@ -12,7 +12,8 @@ const { npkdata, tempHumData, totalDevices } = require('../models/dashboard');
 
 
 router.get('/',  (req, res, next)=>{
-    const meetingJoinId = req.originalUrl.split('join/')[1]
+    console.log(req.user);
+    const meetingJoinId = req.originalUrl.split('join/')[1];
     if(meetingJoinId === undefined){
         res.render('index', {
             title: "Index || Gosthi",
@@ -22,13 +23,30 @@ router.get('/',  (req, res, next)=>{
             rel : 'undefined'
         });
     }else{
-        res.render('index', {
-            title: "Index || Gosthi",
-            page : 'index',
-            loginPage : false,
-            currentUser : req.user || "notLogin",
-            rel: meetingJoinId
-        });
+        if(req.user !== 'undefined'){
+            res.render('index', {
+                title: "Index || Gosthi",
+                page : 'index',
+                loginPage : false,
+                currentUser : req.user || "notLogin",
+                rel: meetingJoinId
+            });
+        }else{
+            connection.query("SELECT * FROM meeting WHERE id = ?", [meetingJoinId], (err, relResultOnLoginIn)=>{
+                if(relResult.length){
+                    res.render('index', {
+                        title: "Index || Gosthi",
+                        page : 'index',
+                        loginPage : false,
+                        currentUser : req.user || "notLogin",
+                        rel: meetingJoinId,
+                        relData : relResultOnLoginIn[0]
+                    });
+                }else{
+                    res.redirect('/?error=meeting');
+                }
+            });
+        }
     }
 });
 
@@ -46,8 +64,15 @@ router.post('/login',
         }else{
             if(req.body.joinRel !== "undefined"){
                 connection.query("SELECT title FROM meeting WHERE id =?", [req.body.joinRel], (err, relResult)=>{
-                    res.redirect('https://15.206.115.114/'+relResult[0].title);
-                })
+                    console.log(relResult);
+                    if(relResult.length){
+                        res.redirect('https://15.206.115.114/'+relResult[0].title);
+                    }else{
+                        res.redirect('/?error=meeting');
+                    }
+                });
+            }else{
+                res.redirect('/');
             }
         }
 });
