@@ -12,7 +12,7 @@
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
-<body class="main <% if(loginPage) { %> login-page <% }else{ %> sidebar-mini <% } %>">
+<body class="main <% if(loginPage) { %> login-page <% }else{ %> sidebar-mini <% } if(currentUser !== 'notLogin' && rel !== 'undefined'){  %>modal-open<% } %>">
   <div class="container">
     <div class="row">
       <!-- <img src="/img/indexpage.png" width="100%"> -->
@@ -72,8 +72,8 @@
     </div>
   </div>
   <% if(currentUser !== 'notLogin' && rel !== 'undefined') {%>
-  <p>fuck</p>
-  <div class="modal fade open in" id="createMeeting" tabindex="-1" role="dialog" aria-labelledby="newMeetingTitle" aria-hidden="true">
+  
+  <div class="modal fade show in" id="meetingRefereModal" tabindex="-1" role="dialog" aria-labelledby="newMeetingTitle" aria-hidden="true" style="display: block;">
     <div class="modal-dialog" role="document">
           <div class="modal-content">
               <div class="modal-header">
@@ -90,6 +90,7 @@
           </div>
       </div>
   </div>
+  <div class="modal-backdrop fade show"></div>
   <% } %>
   <%-include('partials/js')-%>
   <script>
