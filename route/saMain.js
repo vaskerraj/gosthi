@@ -3,19 +3,14 @@ var router = express.Router();
 var bycrypt = require('bcryptjs');
 var {check, validationResult} = require('express-validator');
 
+const { ensureAuthenticated, checkRole  } = require('../config/auth');
+
 var connection = require('../db');
 
 const { totalUsers, totalActiveUsers } = require('../models/dashboard');
 const { adminList } = require('../models/admins');
 
-function ensureAuthenticated(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    }
-    res.redirect('../');
-}
-
-router.get('/', ensureAuthenticated, async (req, res, next)=>{
+router.get('/', ensureAuthenticated, checkRole(['superadmin']), async (req, res, next)=>{
     let dashbaordPromise = [
         totalUsers(req.user.relId),
         totalActiveUsers(req.user.relId)
@@ -76,6 +71,7 @@ router.post('/admins', ensureAuthenticated,
         contactPersonMobile = req.body.contactPersonMobile;
     
     var errors = validationResult(req);
+    console.log(errors);
     
     if(!errors.isEmpty()){
         let userPromise = [
@@ -102,7 +98,7 @@ router.post('/admins', ensureAuthenticated,
 
             // pass into varibale for bycrptjs
             let loginHashData = {
-                users_admin_id : results.insertId,
+                admin_id : results.insertId,
                 username : username,
                 password : password,
                 role : 'admin'

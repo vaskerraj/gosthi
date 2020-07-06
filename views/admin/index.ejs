@@ -7,14 +7,14 @@
     <title><%- title %></title>
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="/vendor/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="/vendor/fontawesome-free/css/v4-shims.min.css">
     <link rel="stylesheet" href="/css/main.min.css">
-    <link rel="stylesheet" href="/vendor/toastr/toastr.min.css">
-    <link rel="stylesheet" href="/vendor/datatables/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="/vendor/scrollbar/jquery.mCustomScrollbar.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     
 </head>
-<body class="<% if(loginPage) { %> login-page <% }else{ %> sidebar-mini <% } %>">
+<body class="<% if(loginPage) { %> login-page <% }else{ %> sidebar-mini sidebar-collapse <% } %>">
   <div class="wrapper">
     <%- include('../partials/adminHeader')-%>
     <div class="content-wrapper">
@@ -22,11 +22,11 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        Dashbaord
+                        Meeting
                     </div>
                     <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item active"><a href="">Dashbaord</a></li>
+                        <li class="breadcrumb-item active"><a href="">Meeting</a></li>
                     </ol>
                     </div>
                 </div>
@@ -34,7 +34,7 @@
         </div>
         <div class="content">
           <div class="container-fluid">
-            <div class="row">
+            <div class="row d-none">
               <div class="col-12 col-sm-6 col-md-6">
                   <div class="info-box">
                   <span class="info-box-icon bg-info elevation-1"><i class="fas fa-fw fa-users "></i></span>
@@ -97,14 +97,246 @@
               </div>
               <!-- /.col -->
             </div><!--/.row-->
-            <div class="row">
-
+            <div class="row mt-4">
+                <div class="col-md-4 col-12">
+                    <div class="d-flex">
+                        <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#createMeeting">
+                            <span class="fa fa-fw fa-calendar-plus"></span>
+                            Create Meeting
+                        </button>
+                    </div>
+                    <div class="clearfix mt-2">
+                        <ul class="nav nav-tabs text-center" id="meeting-card-tab" role="tablist">
+                            <li class="nav-item col-4">
+                              <a class="nav-link active" id="rooms-tab" data-toggle="pill" href="#rooms" role="tab" aria-controls="rooms" aria-selected="true">Rooms</a>
+                              <div class="row activeTab"></div>
+                            </li>
+                            <li class="nav-item col-4">
+                              <a class="nav-link" id="upcoming-tab" data-toggle="pill" href="#upcoming" role="tab" aria-controls="upcoming" aria-selected="false">Upcoming</a>
+                              <div class="row activeTab"></div>
+                            </li>
+                            <li class="nav-item col-4">
+                              <a class="nav-link" id="history-tab" data-toggle="pill" href="#history" role="tab" aria-controls="history" aria-selected="false">History</a>
+                              <div class="row activeTab"></div>
+                            </li>
+                        </ul>
+                        <div class="tab-content mt-1">
+                            <div class="tab-pane fade show active" id="rooms" role="tabpanel" aria-labelledby="rooms-tab">
+                               <ul class="list-unstyled tab-scroll">
+                                   <li class="meeting-card active">
+                                       <div class="d-flex">
+                                            <div class="d-inline mt-2 mr-3">
+                                                <span class="fa fa-calendar-day text-black font26"></span>
+                                            </div>
+                                            <div class="d-inline fW">
+                                                <div class="meeting-card-title d-block">Metting</div>
+                                                <div class="meeting-card-desc">Start an instant meeting in seconds</div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <% data.rooms.forEach((list, index) => {%>
+                                    <li class="meeting-card" data-id="<%=list.id%>">
+                                        <div class="d-flex">
+                                            <div class="d-inline mt-2 mr-3">
+                                                <span class="fa fa-calendar-o text-black font26"></span>
+                                            </div>
+                                            <div class="d-inline fW">
+                                                <div class="meeting-card-title d-block"><%= list.title%></div>
+                                                <div class="meeting-card-desc">ID : <%= list.id%></div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <% }); %>
+                               </ul>
+                            </div>
+                            <div class="tab-pane fade" id="upcoming" role="tabpanel" aria-labelledby="upcoming-tab">
+                                <ul class="list-unstyled tab-scroll">
+                                    <% if(data.upcoming.length === 0) {%>
+                                    <div class="d-flex mt-3 font18 fontb text-secondary text-center" style="font-weight: 500;">
+                                        There weren't any upcoming meetings.
+                                    </div>
+                                    <%}else{
+                                        data.upcoming.forEach((upcoming, index) => {
+                                    %>
+                                    <li class="meeting-date mb-1 pt-3 fontb font16">
+                                        Today
+                                    </li>
+                                    <li class="meeting-card upcoming">
+                                         <div class="row">
+                                             <div class="col-5 text-right pr-3">
+                                                 <div class="meeting-card-time fontb font18">19:68 PM</div>
+                                                 <div class="clearfix"><%= upcoming.meeting_duration%></div>
+                                             </div>
+                                             <div class="col-7">
+                                                 <div class="meeting-card-title d-block"><%=upcoming.title%></div>
+                                                 <div class="meeting-card-desc">ID : <%=upcoming.id%></div>
+                                             </div>
+                                         </div>
+                                    </li>
+                                    <%}); }%>
+                                </ul>
+                            </div>
+                            <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
+                               <div class="tab-scroll">
+                                   <div class="d-flex">
+                                       <button class="btn btn-default mr-2">
+                                           07/07/2020
+                                           <span class="fa fa-fw fa-caret-down"></span>
+                                       </button>
+                                       <span class="fa fa-minus font13 text-muted" style="margin-top: 13px;"></span>
+                                       <button class="btn btn-default ml-2">
+                                           07/07/2020                                           
+                                           <span class="fa fa-fw fa-caret-down"></span>
+                                       </button>
+                                   </div>
+                                   <div class="d-flex mt-3 font18 fontb text-secondary text-center" style="font-weight: 500;">
+                                        There weren't any meetings between those dates.
+                                   </div>
+                               </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8 col-12">
+                    <div class="card">
+                        <div class="card-body meeting-details">
+                            <div class="d-block">
+                                <div class="meeting-details-title"></div>
+                                <div class="clearfix">ID : <span class="meeting-details-id"></span></div>
+                            </div>
+                            <div class="row mt-4 text-center">
+                                <div class="col-md-2 col-sm-12 col-12">
+                                    <a href="javascript:void(0)" class="btn btn-primary btn-block mb-3">
+                                        <span class="fa fa-fw fa-play"></span>
+                                        Start
+                                    </a>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-12 marT7">
+                                    <a href="javascript:voild(0)">
+                                        <span class="fa fa-fw fa-plus"></span>
+                                        Invite Users
+                                    </a>
+                                </div>
+                                <div class="col-md-2 col-sm-4 col-12 marT7">
+                                    <a href="javascript:voild(0)">
+                                        <span class="fa fa-fw fa-edit"></span>
+                                        Edit
+                                    </a>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-12 marT7">
+                                    <a href="javascript:voild(0)">
+                                        <span class="fa fa-fw fa-trash-alt"></span>
+                                        Delete
+                                    </a>
+                                </div>
+                            </div><!--/.row-->
+                            <div class="d-block border-top mt-2">
+                                <div class="d-block meeting-share-title mt-3"></div>
+                                <div class="d-block mt-3">
+                                    <div class="font15 font-weight-bold">Please join my meeting from your computer, tablet or smartphone.</div>
+                                    
+                                    <a href="" target="_blank" class="d-block meeting-share-href"></a>
+                                </div>
+                                <div class="d-block fontb font15 mt-4 mb-3">
+                                    Meeting ID : <span class="meeting-share-id"></span>
+                                </div>
+                            </div><!--/.d-block>
+                        </div>
+                    </div>
+                </div>
             </div><!--./row-->
           </div><!--/.container-->
         </div>
     </div>
   </div>
+  <div class="modal fade" id="createMeeting" tabindex="-1" role="dialog" aria-labelledby="newMeetingTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+              <h5 class="modal-title" id="newMeetingTitle">New Meeting</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span class="fa fa-window-close-o" aria-hidden="true"></span>
+              </button>
+              </div>
+              <div class="modal-body">
+                  <form action="" method ="post" id="form_createMeeting">
+                        <div class="d-block mt-2 mr">
+                            <input type='text' class="form-control" name='meetingTitle' id="meetingTitle" autocomplete="off" />
+                            <label for="meetingTitle">Meeting Title</label>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-md-6 col-sm-6 col-12">
+                                <input type="radio" name="meetingType" class="d-inline-flex" id="meetingRoom" value="normal">
+                                <label for="meetingRoom" class="d-inline" style="cursor: pointer;">
+                                    <span>Metting Room</span>
+                                    <span class="d-block font11 font-weight-light text-muted ml-3">
+                                        Feel free to meet. Link never s.
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-12">
+                                <input type="radio" name="meetingType" class="d-inline-flex" id="scheduleMeeting" value="schedule">
+                                <label for="scheduleMeeting" class="d-inline" style="cursor: pointer;">
+                                    <span>Schedule Metting</span>
+                                    <span class="d-block font11 font-weight-light text-muted ml-3">
+                                        Meet once and then link expires.
+                                    </span>
+                                </label>
+                            </div>
+                        </div><!--/.row-->
+                        <div class="row mt-4">
+                            <div class="col-md-5 col-sm-12 mt-1">
+                                <input type='text' class="form-control" name='meetingDate' id="meetingDate" value="07/04/2020" autocomplete="off" />
+                                <label for="meetingDate">Date</label>
+                            </div>
+                            <div class="col-md-3 col-sm-12 mt-1">
+                                <select name="meetingTime" class="form-control" id="meetingTime">
+                                    <option value="">11:45 PM</option>
+                                </select>
+                                <label for="meetingTime">Time</label>
+                            </div>
+                            <div class="col-md-4 col-sm-12 mt-1">
+                                <select name="meetingDuration" class="form-control" id="meetingDuration">
+                                    <option value="">15 Min</option>
+                                    <option value="">30 Min</option>
+                                    <option value="">45 Min</option>
+                                    <option value="">60 Min</option>
+                                    <option value="">1.5 H</option>
+                                    <option value="">2 H</option>
+                                    <option value="">2.5 H</option>
+                                    <option value="">3 H</option>
+                                    <option value="">4 H</option>
+                                    <option value="">5 H</option>
+                                    <option value="">6 H</option>
+                                    <option value="">7 H</option>
+                                    <option value="">8 H</option>
+                                </select>
+                                <label for="meetingDuration">Duration</label>
+                            </div>
+                        </div><!--/.row-->
+                        <div class="d-block bg-gray-light mt-3 pl-2 pt-1 pb-2 border-0">
+                            The event starts at 11:45 PM in Kathmadnu time zone.
+                        </div>
+                        <div class="d-block mt-4">
+                            <button type="submit" class="btn btn-primary ml-3 fR">SAVE</button>
+                            <button class="btn btn-default fR">Cancel</button>
+                        </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
   <%-include('../partials/js')-%>
   <script src="/js/listing-js.js"></script>
+  <script>
+      $(function(){
+			$(window).on("load",function(){
+                $(".tab-scroll").mCustomScrollbar({
+                    theme : "minimal-dark"
+                });
+            });
+      })
+  </script>
+  <script src="/vendor/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
 </body>
 </html>

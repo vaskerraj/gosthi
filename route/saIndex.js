@@ -44,7 +44,7 @@ passport.deserializeUser((id, done)=>{
     //     return done(err, user);
     // });
 
-    connection.query("SELECT login.id, login.username, admin_user.first_name, admin_user.last_name, admin_user.email, admin_user.role FROM admin_user INNER JOIN login ON admin_user.id = login.users_admin_id WHERE login.id = ?, AND login.role = ?", [id, 'superadmin'], (err, rows)=>{
+    connection.query("SELECT login.id, login.username, admin_user.first_name, admin_user.last_name, admin_user.email, admin_user.role FROM admin_user INNER JOIN login ON admin_user.id = login.admin_id WHERE login.id = ?, AND login.role = ?", [id, 'superadmin'], (err, rows)=>{
         if(err) throw err;
         return done(err, rows[0]);
     });

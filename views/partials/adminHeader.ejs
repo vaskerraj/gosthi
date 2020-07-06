@@ -1,5 +1,5 @@
 <nav class="main-header navbar navbar-expand-md navbar-white navbar-light">
-    <ul class="navbar-nav">
+    <ul class="navbar-nav d-none">
         <li class="nav-item">
             <a class="nav-link" data-widget="pushmenu" href="#"   >
                 <i class="fas fa-bars"></i>
@@ -24,15 +24,15 @@
 </nav>
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <a href="" class="brand-link ">
-        <img src="/img/logo.png" alt="Beacons" class="brand-image img-circle elevation-3 d-none" style="opacity: .8">
+        <img src="/img/logo.png" alt="Beacons" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light ">
-            <b>Gosthi Dashboard</b>
+            <b>Gosthi Online</b>
         </span>
     </a>
     <div class="user-panel mt-2 pb-2 mb-2 ">
-            <div class="info text-center text-white fontb marT3">
+            <div class="info text-left text-white fontb marT3">
             <div class="badge badge-succes">
-                Admin Panel
+                HUB
             </div>
         </div>
     </div>
@@ -41,20 +41,14 @@
             <ul class="nav nav-pills nav-sidebar flex-column " data-widget="treeview" role="menu"  >
                 <li  class="nav-item">
                     <a class="nav-link <% if (page == 'index'){ %> active <% } %>" href="/admin/">
-                    <i class="fas fa-fw fa-tachometer-alt "></i>
-                    <p>Dashboard</p>
+                    <i class="fas fa-fw fa-calendar-check font20"></i>
+                    <p>Meeting</p>
                     </a>
                 </li>
                 <li  class="nav-item">
                     <a class="nav-link <% if (page == 'users'){ %> active <% } %>" href="/admin/users">
-                    <i class="fas fa-fw fa-user "></i>
+                    <i class="fas fa-fw fa-user-friends font20"></i>
                     <p>Users</p>
-                    </a>
-                </li>
-                <li  class="nav-item">
-                    <a class="nav-link" href="/logout">
-                        <i class="fas fa-fw fa-power-off"></i>
-                        <p>Logout</p>
                     </a>
                 </li>
             </ul>

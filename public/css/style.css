@@ -140,9 +140,74 @@ span.error{
     vertical-align: middle;
 }
 
+/* custom slidebar */
+@media (min-width: 992px){
+  .sidebar-mini.sidebar-collapse .nav-sidebar .nav-link {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+  }
+  .sidebar-mini .nav-sidebar .nav-link {
+    /* padding-top: 20px;
+    padding-bottom: 20px; */
+}
+  .sidebar-mini.sidebar-collapse .nav-sidebar .nav-link p {
+      margin-left: -10px;
+      opacity: 1;
+      visibility: unset;
+  }
 
+  /* .sidebar-mini.sidebar-collapse .main-sidebar.sidebar-focused, .sidebar-mini.sidebar-collapse .main-sidebar:hover
+  {
+    width: 4.6rem;
+  } */
+
+  /* .sidebar-mini.sidebar-collapse .main-sidebar .user-panel{
+    opacity: 0;
+    height: 0px;
+  } */
+
+
+  .nav-sidebar .nav-link p {
+    display: block;
+    margin: 0;
+  }
+}
 .main-sidebar {
     min-height: 100%;
+}
+.sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active, .sidebar-light-primary .nav-sidebar>.nav-item>.nav-link.active {
+  background-color: rgb(38, 42, 52);
+  color: #fff;
+}
+/* custom content */
+.content-wrapper {
+  background: rgb(240, 242, 245);
+}
+
+/* custom tab */
+.nav-tabs {
+  border-bottom: 1px solid #aaaaaa;
+}
+.nav-tabs .nav-link {
+  padding: .5rem 0rem;
+  border: none;
+  font-weight: 500;
+  color: #155724;
+}
+.nav-tabs .nav-link.active {
+  background-color: transparent;
+}
+.nav-tabs .nav-link.active ~ .activeTab {
+    transition:  all 0.3s ease-out;
+    border-top-color: rgb(246, 141, 46);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-top-style: solid;
+    border-top-width: 4px;
+    bottom: 0px;
+    position: absolute;
+    width: 100%;
 }
 
 .badge-pill .badge:first-child{
@@ -266,22 +331,8 @@ textarea.form-control.active ~ label{
   transform: translateY(-16px) scale(.8);
 }
 
-.form-control:placeholder-shown ~ label {
-  font-size: 15px;
-  font-weight: 700;
-  -webkit-transform: translateY(-14px) scale(.8);
-  transform: translateY(-14px) scale(.8);
-}
-
-.form-control.disabled ~ label {
-  font-size: 15px;
-  font-weight: 700;
-  -webkit-transform: translateY(-14px) scale(.8);
-  transform: translateY(-14px) scale(.8);
-}
-
-
-#form_updDevice .form-control ~ label{
+#meetingTime.form-control ~ label,
+#meetingDuration.form-control ~ label{
   font-size: 15px;
   font-weight: 700;
   -webkit-transform: translateY(-16px) scale(.8);
@@ -291,8 +342,73 @@ textarea.form-control.active ~ label{
 .list-unstyled{
     margin-bottom: 0px;
 }
+
 div.dataTables_wrapper div.dataTables_info{
     padding-top: 0;
+}
+
+/* metting room */
+
+.card {
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 5px 15px 0px, rgba(0, 0, 0, 0.12) 0px 1px 3px 0px;
+  color: rgb(37, 40, 45);
+}
+
+.tab-content .tab-pane .tab-scroll{
+  padding: 7px 0;
+  height: 290px;
+}
+.meeting-date{
+  display: inline-block;
+  color: rgb(91, 100, 111);
+  height: 24px;
+}
+
+.meeting-card{
+    display: block;
+    background-color: white;
+    margin: 10px 0;
+    padding: 15px 20px;
+    border-radius: 4px;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px 0px;
+    color: #25282d;
+    position: relative;
+    cursor: pointer;
+    text-align: left;
+    outline: transparent;
+    word-break: break-all;
+}
+
+.meeting-card.upcoming{
+  padding: 15px 0px;
+}
+
+.meeting-card.active{
+  background-color: rgb(235, 250, 255);
+  border: 2px solid #4285f4;
+}
+
+.meeting-card:hover{
+  background-color: rgb(235, 250, 255);
+}
+.meeting-card .meeting-card-time{
+  display: block;
+  font-size: 18px;
+  font-weight: 500;
+}
+.meeting-card .meeting-card-title{
+  font-weight: 500;
+}
+.meeting-card .meeting-card-desc {
+  width: 90%;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meeting-details .meeting-details-title{
+  font-weight: 500;
 }
 
 /* for express-messages & flash */
@@ -328,6 +444,22 @@ div.dataTables_wrapper div.dataTables_info{
     #addNewUser .modal-dialog {
       max-width: 676px;
     }
+
+    #createMeeting .modal-dialog {
+      max-width: 550px;
+      min-height: calc(100vh - 40px);
+    }
+}
+.modal .modal-content{
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 10px 0px;
+  border-radius: 4px;
+  border-top-style: solid;
+  border-top-color: #96bd30;
+  border-top-width: 5px;
+}
+
+.modal .modal-header .close:focus{
+  outline: none;
 }
 
 .checking_updusername,

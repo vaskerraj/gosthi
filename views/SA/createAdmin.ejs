@@ -14,7 +14,7 @@
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
-<body class="<% if(loginPage) { %> login-page <% }else{ %> sidebar-mini <% } %>">
+<body class="<% if(loginPage) { %> login-page <% }else{ %> sidebar-mini sidebar-collapse <% } %>">
   <div class="wrapper">
       <%- include('../partials/saHeader')-%>
       <div class="content-wrapper">
@@ -44,57 +44,60 @@
                     </button>
                   </div>
                   <div class="clearfix marT15 fR">
-                      <input type="text" class="form-control" id="searchOpr" placeholder="Search">
+                      <input type="text" class="form-control" id="searchAdmin" placeholder="Search">
                   </div>
                   <div class="clearfix marT10">
                     <span class="clearfix" id="dt_info"></span>
                   </div>
-                  <table class="table table-striped table-hover hide" id="devicelist" data-table="dt"
-                  data-dt_search="#searchOpr"
-                  data-dt_entries="#datatableEntries"
-                  data-dt_dropdown_search =""
-                  data-dt_info="#dt_info"
-                  data-dt_info_txt="Admin(s)"
-                  data-dt_order_column="1"
-                  data-dt_order_colum_by="desc"
-                  data-dt_nonorder_column="5"
-                  data-dt_filter_url_connect="true"
-                  role="grid">
-                    <thead>
-                      <tr>
-                        <th>SN</th>
-                        <th>Name</th>
-                        <th>Username</th>
-                        <th>Email</th>
-                        <th>Contact No.</th>
-                        <th>Address</th>
-                        <th>Contact Person</th>
-                        <th>CP Mobile No.</th>
-                        <th class="no-print">Manage</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <% data.admins.forEach((list, index) => {%>
-                      <tr>
-                        <td><%=index + 1%></td>
-                        <td><%=list.first_name+ ' '+list.last_name%></td>
-                        <td><%=list.username%></td>
-                        <td><%=list.email%></td>
-                        <td><%=list.contactNo%></td>
-                        <td><%=list.address%></td>
-                        <td><%=list.mobile%></td>
-                        <td>
-                          <button class="btn btn-info btn-xs">
-                            <i class="fa fa-edit"></i>
-                          </button>
-                          <button class="btn btn-danger btn-xs">
-                            <i class="fa fa-trash-alt"></i>
-                          </button>
-                        </td>
-                      </tr>
-                      <% });%>
-                    </tbody>                   
-                  </table>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover hide" id="adminsList" data-table="dt"
+                    data-dt_search="#searchAdmin"
+                    data-dt_entries="#datatableEntries"
+                    data-dt_dropdown_search =""
+                    data-dt_info="#dt_info"
+                    data-dt_info_txt="Admin(s)"
+                    data-dt_order_column="1"
+                    data-dt_order_colum_by="desc"
+                    data-dt_nonorder_column="5"
+                    data-dt_filter_url_connect="true"
+                    role="grid">
+                      <thead>
+                        <tr>
+                          <th>SN</th>
+                          <th>Name</th>
+                          <th>Username</th>
+                          <th>Email</th>
+                          <th>Contact No.</th>
+                          <th>Address</th>
+                          <th>Contact Person</th>
+                          <th>CP Mobile No.</th>
+                          <th class="no-print">Manage</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% data.admins.forEach((list, index) => {%>
+                        <tr>
+                          <td><%=index + 1%></td>
+                          <td><%=list.first_name+ ' '+list.last_name%></td>
+                          <td><%=list.username%></td>
+                          <td><%=list.email%></td>
+                          <td><%=list.contact_no%></td>
+                          <td><%=list.address%></td>
+                          <td><%=list.mobile%></td>
+                          <td></td>
+                          <td>
+                            <button class="btn btn-info btn-xs">
+                              <i class="fa fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-xs">
+                              <i class="fa fa-trash-alt"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <% });%>
+                      </tbody>                   
+                    </table>
+                  </div>
                 </div><!-- /.box-body -->
               </div>
             </div>
@@ -197,7 +200,6 @@
   </div>
 
 <%- include('../partials/js') -%>
-
 <script src="/vendor/datatables/js/dataTables.bootstrap4.min.js"></script>
 <script src="/js/listing-js.js"></script>
 <script>

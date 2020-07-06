@@ -1,4 +1,5 @@
 const createError = require('http-errors'),
+    cors = require("cors"),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
     express = require('express'),
@@ -10,6 +11,8 @@ const createError = require('http-errors'),
 
 // connect mysql
 var mysql = require('./db');
+
+const { PORT } = require("./config");
 // connection.connect();
 
 const indexRoute = require('./route/index');
@@ -21,6 +24,11 @@ const SARoute = require('./route/saMain');
 
 var app = express();
 
+
+// Passport Config
+require('./middlewares/passport')(passport);
+
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
@@ -30,7 +38,7 @@ app.set('view engine', 'ejs');
 
 app.use(express.static('public'));
 
-app.use(cookieParser('portfolioSecret'));
+app.use(cookieParser('jhostiSecrete'));
 app.use(session({
     secret : "jhostiSecrete",
     saveUninitialized : true,
@@ -63,6 +71,6 @@ app.use('/admin', adminRoute);
 // superadmin
 app.use('/SA',SARoute);
 
-app.listen(process.env.PORT || 3000, ()=>{
+app.listen(PORT || 3000, ()=>{
     console.log("Server is running");
 });

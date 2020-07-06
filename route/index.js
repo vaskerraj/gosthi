@@ -44,7 +44,11 @@ router.post('/login',
         }else if(req.user.role === 'admin'){
             res.redirect('/admin/');
         }else{
-            res.redirect('/redirect');
+            if(req.body.joinRel !== "undefined"){
+                connection.query("SELECT title FROM meeting WHERE id =?", [req.body.joinRel], (err, relResult)=>{
+                    res.redirect('https://15.206.115.114/'+relResult[0].title);
+                })
+            }
         }
 });
 

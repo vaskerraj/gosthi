@@ -3,19 +3,14 @@ var router = express.Router();
 var {check, validationResult} = require('express-validator');
 var passport = require('passport');
 var localStrategy = require('passport-local').Strategy;
+
 var bcrypt = require('bcryptjs');
 
-var connection = require('./db');
+var connection = require('../db');
 
 const { npkdata, tempHumData, totalDevices } = require('../models/dashboard');
 // const { deviceList, deviceDetails, deviceReport } = require('../models/deviceList');
 
-function ensureAuthenticated(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    }
-    res.redirect('/login');
-}
 
 router.get('/',  (req, res, next)=>{
     console.log(req.user);
@@ -34,7 +29,9 @@ router.post('/login',
         console.log("Login Successfully");
         console.log(req.user);
         req.flash = "Successfull Login";
-        if(req.user.role === 'admin'){
+        if(req.user.role === 'superadmin'){
+            res.redirect('/SA/');
+        }else if(req.user.role === 'admin'){
             res.redirect('/admin/');
         }else{
             res.redirect('/redirect');
@@ -42,7 +39,13 @@ router.post('/login',
 });
 
 passport.serializeUser((user, done)=>{
-    return done(null, user.id);
+    console.log(`user`);
+    console.log(user.role);
+    if(user.role === 'user'){
+        return done(null, user.id);
+    }else if(user.role === 'superadmin'){
+
+    }
 });
 
 passport.deserializeUser((id, done)=>{
@@ -50,20 +53,20 @@ passport.deserializeUser((id, done)=>{
     //     return done(err, user);
     // });
     connection.query('SELECT role FROM login WHERE id = '+id, (err, rows) => {
-        if(rows[0].role == "admin"){
+        if(rows[0].role == "admin" || rows[0].role == "superadmin"){
             var sqlQuery = "SELECT login.id, admin_user.id AS relId ,login.username, admin_user.first_name, admin_user.last_name, admin_user.email, admin_user.role FROM admin_user INNER JOIN login ON admin_user.id = login.admin_id WHERE login.id = "+id;
         }else if(rows[0].role == "user"){
-            var sqlQuery = "SELECT login.id, users.id AS relId ,login.username, users.first_name, users.last_name, users.email, users.role FROM users INNER JOIN login ON users.id = login.admin_id WHERE login.id = "+id;
+            var sqlQuery = "SELECT login.id, users.id AS relId, login.username, users.first_name, users.last_name, users.email, users.role FROM users INNER JOIN login ON users.id = login.user_id WHERE login.id = "+id;
         }
-        connection.query(sqlQuery, (err, rows)=>{
-            if(err) throw err;
-            return done(err, rows[0]);
+        connection.query(sqlQuery, (error, rowss)=>{
+            if(error) throw error;
+            return done(error, rowss[0]);
         });
      });
 });
 
-passport.use(new localStrategy( (username, password, done)=>{
-    connection.query("select * from login where username = ? AND role != ? ", [username, 'superadmin'], (err, rows)=>{
+passport.use('local',new localStrategy( (username, password, done)=>{
+    connection.query("select * from login where username = ? AND role = ?", [username, 'user'], (err, rows)=>{
         if(err) return done(err);
         if(!rows.length){
             return done (null, false , { messages: "Username not found"});
@@ -77,6 +80,7 @@ passport.use(new localStrategy( (username, password, done)=>{
         });
     });
 }));
+
 
 
 router.get('/logout', (req, res, next) => {

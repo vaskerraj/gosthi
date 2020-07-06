@@ -1,24 +1,17 @@
 /**
- * GWTCore
+ * GosthiCore
  * @author Dharma Raj Bhandari
  */
 
 (function($){
     
-    $.GSCore = {
+    $.GHCore = {
         init : function() {
-            var inputFocusStateSel = $('.form-control'),
-                $custommReportSelector = $('#customReport'),
-                $countSecondSelector = $("#countSecondTXT");
-            $.GSCore.ppath();
-            $.GSCore.inputFocusState(inputFocusStateSel);
-            $.GSCore.inputMask();
-            $.GSCore.notifiMsgHandler();
-            $.GSCore.relaodDataInSec($countSecondSelector);
-            $.GSCore.datepickerHandler();
-			$.GSCore.customReport($custommReportSelector);
-			$.GSCore._compareReport.init();
-
+            var inputFocusStateSel = $('.form-control');
+            $.GHCore.ppath();
+            $.GHCore.inputFocusState(inputFocusStateSel);
+            $.GHCore.inputMask();
+            $.GHCore.meetingRoomHandlder();
         },
         ppath : function(){
 			var pageloc = $("#pagelo").val();
@@ -48,165 +41,35 @@
             var $collection = $('[data-minput]');
             if(!$collection.length) return;
         },
-        relaodDataInSec : function($collection){
-            if(!$collection.length) return;
-            var $dataKey = $('#deviceList'),
-                counter = 2;
-            setInterval(function () {
-                $collection.text(counter);
-                if(counter == "60") {
-                    $dataKey.load(location.href +" #deviceList>*","");
-                    counter = 0 ;
-                }
-                ++counter;
-            }, 1000);
-        },
-        notifiMsgHandler : function(){
-            var currAlertMsg = $('#currAlertMsg').val(),
-            reloadAction = $('#currAlertMsg').data("reload"),
-            alertAction = $('#currAlertMsg').data("paction"),
-            alertRedirect = $('#currAlertMsg').data("redirect");
-            if(currAlertMsg == 'success'){
-                if(alertAction == 'close'){
-                    setTimeout(function(){
-                        window.close();
-                    },4000);
-                }else if(alertAction == 'popUpclose'){
-                    setTimeout(function(){
-                        parent.location.reload();
-                    },5000);
-                }else{
-                    if(reloadAction == true){
-                        location.href = alertRedirect;
-                    }else{
-                        window.history.pushState('index','title',alertRedirect);
-                    }
-                }
-                setTimeout(function(){
-                    $('.alert').fadeOut(300);
-                },3500);
-            }
-        },
-        datepickerHandler : function(){
-            var $fromDateSel = $("#fromDate_report"),
-                $toDateSel = $("#toDate_report");
+        meetingRoomHandlder : function(){
+            var $collection = $(".meeting-card");
+            $collection.on('click', function(){
+                var _this = $(this),
+                    thisId = $(this).data('id');
+                $collection.removeClass('active');
+                _this.addClass('active');
 
-            $fromDateSel.datepicker({
-                dateFormat: "yy-mm-dd",
-                changeYear: true,
-                changeMonth: true,
-                maxDate: 0,
-                onSelect: function(dateText, inst)
-                {
-                    $fromDateSel.parent('div').find('label').addClass("active");
-                }
-            });
-
-            $toDateSel.datepicker({
-                dateFormat: "yy-mm-dd",
-                changeYear: true,
-                changeMonth: true,
-                maxDate: 0,
-                onSelect: function(dateText, inst)
-                {
-                    $toDateSel.parent('div').find('label').addClass("active");
-                }
-            });
-            
-        },
-        
-        customReport : function($collection){
-            if(!$collection.length) return;
-            var $dataSelector = $("#customReportSel"),
-                classHide = "hide",
-                $reportTableSelector = $(".reportTable_container"),
-                classBtnActive = "btn-active";
-            $collection.on("click", function(){
-                var _this = $(this);
-                _this.addClass(classBtnActive);
-                $dataSelector.removeClass(classHide);
-                $(".filter_container a.btn").removeClass(classBtnActive);
-                if($reportTableSelector.is(":visible")){
-                    $reportTableSelector.addClass(classHide);
-                }
-            });
-        },
-        _compareReport : {
-			init : function(){
-				let data =  {
-					delRow : ".deleteCr_column",
-					dataSel : "#addNewCT"
-                }
-                this.compareDateSelectHanlder();
-				this.addCompareTimeHandler(data.dataSel);
-				this.deleteCompareTimeRow(data.delRow);
-            },
-            timepickerHandler : function() {
-                $.getScript("js/vendor/bootstrap-timepicker.min.js")
-                .done(function () {
-                    $('.crTime').timepicker({
-                        showInputs: false,
-                        showMeridian : false
+                if(thisId){
+                    $.post('/../admin/meetingDetails', {id : thisId},function(response){
+                        console.log(response);
+                        var joinMeetingHref = "http://localhost:3000/join/"+response.id;
+                        document.querySelector('.meeting-details-title').innerHTML = response.title;
+                        document.querySelector('.meeting-details-id').innerHTML = response.id;
+                        document.querySelector('.meeting-share-href').innerHTML = joinMeetingHref;
+                        document.querySelector('.meeting-share-href').href = joinMeetingHref;
+                        document.querySelector('.meeting-share-title').innerHTML = response.title;
+                        document.querySelector('.meeting-share-id').innerHTML = response.id;
                     });
-                });
-            },
-            compareDateSelectHanlder : function(){
-                var $fromDateSel = $("#crDate"),
-                $toDateSel = $("#crToDate");
+                }else{
 
-                $fromDateSel.datepicker({
-                    dateFormat: "yy-mm-dd",
-                    changeYear: true,
-                    changeMonth: true,
-                    maxDate: 0,
-                    onSelect: function(dateText, inst)
-                    {
-                        console.log($(this).parent());
-                        $(this).addClass("active");
-                    }
-                });
+                }
 
-                $toDateSel.datepicker({
-                    dateFormat: "yy-mm-dd",
-                    changeYear: true,
-                    changeMonth: true,
-                    maxDate: 0,
-                    onSelect: function(dateText, inst)
-                    {
-                        $(this).addClass("active");
-                    }
-                });
-            },
-			addCompareTimeHandler : function(dataSelector){
-                let $self = this;
-                if(!$(dataSelector).length) return;
-				$(document).on('click', dataSelector, function(){
-                    $self.timepickerHandler();
-					let $dataItemLast = $(".col-xs-2:last"),
-						appendNewRow = $('<div class="col-xs-2 marB10">'
-                                        +'<span class="deleteCr_column badge label-warning cp fR"><i class="fa fa-times"></i></span>'
-										+'<div class="row borderR">'
-										+'<div class="col-xs-6 marT15">'
-											+'<input type="text" name="crFromTime[]" class="form-controls crTime">'
-											+'<span class="crFromTo_container">To</span>'
-										+'</div>'
-										+'<div class="col-xs-6">'
-											+'<input type="text" name="crToTime[]" class="form-controls crTime">'
-										+'</div>'
-										+'</div>'
-										+'</div>');
-					$dataItemLast.after(appendNewRow);
-				});
-			},
-			deleteCompareTimeRow : function($collection){
-				var dataKeyClass = '.col-xs-2';
-				$(document).on('click', $collection, function(){
-					$(this).parents(dataKeyClass).remove();
-					
-				});
-			}
-		}
+                // loader
+                
+
+            });
+        }
     }
-    $.GSCore.init();
+    $.GHCore.init();
 
 })(jQuery);
