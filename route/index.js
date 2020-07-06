@@ -91,15 +91,19 @@ router.post('/login',
 });
 
 router.get('/join/:id', async (req, res, next)=>{
-    // console.log(req.params.id);
-    console.log(`is auth: ${ensureAuthenticated}`);
+    console.log(req.headers.referer);
+    const joinMeetingReferer = req.headers.referer;
     if(req.user !==  undefined){
         connection.query("SELECT title FROM meeting WHERE id =?", [req.params.id], (err, relResultOnJoin)=>{
             if(err) throw err;
             if(relResultOnJoin.length){
                 res.redirect('https://15.206.115.114/'+relResultOnJoin[0].title);
             }else{
-                res.redirect('/?error=meeting');
+                if(joinMeetingReferer === 'undefined'){
+                    res.redirect('/?error=meeting');
+                }else{
+                    res.redirect(joinMeetingReferer+'?error=meeting');
+                }
             }
         });
     }else{
