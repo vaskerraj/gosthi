@@ -23,7 +23,8 @@ router.get('/',  (req, res, next)=>{
             rel : 'undefined'
         });
     }else{
-        if(req.user !== 'undefined'){
+        // if not logged in
+        if(req.user === undefined){
             res.render('index', {
                 title: "Index || Gosthi",
                 page : 'index',
@@ -33,7 +34,8 @@ router.get('/',  (req, res, next)=>{
             });
         }else{
             connection.query("SELECT * FROM meeting WHERE id = ?", [meetingJoinId], (err, relResultOnLoginIn)=>{
-                if(relResult.length){
+                console.log(relResultOnLoginIn.length);
+                if(relResultOnLoginIn.length){
                     res.render('index', {
                         title: "Index || Gosthi",
                         page : 'index',
@@ -62,7 +64,10 @@ router.post('/login',
         }else if(req.user.role === 'admin'){
             res.redirect('/admin/');
         }else{
-            if(req.body.joinRel !== "undefined"){
+            // if user
+           console.log(`meeing rel: ${req.body.joinRel}`);
+            // if having meeting room refere
+            if(req.body.joinRel !== undefined){
                 connection.query("SELECT title FROM meeting WHERE id =?", [req.body.joinRel], (err, relResult)=>{
                     console.log(relResult);
                     if(relResult.length){

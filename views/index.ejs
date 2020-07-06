@@ -71,8 +71,27 @@
       </div>
     </div>
   </div>
+  <% if(currentUser !== 'notLogin' && rel !== 'undefined') {%>
+  <p>fuck</p>
+  <div class="modal fade open in" id="createMeeting" tabindex="-1" role="dialog" aria-labelledby="newMeetingTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+              <h5 class="modal-title" id="newMeetingTitle">New Meeting</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span class="fa fa-window-close-o" aria-hidden="true"></span>
+              </button>
+              </div>
+              <div class="modal-body">
+                  <ul class="list-unstyled">
+                    <li></li>
+                  </ul>
+              </div>
+          </div>
+      </div>
+  </div>
+  <% } %>
   <%-include('partials/js')-%>
-  <script src="/js/socket.io.js"></script>
   <script>
     if(performance.navigation.type == 2){
       location.reload(true);
