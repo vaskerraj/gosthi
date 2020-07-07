@@ -65,7 +65,6 @@ app.use(function (req, res, next) {
 });
 
 app.use('/', indexRoute);
-app.use('/login',loginRoute);
 app.use('/admin', adminRoute);
 
 // superadmin
