@@ -8,6 +8,7 @@
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="/vendor/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="/vendor/fontawesome-free/css/v4-shims.min.css">
+    <link rel="stylesheet" href="/vendor/scrollbar/jquery.mCustomScrollbar.min.css">
     <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/main.css">
 
@@ -51,13 +52,13 @@
                 <form action="/login" method="POST">
                   <ul>
                     <li>
-                      <input type="text" name="username" placeholder="Username" autocomplete="off">
+                      <input type="text" name="username" placeholder="Email" autocomplete="off">
                     </li>
                     <li>
                       <input type="password" name="password" class="marT10" placeholder="Password" autocomplete="off">
                     </li>
                     <li>
-                      <input type="text" name="joinRel" value="<%=rel%>">
+                      <input type="hidden" name="joinRel" value="<%=rel%>">
                       <button type="submit" class="marT15">Log in</button>
                     </li>
                   </ul>
@@ -85,12 +86,12 @@
                 <div class="container" id="mettingRooms">
                   <div class="row">
                     <div class="tags col-md-7 mt-2">
-                      <div>Filter by:</div>
+                      <div>Type :</div>
                       <div class="tag filter" data-filter="normal">Rooms</div>
                       <div class="tag filter" data-filter="schedule">Schedule</div>
                     </div>
                     <div class="col-md-5">
-                      <input class="search" placeholder="Search" id="meetingRoomSearch" />
+                      <input class="search" placeholder="Search" id="meetingRoomSearch" autocomplete="off" />
                     </div>
                   </div>
                   
@@ -100,7 +101,7 @@
                   <div class="meeting-search-items d-none border-top pt-2 font18 fontb text-secondary text-center" style="font-weight: 500;"></div>
                   <div class="list" id="meeting-scroll">
                     <% relData.forEach((list, index) => { %>
-                      <li class="meeting-card row" data-id="<%=list.id%>">
+                      <li class="meeting-card row d-none" data-id="<%=list.id%>">
                         <div class="col-md-8 col-8">
                           <div class="row">
                             <div class="col-md-2 col-2 mt-2 text-right mt-2">
@@ -131,45 +132,61 @@
   <div class="modal-backdrop fade show"></div>
   <% } %>
   <%-include('partials/js')-%>
+  <script src="/vendor/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
   <script src="/vendor/listjs/list.min.js"></script>
   <script>
-    // Create the List
-    var options = {
-      valueNames: [ 'meeting-card-title', 'date', 'meetingType' ]
-    };
-
-    // Run the list with default sort
-    var mettingRooms = new List('mettingRooms', options);
-    mettingRooms.sort("meeting-card-title", {
-      order: "asc"
-    })
-
-    // Create Filters
-    $('.filter').on('click',function(){
-      var $q = $(this).attr('data-filter');
-      if($(this).hasClass('active')){
-        mettingRooms.filter();
-        $('.filter').removeClass('active');
-      } else {
-        mettingRooms.filter(function(item) {
-          return (item.values().meetingType == $q);
+    function customScroll(){
+        $("#meeting-scroll").mCustomScrollbar({
+            theme : "minimal-dark"
         });
-        $('.filter').removeClass('active');
-        $(this).addClass('active');
       }
+    $(function(){
+      
+			$(window).on("load",function(){
+        customScroll();
+        $(".meeting-card").removeClass("d-none");
+      });
     });
+      // Create the List
+      var options = {
+        valueNames: [ 'meeting-card-title', 'date', 'meetingType' ]
+      };
 
-    // Return # of items
-    var $count = $('.meeting-search-items')
-    $count.append(mettingRooms.size());
-    mettingRooms.on('searchComplete', function(){
-      var totalMeetingRooms = mettingRooms.update().matchingItems.length;
-      if(totalMeetingRooms === 0){
-        $count.removeClass('d-none').html("There aren't any meetings as you search");
-      }else{
-        $count.addClass('d-none');
-      }
-    });
+      // Run the list with default sort
+      var mettingRooms = new List('mettingRooms', options);
+      mettingRooms.sort("meeting-card-title", {
+        order: "asc"
+      })
+
+      // Create Filters
+      $('.filter').on('click',function(){
+        var $q = $(this).attr('data-filter');
+        if($(this).hasClass('active')){
+          mettingRooms.filter();
+          customScroll();
+          $('.filter').removeClass('active');
+        } else {
+          customScroll();
+          mettingRooms.filter(function(item) {
+            return (item.values().meetingType == $q);
+          });
+          $('.filter').removeClass('active');
+          $(this).addClass('active');
+        }
+      });
+
+      // Return # of items
+      var $count = $('.meeting-search-items')
+      $count.append(mettingRooms.size());
+      mettingRooms.on('searchComplete', function(){
+        customScroll();
+        var totalMeetingRooms = mettingRooms.update().matchingItems.length;
+        if(totalMeetingRooms === 0){
+          $count.removeClass('d-none').html("There aren't any meetings as you search");
+        }else{
+          $count.addClass('d-none');
+        }
+      });
 
     if(performance.navigation.type == 2){
       location.reload(true);
