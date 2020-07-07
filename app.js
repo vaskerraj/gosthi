@@ -38,9 +38,9 @@ app.set('view engine', 'ejs');
 
 app.use(express.static('public'));
 
-app.use(cookieParser('jhostiSecrete'));
+app.use(cookieParser('ghostiSecrete'));
 app.use(session({
-    secret : "jhostiSecrete",
+    secret : "ghostiSecrete",
     saveUninitialized : true,
     resave : true
 }));

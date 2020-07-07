@@ -200,47 +200,68 @@
                 <div class="col-md-8 col-12">
                     <div class="card">
                         <div class="card-body meeting-details">
-                            <div class="d-block">
-                                <div class="meeting-details-title"></div>
-                                <div class="clearfix">ID : <span class="meeting-details-id"></span></div>
-                            </div>
-                            <div class="row mt-4 text-center">
-                                <div class="col-md-2 col-sm-12 col-12">
-                                    <a href="../join/44" target="_blank" class="btn btn-primary btn-block mb-3">
-                                        <span class="fa fa-fw fa-play"></span>
-                                        Start
-                                    </a>
+                            <div class="clearfix" id="instantMeeting">
+                                <div class="d-block">
+                                    <div class="clearfix">Meet Now</div>
+                                    <div class="clearfix">Start an instant meeting within a seconds</div>
                                 </div>
-                                <div class="col-md-4 col-sm-4 col-12 marT7">
-                                    <a href="javascript:voild(0)">
-                                        <span class="fa fa-fw fa-plus"></span>
-                                        Invite Users
-                                    </a>
+                                <div class="row mt-4 text-center">
+                                    <div class="col-md-2 col-sm-12 col-12">
+                                        <a href="" target="_blank" class="btn btn-primary btn-block mb-3">
+                                            <span class="fa fa-fw fa-play"></span>
+                                            Start
+                                        </a>
+                                    </div>
+                                </div><!--/.row-->
+                                <div class="d-block border-top mt-2">
+                                    <div class="d-block mt-3">
+                                        <div class="font15 font-weight-bold">Start a meeting then invite others.</div>
+                                    </div>
+                                </div><!--/.d-block-->
+                            </div><!--/#instantMeeting-->
+                            <div class="clearfix d-none" id="selectedMeeting">
+                                <div class="d-block">
+                                    <div class="meeting-details-title"></div>
+                                    <div class="clearfix">ID : <span class="meeting-details-id"></span></div>
                                 </div>
-                                <div class="col-md-2 col-sm-4 col-12 marT7">
-                                    <a href="javascript:voild(0)">
-                                        <span class="fa fa-fw fa-edit"></span>
-                                        Edit
-                                    </a>
-                                </div>
-                                <div class="col-md-4 col-sm-4 col-12 marT7">
-                                    <a href="javascript:voild(0)">
-                                        <span class="fa fa-fw fa-trash-alt"></span>
-                                        Delete
-                                    </a>
-                                </div>
-                            </div><!--/.row-->
-                            <div class="d-block border-top mt-2">
-                                <div class="d-block meeting-share-title mt-3"></div>
-                                <div class="d-block mt-3">
-                                    <div class="font15 font-weight-bold">Please join my meeting from your computer, tablet or smartphone.</div>
-                                    
-                                    <a href="" target="_blank" class="d-block meeting-share-href"></a>
-                                </div>
-                                <div class="d-block fontb font15 mt-4 mb-3">
-                                    Meeting ID : <span class="meeting-share-id"></span>
-                                </div>
-                            </div><!--/.d-block>
+                                <div class="row mt-4 text-center">
+                                    <div class="col-md-2 col-sm-12 col-12">
+                                        <a href="../join/44" target="_blank" class="btn btn-primary btn-block mb-3">
+                                            <span class="fa fa-fw fa-play"></span>
+                                            Start
+                                        </a>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4 col-12 marT7">
+                                        <button class="copy text-primary" data-text="Copy Invitation" data-text-copied="COPIED Invitation">
+                                            <i class="fa fa-fw fa-copy"></i>
+                                            <span>Copy Invitation</span>
+                                        </button>
+                                    </div>
+                                    <div class="col-md-2 col-sm-4 col-12 marT7">
+                                        <a href="javascript:voild(0)">
+                                            <span class="fa fa-fw fa-edit"></span>
+                                            Edit
+                                        </a>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4 col-12 marT7">
+                                        <a href="javascript:voild(0)">
+                                            <span class="fa fa-fw fa-trash-alt"></span>
+                                            Delete
+                                        </a>
+                                    </div>
+                                </div><!--/.row-->
+                                <div class="d-block border-top mt-2" id="invitationText">
+                                    <div class="d-block meeting-share-title mt-3"></div>
+                                    <div class="d-block mt-3">
+                                        <div class="font15 font-weight-bold">Please join my meeting from your computer, tablet or smartphone.</div>
+                                        
+                                        <a href="" target="_blank" class="d-block meeting-share-href"></a>
+                                    </div>
+                                    <div class="d-block fontb font15 mt-4 mb-3">
+                                        Meeting ID : <span class="meeting-share-id"></span>
+                                    </div>
+                                </div><!--/.d-block-->
+                            </div><!--/#selectedMeeting-->
                         </div>
                     </div>
                 </div>
@@ -266,7 +287,7 @@
                         </div>
                         <div class="row mt-4">
                             <div class="col-md-6 col-sm-6 col-12">
-                                <input type="radio" name="meetingType" class="d-inline-flex" id="meetingRoom" value="normal">
+                                <input type="radio" name="meetingType" class="d-inline-flex meetingType" id="meetingRoom" value="normal">
                                 <label for="meetingRoom" class="d-inline" style="cursor: pointer;">
                                     <span>Metting Room</span>
                                     <span class="d-block font11 font-weight-light text-muted ml-3">
@@ -275,7 +296,7 @@
                                 </label>
                             </div>
                             <div class="col-md-6 col-sm-6 col-12">
-                                <input type="radio" name="meetingType" class="d-inline-flex" id="scheduleMeeting" value="schedule">
+                                <input type="radio" name="meetingType" class="d-inline-flex meetingType" id="scheduleMeeting" value="schedule">
                                 <label for="scheduleMeeting" class="d-inline" style="cursor: pointer;">
                                     <span>Schedule Metting</span>
                                     <span class="d-block font11 font-weight-light text-muted ml-3">
@@ -284,7 +305,7 @@
                                 </label>
                             </div>
                         </div><!--/.row-->
-                        <div class="row mt-4">
+                        <div class="row scheduleMeeting_container mt-4 disabled">
                             <div class="col-md-5 col-sm-12 mt-1">
                                 <input type='text' class="form-control" name='meetingDate' id="meetingDate" value="07/04/2020" autocomplete="off" />
                                 <label for="meetingDate">Date</label>
@@ -313,10 +334,10 @@
                                 </select>
                                 <label for="meetingDuration">Duration</label>
                             </div>
+                            <div class="col bg-gray-light mt-3 pl-2 pt-1 pb-2 border-0">
+                                The event starts at 11:45 PM in Kathmadnu time zone.
+                            </div>
                         </div><!--/.row-->
-                        <div class="d-block bg-gray-light mt-3 pl-2 pt-1 pb-2 border-0">
-                            The event starts at 11:45 PM in Kathmadnu time zone.
-                        </div>
                         <div class="d-block mt-4">
                             <button type="submit" class="btn btn-primary ml-3 fR">SAVE</button>
                             <button class="btn btn-default fR">Cancel</button>
@@ -328,8 +349,23 @@
   </div>
   <%-include('../partials/js')-%>
   <script src="/js/listing-js.js"></script>
+  <script src="/js/jquery.copiq.min.js"></script>
+  <script src="/vendor/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+  
   <script>
       $(function(){
+
+        $('button').copiq({
+            parent: '#selectedMeeting',
+            content: '#invitationText',
+            onSuccess: function($element, source, selection) {
+                $('span', $element).text($element.attr("data-text-copied"));
+                setTimeout(function() {
+                $('span', $element).text($element.attr("data-text"));
+                }, 2000);
+            }
+        });
+
 			$(window).on("load",function(){
                 $(".tab-scroll").mCustomScrollbar({
                     theme : "minimal-dark"
@@ -337,6 +373,5 @@
             });
       })
   </script>
-  <script src="/vendor/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
 </body>
 </html>

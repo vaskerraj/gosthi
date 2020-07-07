@@ -12,6 +12,7 @@
             $.GHCore.inputFocusState(inputFocusStateSel);
             $.GHCore.inputMask();
             $.GHCore.meetingRoomHandlder();
+            $.GHCore.meetingTypeHandler();
         },
         ppath : function(){
 			var pageloc = $("#pagelo").val();
@@ -42,7 +43,12 @@
             if(!$collection.length) return;
         },
         meetingRoomHandlder : function(){
-            var $collection = $(".meeting-card");
+            var $collection = $(".meeting-card"),
+                $selectedMeetingSel = $("#selectedMeeting"),
+                $instantMeetingSel = $("#instantMeeting");
+
+            if(!$collection.length) return;
+
             $collection.on('click', function(){
                 var _this = $(this),
                     thisId = $(this).data('id');
@@ -50,25 +56,46 @@
                 _this.addClass('active');
 
                 if(thisId){
-                    $.post('/../admin/meetingDetails', {id : thisId},function(response){
+                    $.post('/../admin/meetingDetails', {id : thisId},
+                    function(response){
                         console.log(response);
-                        var joinMeetingHref = "http://localhost:3000/join/"+response.id;
+                        var joinMeetingHref = "https://15.206.115.114/join/"+response.id;
                         document.querySelector('.meeting-details-title').innerHTML = response.title;
                         document.querySelector('.meeting-details-id').innerHTML = response.id;
                         document.querySelector('.meeting-share-href').innerHTML = joinMeetingHref;
                         document.querySelector('.meeting-share-href').href = joinMeetingHref;
                         document.querySelector('.meeting-share-title').innerHTML = response.title;
                         document.querySelector('.meeting-share-id').innerHTML = response.id;
+                        
+                        $selectedMeetingSel.removeClass("d-none");
+                        $instantMeetingSel.addClass("d-none");
+
                     });
                 }else{
-
+                    $instantMeetingSel.removeClass("d-none");
+                    $selectedMeetingSel.addClass("d-none");
                 }
 
                 // loader
                 
 
             });
+        },
+
+        meetingTypeHandler : function(){
+            $collection = $(".meetingType");
+            if(!$collection.length) return;
+            var $dataSelector = $(".scheduleMeeting_container");
+            $collection.on('change', function(){
+                var _thisVal = $(this).val();
+                if(_thisVal === 'schedule'){
+                    $dataSelector.removeClass('disabled');
+                }else{
+                    $dataSelector.addClass('disabled');
+                }
+            });
         }
+
     }
     $.GHCore.init();
 

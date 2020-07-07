@@ -347,6 +347,17 @@ div.dataTables_wrapper div.dataTables_info{
     padding-top: 0;
 }
 
+button.copy{
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+
+.scheduleMeeting_container.disabled{
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 /* metting room */
 
 .card {

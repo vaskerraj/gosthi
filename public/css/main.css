@@ -205,6 +205,14 @@ list-style: none;
   outline: none;
 }
 
+#meeting-scroll{
+  padding: 7px 0;
+  height: 200px;
+}
+.mCSB_scrollTools{
+  z-index: 2;
+}
+
 /* meeting card */
 .meeting-date{
   display: inline-block;

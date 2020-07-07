@@ -125,7 +125,7 @@ router.get('/users', ensureAuthenticated, checkRole(['admin']), async (req, res,
 
 router.post('/users', ensureAuthenticated, checkRole(['admin']),
     check("first_name", "Provide first name").not().isEmpty(),
-    check("username", "Provide username").not().isEmpty(),
+    check("email", "Provide email").not().isEmpty(),
     check("password", "Provide password").not().isEmpty(),
 (req, res, next)=>{
 
@@ -133,7 +133,6 @@ router.post('/users', ensureAuthenticated, checkRole(['admin']),
         last_name = req.body.last_name,
         email = req.body.email,
         mobileNo = req.body.mobile_no,
-        username = req.body.username,
         password = req.body.password;
 
     var errors = validationResult(req);
@@ -165,7 +164,7 @@ router.post('/users', ensureAuthenticated, checkRole(['admin']),
             let loginHashData = {
                 admin_id : req.user.relId,
                 user_id : results.insertId,
-                username : username,
+                username : email,
                 password : password,
                 role : 'user'
             };
