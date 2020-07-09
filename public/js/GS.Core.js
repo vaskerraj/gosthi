@@ -59,7 +59,8 @@
                     $.post('/../admin/meetingDetails', {id : thisId},
                     function(response){
                         console.log(response);
-                        var joinMeetingHref = "https://15.206.115.114/join/"+response.id;
+                
+                        var joinMeetingHref = "https://15.33.33.322/join/"+response.id;
                         document.querySelector('.meeting-details-title').innerHTML = response.title;
                         document.querySelector('.meeting-details-id').innerHTML = response.id;
                         document.querySelector('.meeting-share-href').innerHTML = joinMeetingHref;

@@ -73,7 +73,6 @@
       </div>
     </div>
   </div>
-  <%-relOrError%>
   <% if(currentUser !== 'notLogin' && rel !== 'undefined' && relOrError === '') {%>
   
   <div class="modal fade show in" id="meetingRefereModal" tabindex="-1" role="dialog" aria-labelledby="newMeetingTitle" aria-hidden="true" style="display: block;">
@@ -135,6 +134,13 @@
   <script src="/vendor/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
   <script src="/vendor/listjs/list.min.js"></script>
   <script>
+    const currentLocation = location.href;
+                        
+    var index = currentLocation.indexOf("/");
+    
+    var fileNameWithExt = currentLocation.substr(index);
+    console.log(fileNameWithExt);
+    
     function customScroll(){
         $("#meeting-scroll").mCustomScrollbar({
             theme : "minimal-dark"

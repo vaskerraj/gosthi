@@ -159,7 +159,6 @@
                                         data.upcoming.forEach((upcoming, index) => {
                                     %>
                                     <li class="meeting-date mb-1 pt-3 fontb font16">
-                                        Today
                                     </li>
                                     <li class="meeting-card upcoming">
                                          <div class="row">
@@ -232,19 +231,25 @@
                                         </a>
                                     </div>
                                     <div class="col-md-4 col-sm-4 col-12 marT7">
+                                        <a href="javscript:void(0)" data-toggle="modal" data-target="#inviteUser">
+                                            <span class="fa fa-fw fa-plus"></span>
+                                            Invite Users
+                                        </a>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4 col-12 marT7 d-none">
                                         <button class="copy text-primary" data-text="Copy Invitation" data-text-copied="COPIED Invitation">
                                             <i class="fa fa-fw fa-copy"></i>
                                             <span>Copy Invitation</span>
                                         </button>
                                     </div>
                                     <div class="col-md-2 col-sm-4 col-12 marT7">
-                                        <a href="javascript:voild(0)">
+                                        <a href="javascript:void(0)">
                                             <span class="fa fa-fw fa-edit"></span>
                                             Edit
                                         </a>
                                     </div>
                                     <div class="col-md-4 col-sm-4 col-12 marT7">
-                                        <a href="javascript:voild(0)">
+                                        <a href="javascript:void(0)">
                                             <span class="fa fa-fw fa-trash-alt"></span>
                                             Delete
                                         </a>
@@ -347,6 +352,47 @@
           </div>
       </div>
   </div>
+  
+  <div class="modal fade" id="inviteUser" tabindex="-1" role="dialog" aria-labelledby="inviteUserTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+              <h5 class="modal-title" id="inviteUserTitle">Invite Users</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span class="fa fa-window-close-o" aria-hidden="true"></span>
+              </button>
+              </div>
+              <div class="modal-body">
+                  <form action="" method ="post" id="form_inviteUser">
+                        <div class="d-block">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="d-block mt-4">
+                            <button type="submit" class="btn btn-primary ml-3 fR">SAVE</button>
+                            <button type="button" class="btn btn-default fR" data-dismiss="modal">Cancel</button>
+                        </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
   <%-include('../partials/js')-%>
   <script src="/js/listing-js.js"></script>
   <script src="/js/jquery.copiq.min.js"></script>
@@ -354,7 +400,6 @@
   
   <script>
       $(function(){
-
         $('button').copiq({
             parent: '#selectedMeeting',
             content: '#invitationText',

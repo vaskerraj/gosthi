@@ -8,14 +8,15 @@ const { ensureAuthenticated, checkRole } = require('../config/auth');
 var connection = require('../db');
 
 const { totalUsers, totalActiveUsers } = require('../models/dashboard');
-const { meetingRooms, upcomingMeetingRooms } = require('../models/meeting');
+const { meetingRooms, upcomingMeetingRooms, inviteUsersList } = require('../models/meeting');
 const { usersList } = require('../models/users');
 const { JSON } = require('mysql/lib/protocol/constants/types');
 
 router.get('/', ensureAuthenticated, checkRole(['admin']), async (req, res, next)=>{
     let meetingRoomPromise = [
         meetingRooms(req.user.relId),
-        upcomingMeetingRooms(req.user.relId)
+        upcomingMeetingRooms(req.user.relId),
+        inviteUsersList(req.user.relId)
     ];
     Promise.all(meetingRoomPromise)
         .then((meeting)=>{
@@ -26,7 +27,8 @@ router.get('/', ensureAuthenticated, checkRole(['admin']), async (req, res, next
                 loginPage : false,
                 data : {
                     rooms : meeting[0],
-                    upcoming : meeting[1]
+                    upcoming : meeting[1],
+                    users : meeting[2]
                 }
             });
         }).catch((err)=>{
@@ -64,7 +66,7 @@ router.post('/', ensureAuthenticated, checkRole(['admin']),
                     loginPage : false,
                     data : {
                         rooms : meeting[0],
-                        upcoming : meeting[1]  
+                        upcoming : meeting[1]
                     }
                 });
             }).catch((err)=>{

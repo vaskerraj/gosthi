@@ -28,7 +28,7 @@ module.exports = (io)=>{
                 connection.release();
                 throw err;
             }
-            
+
             connection.query("INSERT INTO ")
         });
     }
@@ -77,7 +77,7 @@ module.exports = (io)=>{
 
                     // insertTempHum(humidity, temp);
 
-                    socket.emit('new npk_data', {spot_name: "OFFICE",data : {humidity : humidity, temp: temp }});
+                    socket.emit('new npk_data', {spot_name: "OFFICE", data : {humidity : humidity, temp: temp }});
                 }
             }else{
                 // TOPIC => jxct

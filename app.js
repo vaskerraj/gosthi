@@ -7,7 +7,8 @@ const createError = require('http-errors'),
     ejs = require('ejs'),
     expressValidator = require("express-validator"),
     session = require("express-session"),
-    passport = require("passport");
+    passport = require("passport"),
+    {PythonShell} = require('python-shell');
 
 // connect mysql
 var mysql = require('./db');
@@ -69,6 +70,19 @@ app.use('/admin', adminRoute);
 
 // superadmin
 app.use('/SA',SARoute);
+
+// python inside nodejs
+// var options = {
+//     mode: 'text',
+//     pythonOptions: ['-u'],
+//     args: ['Mosquitto@', 'hello', 'dharma']
+//   };
+// PythonShell.run('./python/myscript.py', options, function (err, results) {
+// if (err) 
+//     throw err;
+// // Results is an array consisting of messages collected during execution
+// console.log('results: %j', results);
+// });
 
 app.listen(PORT || 3000, ()=>{
     console.log("Server is running");
