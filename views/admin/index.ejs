@@ -363,27 +363,36 @@
               </button>
               </div>
               <div class="modal-body">
-                  <form action="" method ="post" id="form_inviteUser">
+                  <form action="/admin/inviteUsers" method ="post" id="form_inviteUser">
                         <div class="d-block">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
+                            <div class="row">
+                                <div class="col-md-6 col-6 pl-3 pt-2">
+                                    <input type="checkbox" name="checkall" id="checkAll">
+                                    <label for="checkAll">All</label>
+                                    
+                                </div>
+                                <div class="col-md-6 col-6 text-right">
+                                    <input type="text" class="form-control" id="searchInviteUsers" placeholder="Search Users">
+                                </div>
+                            </div>
+                            <table class="table mt-2">
                                 <tbody>
+                                    <% data.users.forEach((inv_user, index) =>{ %>
                                     <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>
+                                            <input type="checkbox" name="invite_user_checkbox" value="<%=inv_user.username%>">
+                                        </td>
+                                        <td><%=inv_user.username%></td>
+                                        <td><%=inv_user.first_name+" "+inv_user.last_name%></td>
                                     </tr>
+                                    <% });%>
                                 </tbody>
                             </table>
                         </div>
+                        <input type="text" name="invitedEmails" class="inviteUsersEmail">
+                        <input type="text" name="selectedMeetingId" id="inviteUser_meetingId">
+                        <input type="text" name="selectedMeetingTitle" id="inviteUser_meetingTitle">
+                        <input type="text" name="selectedMeetingLink" id="inviteUser_meetingLink">
                         <div class="d-block mt-4">
                             <button type="submit" class="btn btn-primary ml-3 fR">SAVE</button>
                             <button type="button" class="btn btn-default fR" data-dismiss="modal">Cancel</button>
