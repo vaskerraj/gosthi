@@ -13,6 +13,7 @@
             $.GHCore.inputMask();
             $.GHCore.meetingRoomHandlder();
             $.GHCore.meetingTypeHandler();
+            $.GHCore.inviteUserHandler();
         },
         ppath : function(){
 			var pageloc = $("#pagelo").val();
@@ -59,14 +60,22 @@
                     $.post('/../admin/meetingDetails', {id : thisId},
                     function(response){
                         console.log(response);
-                
-                        var joinMeetingHref = "https://15.33.33.322/join/"+response.id;
+                        if(response.id === undefined){
+                            location.reload(true);
+                            return false;
+                        }
+                        var joinMeetingHref = "https://15.206.115.114/join/"+response.id;
                         document.querySelector('.meeting-details-title').innerHTML = response.title;
                         document.querySelector('.meeting-details-id').innerHTML = response.id;
                         document.querySelector('.meeting-share-href').innerHTML = joinMeetingHref;
                         document.querySelector('.meeting-share-href').href = joinMeetingHref;
                         document.querySelector('.meeting-share-title').innerHTML = response.title;
                         document.querySelector('.meeting-share-id').innerHTML = response.id;
+
+                        // 
+                        document.querySelector('#inviteUser_meetingId').value = response.id;
+                        document.querySelector('#inviteUser_meetingTitle').value = response.title;
+                        document.querySelector('#inviteUser_meetingLink').value = joinMeetingHref;
                         
                         $selectedMeetingSel.removeClass("d-none");
                         $instantMeetingSel.addClass("d-none");
@@ -94,6 +103,19 @@
                 }else{
                     $dataSelector.addClass('disabled');
                 }
+            });
+        },
+        inviteUserHandler : function(){
+            var invitedEmail = [];
+            $("input[name='invite_user_checkbox']").change(function() {
+                var checked = $(this).val();
+                if ($(this).is(':checked')) {
+                    invitedEmail.push(checked);
+                }else{
+                    invitedEmail.splice($.inArray(checked, invitedEmail),1);
+                }
+                
+            $(".inviteUsersEmail").val(invitedEmail);
             });
         }
 
