@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var bycrypt = require('bcryptjs');
 var {check, validationResult} = require('express-validator');
+const nodemailer = require('nodemailer');
 
 const { ensureAuthenticated, checkRole } = require('../config/auth');
 
@@ -10,7 +11,10 @@ var connection = require('../db');
 const { totalUsers, totalActiveUsers } = require('../models/dashboard');
 const { meetingRooms, upcomingMeetingRooms, inviteUsersList } = require('../models/meeting');
 const { usersList } = require('../models/users');
-const { JSON } = require('mysql/lib/protocol/constants/types');
+
+// email
+const { emailHandler } = require('../email/email');
+
 
 router.get('/', ensureAuthenticated, checkRole(['admin']), async (req, res, next)=>{
     let meetingRoomPromise = [
@@ -101,6 +105,23 @@ router.post('/meetingDetails', ensureAuthenticated, checkRole(['admin']), async 
         return res.status(200).json(meetingDetails[0]);
     });
 });
+
+// Invite users
+
+router.post('/inviteUsers', ensureAuthenticated, checkRole(['admin']),
+    check("invitedEmails", "Provide email address").not().isEmpty(),
+    check("selectedMeetingId", "").not().isEmpty(),
+    check("selectedMeetingTitle", "").not().isEmpty(),
+    check("selectedMeetingLink", "").not().isEmpty(),
+(req,res,next)=>{
+    var invitedEmails = req.body.invitedEmails,
+        selectedMeetingId = req.body.selectedMeetingId,
+        selectedMeetingTitle = req.body.selectedMeetingTitle,
+        selectedMeetingLink = req.body.selectedMeetingLink;
+    emailHandler(invitedEmails, selectedMeetingId, selectedMeetingTitle, selectedMeetingLink);
+    
+    res.location('/admin/');
+    res.redirect('/admin/');});
 
 router.get('/users', ensureAuthenticated, checkRole(['admin']), async (req, res, next)=>{
     console.log(req.user);
