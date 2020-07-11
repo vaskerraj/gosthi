@@ -48,7 +48,7 @@
         meetingScrollBarHandler : function(){
             console.log("meeting scroll called");
             $('.tab-scroll').slimscroll({
-                alwaysVisible: true,
+                alwaysVisible: false
                 height: 290
               });
         },
