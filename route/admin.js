@@ -114,24 +114,23 @@ router.post('/inviteUsers', ensureAuthenticated, checkRole(['admin']),
     check("selectedMeetingTitle", "").not().isEmpty(),
     check("selectedMeetingLink", "").not().isEmpty(),
 (req,res,next)=>{
-    var invitedEmails = req.body.invitedEmails,
+    const invitedEmails = req.body.invitedEmails,
         selectedMeetingId = req.body.selectedMeetingId,
         selectedMeetingTitle = req.body.selectedMeetingTitle,
+        selectedMeetingDate = req.body.selectedMeetingDate,
         selectedMeetingLink = req.body.selectedMeetingLink;
-    emailHandler(invitedEmails, selectedMeetingId, selectedMeetingTitle, selectedMeetingLink);
+    emailHandler(invitedEmails, selectedMeetingId, selectedMeetingTitle, selectedMeetingDate, selectedMeetingLink);
     
     res.location('/admin/');
     res.redirect('/admin/');});
 
 router.get('/users', ensureAuthenticated, checkRole(['admin']), async (req, res, next)=>{
-    console.log(req.user);
     let userPromise = [
         usersList(req.user.relId)
     ];
 
     Promise.all(userPromise)
         .then((userList)=>{
-            console.log(userList);
             res.render('admin/users', {
                 title : "Users || Ghosti",
                 page : "users",
@@ -214,8 +213,22 @@ router.post('/users', ensureAuthenticated, checkRole(['admin']),
 
 });
 
-// delete users
+router.post('/upcomingMeeting', ensureAuthenticated, checkRole(['admin']), (req, res, next)=>{
+    const upcomingMeeting_adminId = req.body.id;
+    connection.query("SELECT * FROM meeting WHERE admin_id =? AND type = ?", [upcomingMeeting_adminId, 'schedule'], (err, upcomingMeetingResult)=>{
+        if(err) throw err;
+        // console.log('upcomingMeetingResult');
+        // console.log(upcomingMeetingResult);
+        // console.log(upcomingMeetingResult.admin_id);
+        // const upcomingMeetingDate = moment(upcomingMeetingResult.meeting_date).format('MM/DD/YYYY');
+        
+        // var dateToFromNow = dateToFromNowDaily(upcomingMeetingDate);
+        // console.log(dateToFromNow);
+        return res.status(200).json(upcomingMeetingResult);
+    });
+});
 
+// delete users
 router.get('/deleteUser/:id', ensureAuthenticated, checkRole(['admin']), async(req, res, next) =>{
     var userId = req.params.id;
     connection.query("DELETE FROM users WHERE id = ?", [userId], (err, results)=>{
@@ -225,80 +238,6 @@ router.get('/deleteUser/:id', ensureAuthenticated, checkRole(['admin']), async(r
             res.send("done");
         })
     });
-});
-
-//  for super admi purpose to create admin
-router.post('/spusers', ensureAuthenticated,
-    check("first_name", "Provide first name").not().isEmpty(),
-    check("email", "Provide email").not().isEmpty(),
-    check("contactNo", "Provide contact number").not().isEmpty(),
-    check("username", "Provide username").not().isEmpty(),
-    check("password", "Provide password").not().isEmpty(),
-    check("contactPerson", "Provide contact person name").not().isEmpty(),
-(req, res, next)=>{
-
-    var first_name = req.body.first_name,
-        last_name = req.body.last_name,
-        email = req.body.email,
-        contactNo = req.body.contactNo,
-        address = req.body.address,
-        username = req.body.username,
-        password = req.body.password,
-        contactPerson = req.body.contactPerson,
-        contactPersonMobile = req.body.contactPersonMobile;
-    
-    var errors = validationResult(req);
-    
-    if(!errors.isEmpty()){
-        let userPromise = [
-            usersList(req.user.userId)
-        ];
-        Promise.all(userPromise)
-            .then((userList)=>{
-                res.render('admin/users', {
-                    errors : errors['errors'],
-                    title : "Users || Ghosti",
-                    page : "users",
-                    currentUser : req.user,
-                    loginPage : false,
-                    data : {
-                        users : userList[0]      
-                    }
-                });
-            }).catch((err)=>{
-                if(err) throw err;
-            });
-    }else{
-        connection.query("INSERT INTO users SET  first_name = ?, last_name = ?, email =?, contact_no = ?, address = ?, contact_person = ?, role = ?, created_date = ?, status = ?", [first_name, last_name, email, contactNo, address, contactPerson, 'user',  new Date(), 'active'], (err, results, fields)=>{
-            if(err) throw err;
-
-            // pass into varibale for bycrptjs
-            let loginHashData = {
-                user_id : req.user.userId,
-                username : username,
-                password : password,
-                role : 'user'
-            };
-            var loginData = loginHashData;
-            
-            bycrypt.hash(loginData.password, 10, (err, hash)=>{
-                if(err) throw err;
-                loginData.password = hash;
-
-                connection.query("INSERT INTO login SET ?", [loginData], (err, results)=>{
-                    console.log("login database");
-                });
-            });
-            console.log("successfully inserted at users database");
-        });
-        
-        // req.toastr.success("Successfully added new protfolio");
-        req.flash("success","Successfully added new users");
-
-        res.location('/admin/users');
-        res.redirect('/admin/users');
-    }
-
 });
 
 module.exports = router;
