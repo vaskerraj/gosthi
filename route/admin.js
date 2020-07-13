@@ -122,7 +122,19 @@ router.post('/inviteUsers', ensureAuthenticated, checkRole(['admin']),
     emailHandler(invitedEmails, selectedMeetingId, selectedMeetingTitle, selectedMeetingDate, selectedMeetingLink);
     
     res.location('/admin/');
-    res.redirect('/admin/');});
+    res.redirect('/admin/');
+});
+
+router.get('/editMeeting/:id', ensureAuthenticated, checkRole(['admin']), async (req, res, next)=>{
+    const editMeetingId = req.params.id;
+    
+    connection.query("SELECT title, type, meeting_date, meeting_time, meeting_duration FROM meeting WHERE id = ?", [editMeetingId], (err, editMettingResult)=>{
+        console.log(editMettingResult[0]);
+        res.render('admin/editMeeting',{
+            editMeetingData : editMettingResult[0]
+        });
+    });
+});
 
 router.get('/users', ensureAuthenticated, checkRole(['admin']), async (req, res, next)=>{
     let userPromise = [
