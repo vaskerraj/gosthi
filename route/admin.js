@@ -57,8 +57,7 @@ router.post('/', ensureAuthenticated, checkRole(['admin']),
     
     if(!errors.isEmpty()){
         let meetingRoomPromise = [
-            meetingRooms(req.user.relId),
-            upcomingMeetingRooms(req.user.relId)
+            meetingRooms(req.user.relId)
         ];
         Promise.all(meetingRoomPromise)
             .then((meeting)=>{
@@ -69,8 +68,7 @@ router.post('/', ensureAuthenticated, checkRole(['admin']),
                     currentUser : req.user,
                     loginPage : false,
                     data : {
-                        rooms : meeting[0],
-                        upcoming : meeting[1]
+                        rooms : meeting[0]
                     }
                 });
             }).catch((err)=>{
@@ -273,7 +271,7 @@ router.post('/users', ensureAuthenticated, checkRole(['admin']),
         req.flash("success","Successfully added new users");
 
         res.location('/admin/users/');
-        res.redirect('/admin/users/'); // add / for relaod with data
+        res.redirect('/admin/users/'); // add / for relaod with
     }
 
 });

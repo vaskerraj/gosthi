@@ -1,7 +1,7 @@
 
 <form action="/admin/editMeeting" method ="post" id="form_editMeeting">
-    <input type="hidden" name="edit_meetingId" value="<%- editMeetingData.id%>">
-    <input type="hidden" name="edit_meetingType" value="<%- editMeetingData.type%>">
+    <input type="hidden" name="meetingId" value="<%- editMeetingData.id%>">
+    <input type="hidden" name="meetingType" value="<%- editMeetingData.type%>">
     <div class="d-block mt-2 mr">
         <input type='text' class="form-control" name='meetingTitle' id="edit_meetingTitle" value="<%-editMeetingData.title%>" autocomplete="off" />
         <label for="edit_meetingTitle">Meeting Title</label>
