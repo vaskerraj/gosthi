@@ -128,12 +128,18 @@ router.post('/inviteUsers', ensureAuthenticated, checkRole(['admin']),
 router.get('/editMeeting/:id', ensureAuthenticated, checkRole(['admin']), async (req, res, next)=>{
     const editMeetingId = req.params.id;
     
-    connection.query("SELECT title, type, meeting_date, meeting_time, meeting_duration FROM meeting WHERE id = ?", [editMeetingId], (err, editMettingResult)=>{
+    connection.query("SELECT id, title, type, meeting_date, meeting_time, meeting_duration FROM meeting WHERE id = ?", [editMeetingId], (err, editMettingResult)=>{
         console.log(editMettingResult[0]);
         res.render('admin/editMeeting',{
             editMeetingData : editMettingResult[0]
         });
     });
+});
+
+router.post('/editMeeting', ensureAuthenticated, checkRole(['admin']),
+    check("meetingTitle", "Provide metting title").not().isEmpty(),
+(req, res, next)=>{
+
 });
 
 router.get('/users', ensureAuthenticated, checkRole(['admin']), async (req, res, next)=>{
