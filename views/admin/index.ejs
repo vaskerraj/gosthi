@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="/vendor/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="/vendor/fontawesome-free/css/v4-shims.min.css">
     <link rel="stylesheet" href="/css/main.min.css">
-    <link rel="stylesheet" href="/vendor/scrollbar/jquery.mCustomScrollbar.min.css">
+    <link rel="stylesheet" href="/css/jquery-confirm.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     
@@ -150,30 +150,10 @@
                                </ul>
                             </div>
                             <div class="tab-pane fade" id="upcoming" role="tabpanel" aria-labelledby="upcoming-tab">
-                                <ul class="list-unstyled tab-scroll">
-                                    <% if(data.upcoming.length === 0) {%>
-                                    <div class="d-flex mt-3 font18 fontb text-secondary text-center" style="font-weight: 500;">
-                                        There weren't any upcoming meetings.
-                                    </div>
-                                    <%}else{
-                                        data.upcoming.forEach((upcoming, index) => {
-                                    %>
-                                    <li class="meeting-date mb-1 pt-3 fontb font16">
-                                    </li>
-                                    <li class="meeting-card upcoming">
-                                         <div class="row">
-                                             <div class="col-5 text-right pr-3">
-                                                 <div class="meeting-card-time fontb font18">19:68 PM</div>
-                                                 <div class="clearfix"><%= upcoming.meeting_duration%></div>
-                                             </div>
-                                             <div class="col-7">
-                                                 <div class="meeting-card-title d-block"><%=upcoming.title%></div>
-                                                 <div class="meeting-card-desc">ID : <%=upcoming.id%></div>
-                                             </div>
-                                         </div>
-                                    </li>
-                                    <%}); }%>
-                                </ul>
+                                <div class="d-none text-center mt-5" id="upcomingLoader">
+                                    <span class="fa fa-spinner fa-spin fa-3x text-muted"></span>
+                                </div>
+                                <ul class="list-unstyled tab-scroll" id="upcomingMeetingList"></ul>
                             </div>
                             <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
                                <div class="tab-scroll">
@@ -249,7 +229,7 @@
                                         </a>
                                     </div>
                                     <div class="col-md-4 col-sm-4 col-12 marT7">
-                                        <a href="javascript:void(0)">
+                                        <a href="javascript:void(0)" class="deleteMeeting" data-confirm="ys" data-id="" data-confirm-msg="Do you want to delete metting?" data-confirm-function="deleteMeeting">
                                             <span class="fa fa-fw fa-trash-alt"></span>
                                             Delete
                                         </a>
@@ -257,6 +237,8 @@
                                 </div><!--/.row-->
                                 <div class="d-block border-top mt-2" id="invitationText">
                                     <div class="d-block meeting-share-title mt-3"></div>
+                                    <div class="d-block meeting-share-dateTime"></div>
+                                    
                                     <div class="d-block mt-3">
                                         <div class="font15 font-weight-bold">Please join my meeting from your computer, tablet or smartphone.</div>
                                         
@@ -318,24 +300,72 @@
                             <div class="col-md-3 col-sm-12 mt-1">
                                 <select name="meetingTime" class="form-control" id="meetingTime">
                                     <option value="">11:45 PM</option>
+                                    <option>12:30 AM</option>
+                                    <option>12:00 AM</option>
+                                    <option>1:00 AM</option>
+                                    <option>1:30 AM</option>
+                                    <option>2:00 AM</option>
+                                    <option>2:30 AM</option>
+                                    <option>3:00 AM</option>
+                                    <option>3:30 AM</option>
+                                    <option>4:00 AM</option>
+                                    <option>4:30 AM</option>
+                                    <option>5:00 AM</option>
+                                    <option>5:30 AM</option>
+                                    <option>6:00 AM</option>
+                                    <option>6:30 AM</option>
+                                    <option>7:00 AM</option>
+                                    <option>7:30 AM</option>
+                                    <option>8:00 AM</option>
+                                    <option>8:30 AM</option>
+                                    <option>9:00 AM</option>
+                                    <option>9:30 AM</option>
+                                    <option>10:00 AM</option>
+                                    <option>10:30 AM</option>
+                                    <option>11:00 AM</option>
+                                    <option>11:30 AM</option>
+                                    <option>12:00 PM</option>
+                                    <option>12:30 PM</option>
+                                    <option>1:00 PM</option>
+                                    <option>1:30 PM</option>
+                                    <option>2:00 PM</option>
+                                    <option>2:30 PM</option>
+                                    <option>3:00 PM</option>
+                                    <option>3:30 PM</option>
+                                    <option>4:00 PM</option>
+                                    <option>4:30 PM</option>
+                                    <option>5:00 PM</option>
+                                    <option>5:30 PM</option>
+                                    <option>6:00 PM</option>
+                                    <option>6:30 PM</option>
+                                    <option>7:00 PM</option>
+                                    <option>7:30 PM</option>
+                                    <option>8:00 PM</option>
+                                    <option>8:30 PM</option>
+                                    <option>9:00 PM</option>
+                                    <option>9:30 PM</option>
+                                    <option>10:00 PM</option>
+                                    <option>10:30 PM</option>
+                                    <option>11:00 PM</option>
+                                    <option>11:30 PM</option>
                                 </select>
                                 <label for="meetingTime">Time</label>
                             </div>
                             <div class="col-md-4 col-sm-12 mt-1">
                                 <select name="meetingDuration" class="form-control" id="meetingDuration">
-                                    <option value="">15 Min</option>
-                                    <option value="">30 Min</option>
-                                    <option value="">45 Min</option>
-                                    <option value="">60 Min</option>
-                                    <option value="">1.5 H</option>
-                                    <option value="">2 H</option>
-                                    <option value="">2.5 H</option>
-                                    <option value="">3 H</option>
-                                    <option value="">4 H</option>
-                                    <option value="">5 H</option>
-                                    <option value="">6 H</option>
-                                    <option value="">7 H</option>
-                                    <option value="">8 H</option>
+                                    <option value="15_minutes">15 Min</option>
+                                    <option value="30_minutes" selected>30 Min</option>
+                                    <option value="45_minutes">45 Min</option>
+                                    <option value="60_minutes">60 Min</option>
+                                    <option value="1.5_hours">1.5 H</option>
+                                    <option value="2_hours">2 H</option>
+                                    <option value="2.5_hours">2.5 H</option>
+                                    <option value="3_hours">3 H</option>
+                                    <option value="4_hours">4 H</option>
+                                    <option value="5_hours">5 H</option>
+                                    <option value="6_hours">6 H</option>
+                                    <option value="7_hours">7 H</option>
+                                    <option value="8_hours">8 H</option>
                                 </select>
                                 <label for="meetingDuration">Duration</label>
                             </div>
@@ -389,10 +419,11 @@
                                 </tbody>
                             </table>
                         </div>
-                        <input type="text" name="invitedEmails" class="inviteUsersEmail">
-                        <input type="text" name="selectedMeetingId" id="inviteUser_meetingId">
-                        <input type="text" name="selectedMeetingTitle" id="inviteUser_meetingTitle">
-                        <input type="text" name="selectedMeetingLink" id="inviteUser_meetingLink">
+                        <input type="text" name="invitedEmails" class="inviteUsersEmail" readonly>
+                        <input type="hidden" name="selectedMeetingId" id="inviteUser_meetingId" readonly>
+                        <input type="hidden" name="selectedMeetingTitle" id="inviteUser_meetingTitle" readonly>
+                        <input type="hidden" name="selectedMeetingDate" id="inviteUser_meetingDate" readonly>
+                        <input type="hidden" name="selectedMeetingLink" id="inviteUser_meetingLink" readonly>
                         <div class="d-block mt-4">
                             <button type="submit" class="btn btn-primary ml-3 fR">SAVE</button>
                             <button type="button" class="btn btn-default fR" data-dismiss="modal">Cancel</button>
@@ -405,7 +436,6 @@
   <%-include('../partials/js')-%>
   <script src="/js/listing-js.js"></script>
   <script src="/js/jquery.copiq.min.js"></script>
-  <script src="/vendor/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
   
   <script>
       $(function(){
@@ -419,13 +449,7 @@
                 }, 2000);
             }
         });
-
-			$(window).on("load",function(){
-                $(".tab-scroll").mCustomScrollbar({
-                    theme : "minimal-dark"
-                });
-            });
-      })
+      });
   </script>
 </body>
 </html>
