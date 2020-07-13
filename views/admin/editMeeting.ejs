@@ -1,0 +1,95 @@
+
+<form action="/editMeeting" method ="post" id="form_editMeeting">
+    <div class="d-block mt-2 mr">
+        <input type='text' class="form-control" name='meetingTitle' id="edit_meetingTitle" value="<%-editMeetingData.title%>" autocomplete="off" />
+        <label for="edit_meetingTitle">Meeting Title</label>
+    </div>
+    
+    <div class="row scheduleMeeting_container mt-4 <%- editMeetingData.type === 'schedule' ? 'd-flex' : 'd-none'%> ">
+        <div class="col-md-5 col-sm-12 mt-1">
+            <input type='text' class="form-control" name='meetingDate' id="edit_meetingDate" value="<%=editMeetingData.meeting_date%>" autocomplete="off" />
+            <label for="edit_meetingDate">Date</label>
+        </div>
+        <div class="col-md-3 col-sm-12 mt-1">
+            <select name="meetingTime" class="form-control" id="edit_meetingTime">
+                <option <%- editMeetingData.meeting_time === "11:45 PM" ? 'selected' : '' %>>11:45 PM</option>
+                <option <%- editMeetingData.meeting_time === "12:30 AM" ? 'selected' : '' %>>12:30 AM</option>
+                <option <%- editMeetingData.meeting_time === "12:00 AM" ? 'selected' : '' %>>12:00 AM</option>
+                <option <%- editMeetingData.meeting_time === "01:00 AM" ? 'selected' : '' %>>01:00 AM</option>
+                <option <%- editMeetingData.meeting_time === "01:30 AM" ? 'selected' : '' %>>01:30 AM</option>
+                <option <%- editMeetingData.meeting_time === "02:00 AM" ? 'selected' : '' %>>02:00 AM</option>
+                <option <%- editMeetingData.meeting_time === "02:30 AM" ? 'selected' : '' %>>02:30 AM</option>
+                <option <%- editMeetingData.meeting_time === "03:00 AM" ? 'selected' : '' %>>03:00 AM</option>
+                <option <%- editMeetingData.meeting_time === "03:30 AM" ? 'selected' : '' %>>03:30 AM</option>
+                <option <%- editMeetingData.meeting_time === "04:00 AM" ? 'selected' : '' %>>04:00 AM</option>
+                <option <%- editMeetingData.meeting_time === "04:30 AM" ? 'selected' : '' %>>04:30 AM</option>
+                <option <%- editMeetingData.meeting_time === "05:00 AM" ? 'selected' : '' %>>05:00 AM</option>
+                <option <%- editMeetingData.meeting_time === "05:30 AM" ? 'selected' : '' %>>05:30 AM</option>
+                <option <%- editMeetingData.meeting_time === "06:00 AM" ? 'selected' : '' %>>06:00 AM</option>
+                <option <%- editMeetingData.meeting_time === "06:30 AM" ? 'selected' : '' %>>06:30 AM</option>
+                <option <%- editMeetingData.meeting_time === "07:00 AM" ? 'selected' : '' %>>07:00 AM</option>
+                <option <%- editMeetingData.meeting_time === "07:30 AM" ? 'selected' : '' %>>07:30 AM</option>
+                <option <%- editMeetingData.meeting_time === "08:00 AM" ? 'selected' : '' %>>08:00 AM</option>
+                <option <%- editMeetingData.meeting_time === "8:30 AM" ? 'selected' : '' %>>8:30 AM</option>
+                <option <%- editMeetingData.meeting_time === "09:00 AM" ? 'selected' : '' %>>09:00 AM</option>
+                <option <%- editMeetingData.meeting_time === "09:30 AM" ? 'selected' : '' %>>09:30 AM</option>
+                <option <%- editMeetingData.meeting_time === "10:00 AM" ? 'selected' : '' %>>10:00 AM</option>
+                <option <%- editMeetingData.meeting_time === "10:30 AM" ? 'selected' : '' %>>10:30 AM</option>
+                <option <%- editMeetingData.meeting_time === "11:00 AM" ? 'selected' : '' %>>11:00 AM</option>
+                <option <%- editMeetingData.meeting_time === "11:30 AM" ? 'selected' : '' %>>11:30 AM</option>
+                <option <%- editMeetingData.meeting_time === "12:00 PM" ? 'selected' : '' %>>12:00 PM</option>
+                <option <%- editMeetingData.meeting_time === "12:30 PM" ? 'selected' : '' %>>12:30 PM</option>
+                <option <%- editMeetingData.meeting_time === "01:00 PM" ? 'selected' : '' %>>01:00 PM</option>
+                <option <%- editMeetingData.meeting_time === "01:30 PM" ? 'selected' : '' %>>01:30 PM</option>
+                <option <%- editMeetingData.meeting_time === "02:00 PM" ? 'selected' : '' %>>02:00 PM</option>
+                <option <%- editMeetingData.meeting_time === "02:30 PM" ? 'selected' : '' %>>02:30 PM</option>
+                <option <%- editMeetingData.meeting_time === "03:00 PM" ? 'selected' : '' %>>03:00 PM</option>
+                <option <%- editMeetingData.meeting_time === "03:30 PM" ? 'selected' : '' %>>03:30 PM</option>
+                <option <%- editMeetingData.meeting_time === "04:00 PM" ? 'selected' : '' %>>04:00 PM</option>
+                <option <%- editMeetingData.meeting_time === "04:30 PM" ? 'selected' : '' %>>04:30 PM</option>
+                <option <%- editMeetingData.meeting_time === "05:00 PM" ? 'selected' : '' %>>05:00 PM</option>
+                <option <%- editMeetingData.meeting_time === "05:30 PM" ? 'selected' : '' %>>05:30 PM</option>
+                <option <%- editMeetingData.meeting_time === "06:00 PM" ? 'selected' : '' %>>06:00 PM</option>
+                <option <%- editMeetingData.meeting_time === "06:30 PM" ? 'selected' : '' %>>06:30 PM</option>
+                <option <%- editMeetingData.meeting_time === "07:00 PM" ? 'selected' : '' %>>07:00 PM</option>
+                <option <%- editMeetingData.meeting_time === "07:30 PM" ? 'selected' : '' %>>07:30 PM</option>
+                <option <%- editMeetingData.meeting_time === "08:00 PM" ? 'selected' : '' %>>08:00 PM</option>
+                <option <%- editMeetingData.meeting_time === "08:30 PM" ? 'selected' : '' %>>08:30 PM</option>
+                <option <%- editMeetingData.meeting_time === "09:00 PM" ? 'selected' : '' %>>09:00 PM</option>
+                <option <%- editMeetingData.meeting_time === "09:30 PM" ? 'selected' : '' %>>09:30 PM</option>
+                <option <%- editMeetingData.meeting_time === "10:00 PM" ? 'selected' : '' %>>10:00 PM</option>
+                <option <%- editMeetingData.meeting_time === "10:30 PM" ? 'selected' : '' %>>10:30 PM</option>
+                <option <%- editMeetingData.meeting_time === "11:00 PM" ? 'selected' : '' %>>11:00 PM</option>
+                <option <%- editMeetingData.meeting_time === "11:30 PM" ? 'selected' : '' %>>11:30 PM</option>
+            </select>
+            <label for="edit_meetingTime">Time</label>
+        </div>
+        <div class="col-md-4 col-sm-12 mt-1">
+            <select name="meetingDuration" class="form-control" id="edit_meetingDuration">
+                <option value="15_minutes" <%- editMeetingData.meeting_duration === "15_minutes" ? 'selected' : '' %>>15 Min</option>
+                <option value="30_minutes" <%- editMeetingData.meeting_duration === "30_minutes" ? 'selected' : '' %>>30 Min</option>
+                <option value="45_minutes" <%- editMeetingData.meeting_duration === "45_minutes" ? 'selected' : '' %>>45 Min</option>
+                <option value="60_minutes" <%- editMeetingData.meeting_duration === "60_minutes" ? 'selected' : '' %>>60 Min</option>
+                <option value="1.5_hours" <%- editMeetingData.meeting_duration === "1.5_hours" ? 'selected' : '' %>>1.5 H</option>
+                <option value="2_hours" <%- editMeetingData.meeting_duration === "2_hours" ? 'selected' : '' %>>2 H</option>
+                <option value="2.5_hours" <%- editMeetingData.meeting_duration === "2.5_hours" ? 'selected' : '' %>>2.5 H</option>
+                <option value="3_hours" <%- editMeetingData.meeting_duration === "3_hours" ? 'selected' : '' %>>3 H</option>
+                <option value="4_hours" <%- editMeetingData.meeting_duration === "4_hours" ? 'selected' : '' %>>4 H</option>
+                <option value="5_hours" <%- editMeetingData.meeting_duration === "5_hours" ? 'selected' : '' %>>5 H</option>
+                <option value="6_hours" <%- editMeetingData.meeting_duration === "6_hours" ? 'selected' : '' %>>6 H</option>
+                <option value="7_hours" <%- editMeetingData.meeting_duration === "7_hours" ? 'selected' : '' %>>7 H</option>
+                <option value="8_hours" <%- editMeetingData.meeting_duration === "8_hours" ? 'selected' : '' %>>8 H</option>
+            </select>
+            <label for="edit_meetingDuration">Duration</label>
+        </div>
+        <div class="col bg-gray-light mt-3 pl-2 pt-1 pb-2 border-0">
+            The event starts at 11:45 PM in Kathmadnu time zone.
+        </div>
+    </div><!--/.row-->
+    <div class="d-block mt-4">
+        <button type="submit" class="btn btn-primary ml-3 fR">SAVE</button>
+        <button class="btn btn-default fR" data-dismiss="modal" aria-label="Close">Cancel</button>
+    </div>
+</form>
+
+<%- include('../partials/js')%>
