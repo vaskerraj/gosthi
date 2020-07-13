@@ -365,11 +365,6 @@ button.copy{
   color: rgb(37, 40, 45);
 }
 
-.tab-content .tab-pane .tab-scroll{
-  padding: 7px 0;
-  height: 290px;
-}
-
 /* meeting card */
 
 .meeting-date{
