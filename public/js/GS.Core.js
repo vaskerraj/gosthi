@@ -48,7 +48,7 @@
         meetingScrollBarHandler : function(){
             console.log("meeting scroll called");
             $('.tab-scroll').slimscroll({
-                alwaysVisible: false
+                alwaysVisible: true,
                 height: 290
               });
         },
@@ -82,10 +82,11 @@
                         }else{
                             var meetingDate = moment(response.meeting_date).format('ddd, MMM DD, YYYY');
                             var meetingTime = response.meeting_time;
-                            var meetingDuration = response.meeting_duration;
-                           var meetingAddDuration =  moment(meetingTime, 'hh:mm A').add(30, 'minutes').format('hh:mm A');
+                            var meetingDuration = response.meeting_duration.split('_');
+                           var meetingAddDuration =  moment(meetingTime, 'hh:mm A').add(meetingDuration[0], meetingDuration[1]).format('hh:mm A');
                             var meetingDateTime = meetingDate+' '+meetingTime+' - '+meetingAddDuration
                         }
+
                         var joinMeetingHref = "https://15.206.115.114/join/"+response.id;
                         document.querySelector('.meeting-details-title').innerHTML = response.title;
                         document.querySelector('.meeting-details-id').innerHTML = response.id;
@@ -94,6 +95,7 @@
                         document.querySelector('.meeting-share-title').innerHTML = response.title;
                         document.querySelector('.meeting-share-dateTime').innerHTML = meetingDateTime;
                         document.querySelector('.meeting-share-id').innerHTML = response.id;
+                        // document.querySelector('.deleteMeeting').setAttribute('data-id', response.id);
 
                         // 
                         document.querySelector('#inviteUser_meetingId').value = response.id;
