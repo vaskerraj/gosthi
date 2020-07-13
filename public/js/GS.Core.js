@@ -95,7 +95,7 @@
                         document.querySelector('.meeting-share-title').innerHTML = response.title;
                         document.querySelector('.meeting-share-dateTime').innerHTML = meetingDateTime;
                         document.querySelector('.meeting-share-id').innerHTML = response.id;
-                        // document.querySelector('.deleteMeeting').setAttribute('data-id', response.id);
+                        document.querySelector('.deleteMeeting').setAttribute('data-id', response.id);
 
                         // 
                         document.querySelector('#inviteUser_meetingId').value = response.id;
