@@ -23,6 +23,7 @@ const emailHandler = async (emails, meeting_id, meeting_title, meeting_link)=> {
                         { 
                             id: meeting_id,
                             title : meeting_title,
+                            inv_date : meeting_DateTime,
                             link : meeting_link
                         }
                     );
