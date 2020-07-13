@@ -223,13 +223,13 @@
                                         </button>
                                     </div>
                                     <div class="col-md-2 col-sm-4 col-12 marT7">
-                                        <a href="javascript:void(0)">
+                                        <a href="javascript:void(0)" id="meeting_edit" data-remote="" data-toggle="modal" data-target="#meetingEdit_modal">
                                             <span class="fa fa-fw fa-edit"></span>
                                             Edit
                                         </a>
                                     </div>
                                     <div class="col-md-4 col-sm-4 col-12 marT7">
-                                        <a href="javascript:void(0)" class="deleteMeeting" data-confirm="ys" data-id="" data-confirm-msg="Do you want to delete metting?" data-confirm-function="deleteMeeting">
+                                        <a href="javascript:void(0)" class="deleteMeeting" data-confirm="ys" data-id="" data-confirm-msg="Do you want to delete metting ?" data-confirm-function="deleteMeeting">
                                             <span class="fa fa-fw fa-trash-alt"></span>
                                             Delete
                                         </a>
@@ -383,17 +383,17 @@
       </div>
   </div>
   
-  <div class="modal fade" id="inviteUser" tabindex="-1" role="dialog" aria-labelledby="inviteUserTitle" aria-hidden="true">
+    <div class="modal fade" id="inviteUser" tabindex="-1" role="dialog" aria-labelledby="inviteUserTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
-          <div class="modal-content">
-              <div class="modal-header">
-              <h5 class="modal-title" id="inviteUserTitle">Invite Users</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span class="fa fa-window-close-o" aria-hidden="true"></span>
-              </button>
-              </div>
-              <div class="modal-body">
-                  <form action="/admin/inviteUsers" method ="post" id="form_inviteUser">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="inviteUserTitle">Invite Users</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span class="fa fa-window-close-o" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/admin/inviteUsers" method ="post" id="form_inviteUser">
                         <div class="d-block">
                             <div class="row">
                                 <div class="col-md-6 col-6 pl-3 pt-2">
@@ -428,17 +428,33 @@
                             <button type="submit" class="btn btn-primary ml-3 fR">SAVE</button>
                             <button type="button" class="btn btn-default fR" data-dismiss="modal">Cancel</button>
                         </div>
-                  </form>
-              </div>
-          </div>
-      </div>
-  </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="meetingEdit_modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="inviteUserTitle">Edit Meeting</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span class="fa fa-window-close-o" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Loading ...
+                </div>
+            </div>
+        </div>
+    </div>
   <%-include('../partials/js')-%>
   <script src="/js/listing-js.js"></script>
   <script src="/js/jquery.copiq.min.js"></script>
   
   <script>
-      $(function(){
+    $(function(){
         $('button').copiq({
             parent: '#selectedMeeting',
             content: '#invitationText',
@@ -449,7 +465,13 @@
                 }, 2000);
             }
         });
-      });
+
+        $('#meetingEdit_modal').on('show.bs.modal', function (e) {
+            var button = $(e.relatedTarget);
+            var modal = $(this);
+            modal.find('.modal-body').load(button.data("remote"));
+        });
+    });
   </script>
 </body>
 </html>
