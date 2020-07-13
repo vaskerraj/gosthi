@@ -139,7 +139,54 @@ router.get('/editMeeting/:id', ensureAuthenticated, checkRole(['admin']), async 
 router.post('/editMeeting', ensureAuthenticated, checkRole(['admin']),
     check("meetingTitle", "Provide metting title").not().isEmpty(),
 (req, res, next)=>{
+    const edit_meetingId =  req.body.meetingId,
+        edit_meetingTitle = req.body.meetingTitle,
+        edit_meetingType = req.body.meetingType,
+        edit_meetingDate = req.body.meetingDate,
+        edit_meetingTime = req.body.meetingTime,
+        edit_meetingDuration = req.body.meetingDuration;
 
+    const error_updateMeeting = validationResult(req);
+    
+    if(!error_updateMeeting.isEmpty()){
+        let meetingRoomPromise = [
+            meetingRooms(req.user.relId)
+        ];
+        Promise.all(meetingRoomPromise)
+            .then((meeting)=>{
+                res.render('admin/', {
+                    errors : errors['errors'],
+                    title : "Index || Ghosti Hub",
+                    page : "index",
+                    currentUser : req.user,
+                    loginPage : false,
+                    data : {
+                        rooms : meeting[0]
+                    }
+                });
+            }).catch((err)=>{
+                if(err) throw err;
+            });
+    }else{
+
+        if(edit_meetingType === "normal"){
+            var editMeetingSql = "UPDATE meeting SET title = ? WHERE id = ?";
+            var editMeetingSqlData = [edit_meetingTitle, edit_meetingId];
+        }else{
+            
+            var editMeetingSql = "UPDATE meeting SET title = ?, meeting_date = ?, meeting_time = ?, meeting_duration =? WHERE id = ?";
+            var editMeetingSqlData = [edit_meetingTitle, edit_meetingDate, edit_meetingTime, edit_meetingDuration, edit_meetingId];
+        }
+
+        connection.query(editMeetingSql, editMeetingSqlData, (err)=>{
+            if(err) throw err;
+        });
+
+        req.flash("success","Successfully edited meeting.");
+
+        res.location('/admin/');
+        res.redirect('/admin/');
+    }
 });
 
 router.get('/users', ensureAuthenticated, checkRole(['admin']), async (req, res, next)=>{
@@ -225,8 +272,8 @@ router.post('/users', ensureAuthenticated, checkRole(['admin']),
         // req.toastr.success("Successfully added new protfolio");
         req.flash("success","Successfully added new users");
 
-        res.location('/admin/users');
-        res.redirect('/admin/users');
+        res.location('/admin/users/');
+        res.redirect('/admin/users/'); // add / for relaod with data
     }
 
 });
