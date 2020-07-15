@@ -88,7 +88,7 @@ router.post('/', ensureAuthenticated, checkRole(['admin']),
         });
         
         // req.toastr.success("Successfully added new protfolio");
-        req.flash("success","Successfully created new meeting");
+        req.flash("success","<span class='fa fa-fw fa-check'></span> Successfully created new meeting");
 
         res.location('/admin/');
         res.redirect('/admin/');
@@ -180,11 +180,20 @@ router.post('/editMeeting', ensureAuthenticated, checkRole(['admin']),
             if(err) throw err;
         });
 
-        req.flash("success","Successfully edited meeting.");
+        req.flash("success","<span class='fa fa-fw fa-check'></span> Successfully edited meeting.");
 
         res.location('/admin/');
         res.redirect('/admin/');
     }
+});
+
+router.get("/deleteMeeting/:id", ensureAuthenticated, checkRole(['admin']), (req, res, next)=>{
+    const deleteMeetingId = req.params.id;
+    connection.query("DELETE FROM meeting WHERE id = ?", [deleteMeetingId], (err)=>{
+        if(err) throw err;
+        req.flash("meeting_del_success","<span class='fa fa-fw fa-check'></span> Successfully deleted meeting.");
+        res.send("done");
+    });
 });
 
 router.get('/users', ensureAuthenticated, checkRole(['admin']), async (req, res, next)=>{
@@ -268,7 +277,7 @@ router.post('/users', ensureAuthenticated, checkRole(['admin']),
         });
         
         // req.toastr.success("Successfully added new protfolio");
-        req.flash("success","Successfully added new users");
+        req.flash("success","<span class='fa fa-fw fa-check'></span> Successfully added new users");
 
         res.location('/admin/users/');
         res.redirect('/admin/users/'); // add / for relaod with
