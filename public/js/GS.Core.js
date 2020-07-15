@@ -11,7 +11,10 @@
             $.GHCore.ppath();
             $.GHCore.inputFocusState(inputFocusStateSel);
             $.GHCore.inputMask();
+            $.GHCore.flashMessageHandler();
             $.GHCore.customScrollBarOnLoadHandler();
+            $.GHCore.meetingTimeHandler();
+            $.GHCore.editMeetingTimeHandler()
             $.GHCore.meetingRoomHandlder();
             $.GHCore.upcomigMeetingHandler();
             $.GHCore.meetingTypeHandler();
@@ -45,6 +48,14 @@
             var $collection = $('[data-minput]');
             if(!$collection.length) return;
         },
+        flashMessageHandler : function(){
+            $collection = $("#messages");
+            if(!$collection.length) return;
+            setTimeout(function() {
+                console.log("meesage hide");
+                $("#messages").fadeOut();
+            }, 4000);
+        },
         meetingScrollBarHandler : function(){
             console.log("meeting scroll called");
             $('.tab-scroll').slimscroll({
@@ -56,13 +67,41 @@
             var $self = this;
             $self.meetingScrollBarHandler();
         },
+        meetingTimeHandler : function(){
+            $collection = document.querySelector(".meetingTime");
+            $editCollection = document.querySelector("#edit_meetingTime");
+            if(!$collection.length) return;
+
+            // init meeting time
+            var selectedMeetingTimeTxt = $collection.options[$collection.selectedIndex].value;
+            document.querySelector('.meetingTimeTxt').innerText = selectedMeetingTimeTxt;
+
+            $collection.addEventListener('change', (e)=>{
+                var selectedMeetingTime = e.target.value;
+                document.querySelector('.meetingTimeTxt').innerText = selectedMeetingTime;
+            });
+        },
+        editMeetingTimeHandler : function(){
+            $collection = $("#edit_meetingTime");
+            if(!$collection.length) return;
+
+            // init meeting time at edit page
+            var docEditMeetingSel = document.querySelector("#edit_meetingTime");
+            var edit_selectedMeetingTimeTxt = docEditMeetingSel.options[docEditMeetingSel.selectedIndex].value;
+            document.querySelector('.edit_meetingTimeTxt').innerText = edit_selectedMeetingTimeTxt;
+
+            docEditMeetingSel.addEventListener('change', (e)=>{
+                var edit_selectedMeetingTime = e.target.value;
+                document.querySelector('.edit_meetingTimeTxt').innerText = edit_selectedMeetingTime;
+            });
+        },
         meetingRoomHandlder : function(){
             var $collection = $(".meeting-card"),
                 $selectedMeetingSel = $("#selectedMeeting"),
                 $instantMeetingSel = $("#instantMeeting");
 
             if(!$collection.length) return;
-
+            $.GHCore.meetingTimeHandler();
             $collection.on('click', function(){
                 var _this = $(this),
                     thisId = $(this).data('id');
@@ -114,7 +153,6 @@
                 }
 
                 // loader
-                
 
             });
         },
@@ -125,6 +163,14 @@
                 return date.fromNow(); // '2 days ago' etc.
             }
             return date.calendar().split(' ')[0]; // 'Today', 'yesterday', 'tomorrow'
+        },
+
+        meetingTimeMinOrHour : function($collection){
+            if($collection === "minutes"){
+                return "Min";
+            }else{
+                return "H";
+            }
         },
         upcomigMeetingHandler : async function(){
             $collection = $("#upcoming-tab");
@@ -142,12 +188,16 @@
                         }else{
                             var upcomingMeetingDate = upcomingDisplayFormat;
                         }
+
+                        const upcomingMeetingDuFirst = (item.meeting_duration).split('_')[0];
+                        const upcomingMeetingDuSecond = $.GHCore.meetingTimeMinOrHour((item.meeting_duration).split('_')[1]);
+                        const upcomingMeetingDuration = upcomingMeetingDuFirst+' '+upcomingMeetingDuSecond;
                         const upcomingMettingitemList = '<li class="meeting-date mb-1 pt-3 fontb font18" style="font-weight:600">'+upcomingMeetingDate+'</li>'
                                         +'<li class="meeting-card upcoming" data-id="'+item.id+'">'
                                         +'<div class="row">'
                                             +'<div class="col-5 text-right pr-3">'
                                                 +'<div class="meeting-card-time fontb font18">'+item.meeting_time+'</div>'
-                                                +'<div class="clearfix">'+item.meeting_duration+'</div>'
+                                                +'<div class="clearfix">'+upcomingMeetingDuration+'</div>'
                                             +'</div>'
                                             +'<div class="col-7">'
                                                 +'<div class="meeting-card-title d-block">'+item.title+'</div>'
