@@ -20,6 +20,9 @@
     <div class="content-wrapper">
         <div class="content-header">
             <div class="container-fluid">
+                <% if (messages) { %>
+                    <%- messages -%>
+                <% } %>
                 <div class="row mb-2">
                     <div class="col-sm-6">
                         Meeting
@@ -298,7 +301,7 @@
                                 <label for="meetingDate">Date</label>
                             </div>
                             <div class="col-md-3 col-sm-12 mt-1">
-                                <select name="meetingTime" class="form-control" id="meetingTime">
+                                <select name="meetingTime" class="form-control meetingTime" id="meetingTime">
                                     <option>11:45 PM</option>
                                     <option>12:30 AM</option>
                                     <option>12:00 AM</option>
@@ -370,7 +373,7 @@
                                 <label for="meetingDuration">Duration</label>
                             </div>
                             <div class="col bg-gray-light mt-3 pl-2 pt-1 pb-2 border-0">
-                                The event starts at 11:45 PM in Kathmadnu time zone.
+                                The event starts at <span class="meetingTimeTxt"></span> in Kathmadnu time zone.
                             </div>
                         </div><!--/.row-->
                         <div class="d-block mt-4">
@@ -396,21 +399,41 @@
                     <form action="/admin/inviteUsers" method ="post" id="form_inviteUser">
                         <div class="d-block">
                             <div class="row">
-                                <div class="col-md-6 col-6 pl-3 pt-2">
-                                    <input type="checkbox" name="checkall" id="checkAll">
-                                    <label for="checkAll">All</label>
+                                <div class="col-md-6 col-6 pl-4 pt-2">
+                                    
                                     
                                 </div>
                                 <div class="col-md-6 col-6 text-right">
                                     <input type="text" class="form-control" id="searchInviteUsers" placeholder="Search Users">
                                 </div>
                             </div>
-                            <table class="table mt-2">
+                            <table class="table table-hover mt-2 hide" id="inviteUserslist" data-table="dt"
+                                data-dt_search="#searchInviteUsers"
+                                data-dt_entries="#datatableEntries"
+                                data-dt_dropdown_search =""
+                                data-dt_info=""
+                                data-dt_info_txt="User(s)"
+                                data-dt_order_column="1"
+                                data-dt_order_colum_by="desc"
+                                data-dt_nonorder_column="0"
+                                data-dt_filter_url_connect="true"
+                                role="grid">
+                                <thead>
+                                    <tr>
+                                        <th style="pointer-events: none"></th>
+                                        <th class="pl-2">
+                                            <input type="checkbox" name="checkall" id="checkAll">
+                                            <label for="checkAll">All</label>
+                                        </th>
+                                        <th style="pointer-events: none"></th>
+                                    </tr>
+                                </thead>
                                 <tbody>
                                     <% data.users.forEach((inv_user, index) =>{ %>
                                     <tr>
                                         <td>
-                                            <input type="checkbox" name="invite_user_checkbox" value="<%=inv_user.username%>">
+                                            <input type="checkbox" name="invite_user_checkbox" id="input_<%=inv_user.username%>" value="<%=inv_user.username%>">
+                                            <label for="input_<%=inv_user.username%>"></label>
                                         </td>
                                         <td><%=inv_user.username%></td>
                                         <td><%=inv_user.first_name+" "+inv_user.last_name%></td>
