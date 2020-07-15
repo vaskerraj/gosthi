@@ -155,6 +155,15 @@ function doExport(selector, params) {
                 }
             });
         }
+        function deleteMeeting(el, id){
+            $.get('/../admin/deleteMeeting/'+id,
+            function(data){
+                if(data == 'done'){
+                    location.reload(true);
+                }
+            });
+        }
+        
 
         function __fireConfirmPopup(){
             var confirmeds = false;
@@ -179,8 +188,8 @@ function doExport(selector, params) {
                             confirmeds = true;
                                 if(cFunction == 'deleteUser'){
                                     deleteUser(that,thatId);
-                                }else if(cFunction == 'deleteOperator'){
-                                    deleteOperator(that,thatId);
+                                }else if(cFunction == 'deleteMeeting'){
+                                    deleteMeeting(that,thatId);
                                 }
                             }
                         }
