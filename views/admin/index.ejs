@@ -294,6 +294,7 @@
                                     </span>
                                 </label>
                             </div>
+                            <div class="d-block meetingType_error ml-2"></div>
                         </div><!--/.row-->
                         <div class="row scheduleMeeting_container mt-4 disabled">
                             <div class="col-md-5 col-sm-12 mt-1">
@@ -407,48 +408,53 @@
                                     <input type="text" class="form-control" id="searchInviteUsers" placeholder="Search Users">
                                 </div>
                             </div>
-                            <table class="table table-hover mt-2 hide" id="inviteUserslist" data-table="dt"
-                                data-dt_search="#searchInviteUsers"
-                                data-dt_entries="#datatableEntries"
-                                data-dt_dropdown_search =""
-                                data-dt_info=""
-                                data-dt_info_txt="User(s)"
-                                data-dt_order_column="1"
-                                data-dt_order_colum_by="desc"
-                                data-dt_nonorder_column="0"
-                                data-dt_filter_url_connect="true"
-                                role="grid">
-                                <thead>
-                                    <tr>
-                                        <th style="pointer-events: none"></th>
-                                        <th class="pl-2">
-                                            <input type="checkbox" name="checkall" id="checkAll">
-                                            <label for="checkAll">All</label>
-                                        </th>
-                                        <th style="pointer-events: none"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <% data.users.forEach((inv_user, index) =>{ %>
-                                    <tr>
-                                        <td>
-                                            <input type="checkbox" name="invite_user_checkbox" id="input_<%=inv_user.username%>" value="<%=inv_user.username%>">
-                                            <label for="input_<%=inv_user.username%>"></label>
-                                        </td>
-                                        <td><%=inv_user.username%></td>
-                                        <td><%=inv_user.first_name+" "+inv_user.last_name%></td>
-                                    </tr>
-                                    <% });%>
-                                </tbody>
-                            </table>
+                            <div id="inviteUser-scroll">
+                                <table class="table table-hover mt-2 hide" id="inviteUserslist" data-table="dt"
+                                    data-dt_search="#searchInviteUsers"
+                                    data-dt_entries="#datatableEntries"
+                                    data-dt_dropdown_search =""
+                                    data-dt_info=""
+                                    data-dt_info_txt="User(s)"
+                                    data-dt_order_column="0"
+                                    data-dt_order_colum_by="desc"
+                                    data-dt_nonorder_column="1"
+                                    data-dt_filter_url_connect="true"
+                                    role="grid">
+                                    <thead>
+                                        <tr>
+                                            <th style="pointer-events: none"></th>
+                                            <th class="pl-2">
+                                                <input type="checkbox" name="checkall" class="normal" id="dt_checkAll">
+                                                <label for="dt_checkAll">All</label>
+                                            </th>
+                                            <th style="pointer-events: none"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% data.users.forEach((inv_user, index) =>{ %>
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" name="invite_user_checkbox" id="input_<%=inv_user.username%>" value="<%=inv_user.username%>">
+                                                <label for="input_<%=inv_user.username%>"></label>
+                                            </td>
+                                            <td><%=inv_user.username%></td>
+                                            <td><%=inv_user.first_name+" "+inv_user.last_name%></td>
+                                        </tr>
+                                        <% });%>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <input type="text" name="invitedEmails" class="inviteUsersEmail" readonly>
+                        <input type="hidden" name="invitedEmails" class="inviteUsersEmail" readonly="true">
                         <input type="hidden" name="selectedMeetingId" id="inviteUser_meetingId" readonly>
                         <input type="hidden" name="selectedMeetingTitle" id="inviteUser_meetingTitle" readonly>
                         <input type="hidden" name="selectedMeetingDate" id="inviteUser_meetingDate" readonly>
                         <input type="hidden" name="selectedMeetingLink" id="inviteUser_meetingLink" readonly>
                         <div class="d-block mt-4">
-                            <button type="submit" class="btn btn-primary ml-3 fR">SAVE</button>
+                            <button type="submit" class="btn btn-primary ml-3 fR">
+                                <span class="fa fa-save"></span>
+                                SAVE
+                            </button>
                             <button type="button" class="btn btn-default fR" data-dismiss="modal">Cancel</button>
                         </div>
                     </form>
@@ -487,12 +493,6 @@
                 $('span', $element).text($element.attr("data-text"));
                 }, 2000);
             }
-        });
-
-        $('#meetingEdit_modal').on('show.bs.modal', function (e) {
-            var button = $(e.relatedTarget);
-            var modal = $(this);
-            modal.find('.modal-body').load(button.data("remote"));
         });
     });
   </script>
