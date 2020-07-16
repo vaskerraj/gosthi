@@ -251,8 +251,11 @@
                 var _thisVal = $(this).val();
                 if(_thisVal === 'schedule'){
                     $dataSelector.removeClass('disabled');
+                    $dataSelector.find('input, select').prop('disabled', false);
                 }else{
                     $dataSelector.addClass('disabled');
+                    $dataSelector.find('input, select').attr('disabled', true);
+
                 }
             });
         },
