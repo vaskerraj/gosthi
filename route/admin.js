@@ -289,14 +289,33 @@ router.post('/upcomingMeeting', ensureAuthenticated, checkRole(['admin']), (req,
     const upcomingMeeting_adminId = req.body.id;
     connection.query("SELECT * FROM meeting WHERE admin_id =? AND type = ?", [upcomingMeeting_adminId, 'schedule'], (err, upcomingMeetingResult)=>{
         if(err) throw err;
-        // console.log('upcomingMeetingResult');
-        // console.log(upcomingMeetingResult);
-        // console.log(upcomingMeetingResult.admin_id);
-        // const upcomingMeetingDate = moment(upcomingMeetingResult.meeting_date).format('MM/DD/YYYY');
-        
-        // var dateToFromNow = dateToFromNowDaily(upcomingMeetingDate);
-        // console.log(dateToFromNow);
         return res.status(200).json(upcomingMeetingResult);
+    });
+});
+
+router.post('/checkUserEmail', ensureAuthenticated, checkRole(['admin']), async(req, res, next)=>{
+    var userEmailToCheck = req.body.email;
+    connection.query("SELECT count(id) AS userEmailExit FROM login WHERE username =?", [userEmailToCheck], (err, userEmailCheckResult)=>{
+        if(err) throw err;
+       console.log(userEmailCheckResult[0].userEmailExit)
+        if(userEmailCheckResult[0].userEmailExit === 0){
+            return res.send("true");
+        }else{
+            return res.send("false");
+        }
+
+    });
+});
+
+router.get('/editUsers/:id', ensureAuthenticated, checkRole(['admin']), async (req, res, next)=>{
+    const editUsersId = req.params.id;
+    console.log(editUsersId);
+    
+    connection.query("SELECT * FROM users INNER JOIN login ON users.id = login.user_id WHERE users.id = ?", [editUsersId], (err, editUsersResult) =>{
+        if(err) throw err;
+        res.render('admin/editUsers', {
+            editUsersData : editUsersResult[0]
+        });
     });
 });
 
