@@ -7,18 +7,22 @@
     
     $.GHCore = {
         init : function() {
-            var inputFocusStateSel = $('.form-control');
+            var inputFocusStateSel = $('.form-control'),
+				$applistDTtable = $("#inviteUserslist"),
+				$applistDTtableCheckAll = $("#dt_checkAll");
             $.GHCore.ppath();
             $.GHCore.inputFocusState(inputFocusStateSel);
             $.GHCore.inputMask();
+            $.GHCore.DTselectAll($applistDTtableCheckAll,$applistDTtable);
             $.GHCore.flashMessageHandler();
+            $.GHCore.remoteModalHandler();
             $.GHCore.customScrollBarOnLoadHandler();
             $.GHCore.meetingTimeHandler();
             $.GHCore.editMeetingTimeHandler()
             $.GHCore.meetingRoomHandlder();
             $.GHCore.upcomigMeetingHandler();
             $.GHCore.meetingTypeHandler();
-            $.GHCore.inviteUserHandler();
+            $.GHCore.inviteUserHandler.init();
         },
         ppath : function(){
 			var pageloc = $("#pagelo").val();
@@ -48,6 +52,24 @@
             var $collection = $('[data-minput]');
             if(!$collection.length) return;
         },
+        DTselectAll : function (selectallcontrol, target) {
+            if (!selectallcontrol.length || !target.length) return;
+			$(selectallcontrol).on('click', function () {
+				var rows = target.DataTable().rows({'search': 'applied'}).nodes();
+                $('input[type="checkbox"]', rows).not(".switch input").prop('checked', this.checked);
+                $.GHCore.inviteUserHandler.init();
+			});
+	  
+			$(target).find('tbody').on('change', 'input[type="checkbox"]', function () {
+                if (!this.checked) {
+                    var el = $(selectallcontrol).get(0);
+					if (el && el.checked && ('indeterminate' in el)) {
+                        el.indeterminate = true;
+                        console.log("tbody on change");
+					}
+				}
+			});
+		},
         flashMessageHandler : function(){
             $collection = $("#messages");
             if(!$collection.length) return;
@@ -56,12 +78,18 @@
                 $("#messages").fadeOut();
             }, 4000);
         },
+        remoteModalHandler : function(){
+            $('#meetingEdit_modal, #userEdit_modal').on('show.bs.modal', function (e) {
+                var button = $(e.relatedTarget);
+                var modal = $(this);
+                modal.find('.modal-body').load(button.data("remote"));
+            });
+        },
         meetingScrollBarHandler : function(){
-            console.log("meeting scroll called");
             $('.tab-scroll').slimscroll({
                 alwaysVisible: true,
                 height: 290
-              });
+            });
         },
         customScrollBarOnLoadHandler : function(){
             var $self = this;
@@ -228,18 +256,31 @@
                 }
             });
         },
-        inviteUserHandler : function(){
-            var invitedEmail = [];
-            $("input[name='invite_user_checkbox']").change(function() {
-                var checked = $(this).val();
-                if ($(this).is(':checked')) {
-                    invitedEmail.push(checked);
-                }else{
-                    invitedEmail.splice($.inArray(checked, invitedEmail),1);
+        inviteUserHandler : {
+            init : function(){
+                this.onInviteUsersChange()
+            },
+            setInviteUsers : function(){
+                var invitedEmail = [];
+
+                var selectedUsers = document.querySelectorAll("input[name='invite_user_checkbox']:checked");
+                for ( var i = 0; i < selectedUsers.length; i++ ){
+                    invitedEmail.push(selectedUsers[i].value);
                 }
-                
-            $(".inviteUsersEmail").val(invitedEmail);
-            });
+            
+                $(".inviteUsersEmail").val(invitedEmail);
+            },
+            onInviteUsersChange : function(){
+                // scroll
+                $('#inviteUser-scroll').slimscroll({
+                    alwaysVisible: true,
+                    height: 350
+                });
+
+                $("input[name='invite_user_checkbox']").change(function() {
+                    $.GHCore.inviteUserHandler.setInviteUsers();
+                });
+            }
         }
 
     }
