@@ -165,489 +165,198 @@ function doExport(selector, params) {
         }
         
 
-        function __fireConfirmPopup(){
-            var confirmeds = false;
-            $('[data-confirm]').on('click',function(){
-                var that = $(this),
-                    cMsg = that.attr('data-confirm-msg'),
-                    cFunction = that.attr('data-confirm-function'),
-                    thatId = that.attr('data-id');
-                $.confirm({
-                        icon: 'fa fa-smile-o',
-                        theme: 'modern',
-                        closeIcon: true,
-                        animation: 'scale',
-                        type: 'blue',
-                        title: 'Confirm!',
-                        content: cMsg,
-                        buttons: {
-                            No: function () {
-                            return;
-                            },
-                            Yes: function () {
-                            confirmeds = true;
-                                if(cFunction == 'deleteUser'){
-                                    deleteUser(that,thatId);
-                                }else if(cFunction == 'deleteMeeting'){
-                                    deleteMeeting(that,thatId);
-                                }
-                            }
-                        }
-                });
-            });
-        }
-        
-        $("#editSpotName_form").validate({
-            errorElement: 'span',
-            errorClass: 'error',
-            rules : {
-                spotName : {
-                    required : true,
-                    remote: {
-                        url: "../ajax/checkSpotName.php",
-                        type: "post",
-                        data:
-                        {
-                            id: function () {
-                                $(".checking_spot"+loadingIcon).show();
-                                $(".checking_spot"+checkIcon).hide();
-                                return $("#deviceId").val();
-                            },
-                            spotName: function () {
-                                return $("#spotName").val();
-                            }
+    function __fireConfirmPopup(){
+        var confirmeds = false;
+        $('[data-confirm]').on('click',function(){
+            var that = $(this),
+                cMsg = that.attr('data-confirm-msg'),
+                cFunction = that.attr('data-confirm-function'),
+                thatId = that.attr('data-id');
+            $.confirm({
+                    icon: 'fa fa-smile-o',
+                    theme: 'modern',
+                    closeIcon: true,
+                    animation: 'scale',
+                    type: 'blue',
+                    title: 'Confirm!',
+                    content: cMsg,
+                    buttons: {
+                        No: function () {
+                        return;
                         },
-                        complete: function (respone) {
-                            $(".checking_spot"+loadingIcon).hide();
-                            console.log(respone.responseText);
-                            if (respone.responseText == "true") {
-                                $(".checking_spot"+checkIcon).show().addClass("text-success");
+                        Yes: function () {
+                        confirmeds = true;
+                            if(cFunction == 'deleteUser'){
+                                deleteUser(that,thatId);
+                            }else if(cFunction == 'deleteMeeting'){
+                                deleteMeeting(that,thatId);
                             }
                         }
                     }
-                }
-            },
-            messages : {
-                spotName: {
-                    required : function(){
-                        if(!$("#spotName").val().length)$(".checking_spot"+checkIcon).hide();
-                        return "Provide"
-                    },
-                    remote: "Spot's name already used!!"
-                }
-            }
+            });
         });
-
-
-	$("#resetUsrPsw-form").validate({
-        
+    }
+    
+    $("#form_createMeeting").validate({
         errorElement: 'span',
         errorClass: 'error',
-        rules: {
-            currPsw_psw: {
-                required: true,
-                minlength: 5,
+        rules : {
+            meetingTitle : {
+                required : true
+            },
+            meetingType : {
+                required : true
+            },
+            meetingDate : {
+                required : true,
+            },
+            meetingTime : {
+                required : true,
+            },
+            meetingDuration : {
+                required : true,
+            }
+        },
+        messages : {
+            meetingTitle : {
+                required : "Provide"
+            },
+            meetingType: {
+                required : "Provide"
+            },
+            meetingDate : {
+                required : "Provide"
+            },
+            meetingTime : {
+                required : "Provide"
+            },
+            meetingDuration : {
+                required : "Provide"
+            }
+        },
+        errorPlacement : function(error, element){
+			if(element.attr("name") == "meetingType"){
+				error.appendTo(".meetingType_error");
+			}else{
+				error.insertAfter(element)
+			}
+		}
+    });
+
+    $("#form_addUsers").validate({
+        errorElement: 'span',
+        errorClass: 'error',
+        rules : {
+            first_name : {
+                required : true
+            },
+            last_name : {
+                required : true
+            },
+            email : {
+                required : true,
                 remote: {
-                    url: "ajax/checkLoginPwd.php",
+                    url: "/../admin/checkUserEmail",
                     type: "post",
                     data:
                     {
                         email: function () {
-                            $("#resetUsrPsw").find(loadingIcon).show();
-                            $("#resetUsrPsw").find(checkIcon).hide();
-                            return $("#loginId").val();
-                        },
-                        enteredPsw: function () {
-                            return $("#currPsw_psw").val();
+                            $(".checking_email"+loadingIcon).show();
+                            $(".checking_email"+checkIcon).hide();
+                            return $("#email").val();
                         }
                     },
                     complete: function (respone) {
-                        $("#resetUsrPsw").find(loadingIcon).hide();
+                        $(".checking_email"+loadingIcon).hide();
+                        console.log(respone.responseText);
                         if (respone.responseText == "true") {
-                            $("#resetUsrPsw").find(checkIcon).show().addClass("text-success");
+                            $(".checking_email"+checkIcon).show().addClass("text-success");
                         }
                     }
                 }
             },
-            resetNewpsw: {
-                required: true,
-                minlength: 5
-            },
-            resetCnewpsw: {
-                required: true,
-                equalTo: "#resetNewpsw"
+            password : {
+                required : true,
+                length : 4
             }
         },
-        messages: {
-            currPsw_psw: {
-                required: "Provide current password",
-                minlength: "Password must be at least 5 characters",
-                remote: "Invalid Password"
+        messages : {
+            first_name : {
+                required : "Provide"
             },
-            resetNewpsw: {
-                required: "Please enter new password",
-                minlength: "Password must be at least 5 characters"
+            last_name : {
+                required : "Provide"
             },
-            resetCnewpsw: {
-                required: "Please confirm new password",
-                equalTo: "Password doesn't match"
+            email: {
+                required : function(){
+                    if(!$("#email").val().length)$(".checking_email"+checkIcon).hide();
+                    return "Provide"
+                },
+                remote: "Email address already used !!!"
+            },
+            password : {
+                required : "Provide",
+                minlength : "Password must be atleast 4 character"
             }
-        },
-        submitHandler: function (form) {
-            $("#resetUsrPsw.modal").attr("data-backdrop", "static");
-            var chePsw_currEmail = $("#loginId").val(),
-            chpsw_newPsw = $("#resetCnewpsw").val(),
-            chePsw_oldPsw = $("#currPsw_psw").val();
-
-            btnChangePsw.html(btnPrctxt).attr('disabled', true).addClass(btnanimate);
-            $.post("ajax/updLoginPwd.php", { userEmail: chePsw_currEmail, currPsw: chePsw_oldPsw, newPsw: chpsw_newPsw },
-			function (data) {
-				console.log(data);
-			    if (data == 'valid') {
-			        btnChangePsw.html(btnCnttxt).attr('disabled', false).removeClass(btnanimate);
-			        $("#restPsw_msgs").html("<div class='alert alert-success padd4' role='alert'>" + checkSign + " Sucessfully Reset. Use New Password On Next Login</div>");
-			        window.setTimeout(function () { location.reload(true) }, 4000);
-			    }
-			    else if (data == 'invalidd') {
-			        $("#restPsw_msgs").html("<div class='alert alert-warning padd4' role='alert'>" + checkSign + " Some problem occurs.Please try again.</div>");
-			        btnChangePsw.html("RESET").attr('disabled', false).removeClass(btnanimate);
-			    }
-			    else if (data == 'invalid') {
-					alert("You try some harmful activities!!!");
-					location.reload(true);
-			    }
-			});
-            return false;
         }
     });
 
-    
-    $(".graphFrame").colorbox({ iframe: true, innerWidth: "992px", innerHeight: "580px", opacity: 0.9});
-    
-    $(".iframe-common").colorbox({ iframe: true, innerWidth : function(){ return $(this).attr("data-width")}, innerHeight : function(){ return $(this).attr("data-height")}, opacity: 0.9,});
-    
-    function getGuageSensorData(sType){
-        $.post("ajax/tempHumData.php",
-            function(response){
-                var $responses =  $.parseJSON(response),
-                    temp = $responses['env_temp'],
-                    humidity = $responses['humidity'];
-                if(sType == "temp"){
-                    return temp;
-                }else if(sType == "humidity"){
-                    return humidity;
-                }else{
-                    return humidity;
-                }
-            });
-        return "76";
-    }
-    function fireLocationPieChart(location){
-        var freqLocationArray = location;
-        console.log(freqLocationArray);
-        if((location == undefined || location == '')){
-            $("#freqLocation_pie").html("<div class='txt-gray'>Nothing to display</div>").css({
-                "padding-top": "60px",
-                "text-align": "center"
-            });
-        }else{
-            $("#freqLocation_pie").css({"padding-top": "0px","text-align": "center"});
-            var chart = '';
-            var options = {
-                chart: {
-                    renderTo: 'freqLocation_pie',
-                    plotBackgroundColor: null,
-                    plotBorderWidth: null,
-                    plotShadow: false
-                },
-                title: {
-                    text: ''
-                },
-                credits: {
-                    enabled: false
-                },
-                tooltip: {
-                    formatter: function() {
-                        return '<b>'+ this.point.name +'</b>: '+ Math.round(this.percentage) +' %';
-                    }
-                },
-                plotOptions: {
-                    pie: {
-                        allowPointSelect: true,
-                        cursor: 'pointer',
-                        dataLabels: {
-                            enabled: true,
-                            color: '#000000',
-                            connectorColor: '#000000',
-                            formatter: function() {
-                                return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
-                            }
+    $("#form_editUsers").validate({
+        errorElement: 'span',
+        errorClass: 'error',
+        rules : {
+            first_name : {
+                required : true
+            },
+            last_name : {
+                required : true
+            },
+            email : {
+                required : true,
+                remote: {
+                    url: "/../admin/checkUserEmail",
+                    type: "post",
+                    data:
+                    {
+                        email: function () {
+                            $(".checking_email"+loadingIcon).show();
+                            $(".checking_email"+checkIcon).hide();
+                            return $("#email").val();
+                        }
+                    },
+                    complete: function (respone) {
+                        $(".checking_email"+loadingIcon).hide();
+                        console.log(respone.responseText);
+                        if (respone.responseText == "true") {
+                            $(".checking_email"+checkIcon).show().addClass("text-success");
                         }
                     }
-                },
-                series: [{
-                    type: 'pie',
-                    name: '',
-                    data: [],
-                    size: '100%',
-                    innerSize: '80%',
-                    colors: ['#3da07b', 'rgba(206, 67, 0, 0.5)'],
-                    showInLegend:true,
-                    dataLabels: {
-                        enabled: false
-                    }
-                }]
-            }
-        
-            chart = new Highcharts.Chart(options);
-            chart.series[0].setData(eval('['+freqLocationArray+']'));
-        }
-    }
-    
-    function _fireEnvTempHumMulti(id){
-
-        // Create the chart
-        var chart = Highcharts.StockChart('tempHumGraph', {
-            chart: {
-                events: {
-                    load: envTempHumGraph
                 }
             },
-
-            time: {
-                useUTC: false
-            },
-            credits : {
-                enabled : false
-            },
-            rangeSelector: {
-                buttons: [{
-                    count: 1,
-                    type: 'minute',
-                    text: '1M'
-                }, {
-                    count: 5,
-                    type: 'minute',
-                    text: '5M'
-                }, {
-                    type: 'all',
-                    text: 'All'
-                }],
-                inputEnabled: false,
-                selected: 2
-            },
-
-            title: null,
-            xAxis: {
-                type: 'datetime',
-                },
-            
-            yAxis: [{
-                labels: {
-                    format: '{value} C'
-                },
-                title: {
-                    text: 'Temperature'
-                },
-                offset:45
-            }, {
-                labels: {
-                    format: '{value}%'
-                },
-                title: {
-                    text: 'Humidity'
-                },
-                opposite: false,
-            }],
-            exporting: {
-                enabled: false
-            },
-
-            series: [{
-                name: 'Temperature',
-                data: [],
-                yAxis: 0
-            }, {
-                name: 'Humidity',
-                data: [],
-                yAxis: 1
-            }]
-        });
-        function envTempHumGraph() {
-            function temHumGraphCore(){
-                $.post("../ajax/tempHumData.php", { id : id },
-                function(response){
-                    console.log(response);
-                    var $responses =  $.parseJSON(response),
-                        temp = parseFloat($responses['temp']),
-                        hum = parseFloat($responses['humidity']),
-                        datetime = $responses['time'];
-                    chart.series[0].addPoint({ x: (datetime), y: temp });
-                    chart.series[1].addPoint({ x: (datetime), y: hum });
-                });
+            password : {
+                required : true,
+                length : 4
             }
-            setInterval(function () {
-                temHumGraphCore();
-            }, 11000);
-            
-            temHumGraphCore();
+        },
+        messages : {
+            first_name : {
+                required : "Provide"
+            },
+            last_name : {
+                required : "Provide"
+            },
+            email: {
+                required : function(){
+                    if(!$("#email").val().length)$(".checking_email"+checkIcon).hide();
+                    return "Provide"
+                },
+                remote: "Email address already used !!!"
+            },
+            password : {
+                required : "Provide",
+                minlength : "Password must be atleast 4 character"
+            }
         }
-
-        var customGraphOptions = {
-            chart: {
-                renderTo: ' ',
-                type: 'spline',
-            },
-            time: {
-                useUTC: false
-            },
-            credits : {
-                enabled : false
-            },
-            rangeSelector: {
-                buttons: [{
-                    count: 1,
-                    type: 'day',
-                    text: 'TD'
-                }, {
-                    count: 1,
-                    type: 'month',
-                    text: '1mnt'
-                }, {
-                    count: 3,
-                    type: 'month',
-                    text: '3mnt'
-                }, {
-                    count: 6,
-                    type: 'month',
-                    text: '6mnt'
-                }, {
-                    count: 1,
-                    type: 'year',
-                    text: '1Y'
-                }, {
-                    type: 'all',
-                    text: 'All'
-                }],
-                selected: 7
-            },
-
-            title: null,
-            xAxis: {
-                type: 'datetime',
-                },
-            
-            yAxis: [{
-                labels: {
-                    format: '{value} C'
-                },
-                title: {
-                    text: 'Temperature'
-                },
-                offset:45
-            }, {
-                labels: {
-                    format: '{value}%'
-                },
-                title: {
-                    text: 'Humidity'
-                },
-                opposite: false,
-            }],
-            exporting: {
-                enabled: false
-            },
-
-            series: [{
-                name: 'Temperature',
-                data: [],
-                yAxis: 0
-            }, {
-                name: 'Humidity',
-                data: [],
-                yAxis: 1
-            }]
-        }
-
-        function tempHumCusGraph() {
-            $.post("../ajax/tempHumCustomData.php", { id : id },
-                function(response){
-                    var $responses =  $.parseJSON(response);
-                    var temp = [];
-                    var humidity = [];
-                    $.each($responses, function(key,value) {
-                        temp.push([value.time, parseFloat(value.temp)]);
-                        humidity.push([value.time,parseFloat(value.humidity)]);
-                    });
-                    customGraphOptions.series[0].data = temp;
-                    customGraphOptions.series[1].data = humidity;
-                    new Highcharts.StockChart(customGraphOptions);
-            });
-        }
-        tempHumCusGraph();
-    }
-
-    function _fireCompareReport(){
-        var seriesOptions = [],
-		yAxisOptions = [],
-		seriesCounter = 0,
-		counts = ['1', '2', '3'],
-		colors = Highcharts.getOptions().colors;
-	$.each(counts, function(i, count) {
-        var crDate = $("#crDate").val(),
-            fromDateTime = $("#crFrom_"+count).val(),
-            toDateTime = $("#crTo_"+count).val();
-        console.log(crDate);
-		$.getJSON('ajax/testHigh.php?date='+crDate+'&fromTime='+fromDateTime+'&toTime='+toDateTime+'', function(data) {
-            console.log(data);
-			seriesOptions[i] = {
-				name: name,
-				data: data
-			};
-			// As we're loading the data asynchronously, we don't know what order it will arrive. So
-			// we keep a counter and create the chart when all the data is loaded.
-			seriesCounter++;
-			if (seriesCounter == names.length) {
-				createChart();
-			}
-		});
-	});
-	// create the chart when all data is loaded
-	function createChart() {
-		chart = new Highcharts.StockChart({
-		    chart: {
-		        renderTo: 'container'
-		    },
-		    rangeSelector: {
-		        selected: 4
-		    },
-		    yAxis: {
-		    	labels: {
-		    		formatter: function() {
-		    			return (this.value > 0 ? '+' : '') + this.value + '%';
-		    		}
-		    	},
-		    	plotLines: [{
-		    		value: 0,
-		    		width: 2,
-		    		color: 'silver'
-		    	}]
-		    },
-		    
-		    plotOptions: {
-		    	series: {
-		    		compare: 'percent'
-		    	}
-		    },
-		    
-		    tooltip: {
-		    	pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
-		    	valueDecimals: 2
-		    },
-		    
-		    series: seriesOptions
-		});
-	}
-    }
+    });
 
 })(jQuery);
