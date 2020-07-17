@@ -243,6 +243,30 @@ function doExport(selector, params) {
 		}
     });
 
+    $("#form_inviteUser").validate({
+        errorElement: 'span',
+        errorClass: 'error',
+        ignore : "",
+        rules : {
+            invitedEmails : {
+                required : true
+            },
+            
+        },
+        messages : {
+            invitedEmails : {
+                required : "Select atleast on user to meeting invite."
+            }
+        },
+        errorPlacement : function(error, element){
+			if(element.attr("name") == "invitedEmails"){
+				error.appendTo(".invitedEmails_error");
+			}else{
+				error.insertAfter(element)
+			}
+		}
+    });
+    
     $("#form_addUsers").validate({
         errorElement: 'span',
         errorClass: 'error',
