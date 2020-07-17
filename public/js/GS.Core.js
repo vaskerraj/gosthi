@@ -15,6 +15,7 @@
             $.GHCore.inputMask();
             $.GHCore.DTselectAll($applistDTtableCheckAll,$applistDTtable);
             $.GHCore.flashMessageHandler();
+            $.GHCore.createMeetingHandler();
             $.GHCore.remoteModalHandler();
             $.GHCore.customScrollBarOnLoadHandler();
             $.GHCore.meetingTimeHandler();
@@ -79,6 +80,11 @@
                 console.log("meesage hide");
                 $("#messages").fadeOut();
             }, 4000);
+        },
+        createMeetingHandler : function(){
+            const currentMeetingDate = moment().format('YYYY/MM/DD');
+            document.querySelector("#meetingDate").value = currentMeetingDate;
+            document.querySelector("#meetingDate").classList.add("active");
         },
         remoteModalHandler : function(){
             $('#meetingEdit_modal').on('show.bs.modal', function (e) {
@@ -147,7 +153,6 @@
                 if(thisId){
                     $.post('/../admin/meetingDetails', {id : thisId},
                     function(response){
-                        console.log(response);
                         if(response.id === undefined){
                             location.reload(true);
                             return false;
