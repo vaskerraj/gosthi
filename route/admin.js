@@ -84,7 +84,6 @@ router.post('/', ensureAuthenticated, checkRole(['admin']),
         }
         connection.query(meetingSql, meetingSqlData, (err, results, fields)=>{
             if(err) throw err;
-            console.log("successfully inserted at meeting database");
         });
         
         // req.toastr.success("Successfully added new protfolio");
@@ -127,7 +126,6 @@ router.get('/editMeeting/:id', ensureAuthenticated, checkRole(['admin']), async 
     const editMeetingId = req.params.id;
     
     connection.query("SELECT id, title, type, meeting_date, meeting_time, meeting_duration FROM meeting WHERE id = ?", [editMeetingId], (err, editMettingResult)=>{
-        console.log(editMettingResult[0]);
         res.render('admin/editMeeting',{
             editMeetingData : editMettingResult[0]
         });
@@ -185,6 +183,15 @@ router.post('/editMeeting', ensureAuthenticated, checkRole(['admin']),
         res.location('/admin/');
         res.redirect('/admin/');
     }
+});
+
+
+router.post('/upcomingMeeting', ensureAuthenticated, checkRole(['admin']), (req, res, next)=>{
+    const upcomingMeeting_adminId = req.body.id;
+    connection.query("SELECT * FROM meeting WHERE admin_id =? AND type = ?", [upcomingMeeting_adminId, 'schedule'], (err, upcomingMeetingResult)=>{
+        if(err) throw err;
+        return res.status(200).json(upcomingMeetingResult);
+    });
 });
 
 router.get("/deleteMeeting/:id", ensureAuthenticated, checkRole(['admin']), (req, res, next)=>{
@@ -272,10 +279,8 @@ router.post('/users', ensureAuthenticated, checkRole(['admin']),
 
                 connection.query("INSERT INTO login SET ?", [loginData], (err, results)=>{
                     if(err) throw err;
-                    console.log("login database");
                 });
             });
-            console.log("successfully inserted at users database");
         });
         
         // req.toastr.success("Successfully added new protfolio");
@@ -287,19 +292,10 @@ router.post('/users', ensureAuthenticated, checkRole(['admin']),
 
 });
 
-router.post('/upcomingMeeting', ensureAuthenticated, checkRole(['admin']), (req, res, next)=>{
-    const upcomingMeeting_adminId = req.body.id;
-    connection.query("SELECT * FROM meeting WHERE admin_id =? AND type = ?", [upcomingMeeting_adminId, 'schedule'], (err, upcomingMeetingResult)=>{
-        if(err) throw err;
-        return res.status(200).json(upcomingMeetingResult);
-    });
-});
-
 router.post('/checkUserEmail', ensureAuthenticated, checkRole(['admin']), async(req, res, next)=>{
     var userEmailToCheck = req.body.email;
     connection.query("SELECT count(id) AS userEmailExit FROM login WHERE username =?", [userEmailToCheck], (err, userEmailCheckResult)=>{
         if(err) throw err;
-       console.log(userEmailCheckResult[0].userEmailExit)
         if(userEmailCheckResult[0].userEmailExit === 0){
             return res.send("true");
         }else{
@@ -324,7 +320,6 @@ router.post('/checkUpdUserEmail', ensureAuthenticated, checkRole(['admin']), asy
 
 router.get('/editUsers/:id', ensureAuthenticated, checkRole(['admin']), async (req, res, next)=>{
     const editUsersId = req.params.id;
-    console.log(editUsersId);
     
     connection.query("SELECT * FROM users INNER JOIN login ON users.id = login.user_id WHERE users.id = ?", [editUsersId], (err, editUsersResult) =>{
         if(err) throw err;
@@ -332,6 +327,73 @@ router.get('/editUsers/:id', ensureAuthenticated, checkRole(['admin']), async (r
             editUsersData : editUsersResult[0]
         });
     });
+});
+
+
+router.post('/editUsers', ensureAuthenticated, checkRole(['admin']),
+    check("userId", "Provide").not().isEmpty(),
+    check("first_name", "Provide first name").not().isEmpty(),
+    check("updEmail", "Provide email").not().isEmpty(),
+(req, res, next)=>{
+    var edit_userId = req.body.userId,
+        edit_first_name = req.body.first_name,
+        edit_last_name = req.body.last_name,
+        edit_email = req.body.updEmail,
+        edit_mobileNo = req.body.mobile_no,
+        edit_password = req.body.password;
+
+    var updUser_errors = validationResult(req);
+    
+    if(!updUser_errors.isEmpty()){
+        let userPromise = [
+            usersList(req.user.relId)
+        ];
+        Promise.all(userPromise)
+            .then((userList)=>{
+                res.render('admin/users', {
+                    errors : updUser_errors['errors'],
+                    title : "Users || Ghosti",
+                    page : "users",
+                    currentUser : req.user,
+                    loginPage : false,
+                    data : {
+                        users : userList[0]      
+                    }
+                });
+            }).catch((err)=>{
+                if(err) throw err;
+            });
+    }else{
+        connection.query("UPDATE users SET first_name = ?, last_name = ?, email =?, mobile_no = ? WHERE id = ?", [edit_first_name, edit_last_name, edit_email, edit_mobileNo, edit_userId], (err)=>{
+            if(err) throw err;
+
+            if(edit_password === undefined){
+                connection.query("UPDATE login SET username = ? WHERE user_id = ?", [edit_email, edit_userId], (err)=>{
+                    if(err) throw err;
+                });
+            }else{
+                // pass into varibale for bycrptjs
+                let loginHashData = {
+                    username : edit_email,
+                    password : edit_password,
+                };
+                bycrypt.hash(loginHashData.password, 10, (err, hash)=>{
+                    if(err) throw err;
+                    loginHashData.password = hash;
+    
+                    connection.query("UPDATE login SET ? WHERE user_id = ?", [loginHashData, edit_userId], (err)=>{
+                        if(err) throw err;
+                    });
+                });
+            }
+        });
+
+        req.flash("success","<span class='fa fa-fw fa-check'></span> Successfully edited users's details");
+
+        res.location('/admin/users/');
+        res.redirect('/admin/users/'); // add / for relaod with
+    }
+
 });
 
 // delete users
