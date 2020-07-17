@@ -333,6 +333,9 @@ textarea.form-control.active ~ label{
 .form-control:disabled {
   cursor: not-allowed;
 }
+.form-control:disabled ~ label {
+  opacity: 0.6;
+}
 
 #meetingTime.form-control ~ label,
 #meetingDuration.form-control ~ label{
