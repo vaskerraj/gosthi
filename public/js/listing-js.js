@@ -248,18 +248,18 @@ function doExport(selector, params) {
         errorClass: 'error',
         ignore : "",
         rules : {
-            invitedEmails : {
+            invite_user_checkbox : {
                 required : true
             },
             
         },
         messages : {
-            invitedEmails : {
-                required : "Select atleast on user to meeting invite."
+            invite_user_checkbox : {
+                required : "Select atleast one user to meeting invite."
             }
         },
         errorPlacement : function(error, element){
-			if(element.attr("name") == "invitedEmails"){
+			if(element.attr("name") == "invite_user_checkbox"){
 				error.appendTo(".invitedEmails_error");
 			}else{
 				error.insertAfter(element)
@@ -335,24 +335,27 @@ function doExport(selector, params) {
             last_name : {
                 required : true
             },
-            email : {
+            updEmail : {
                 required : true,
                 remote: {
-                    url: "/../admin/checkUserEmail",
+                    url: "/../admin/checkUpdUserEmail",
                     type: "post",
                     data:
                     {
+                        userId: function(){
+                            return $("input[name='userId']").val();
+                        },
                         email: function () {
-                            $(".checking_email"+loadingIcon).show();
-                            $(".checking_email"+checkIcon).hide();
-                            return $("#email").val();
+                            $(".checking_updEmail"+loadingIcon).show();
+                            $(".checking_updEmail"+checkIcon).hide();
+                            return $("#updEmail").val();
                         }
                     },
                     complete: function (respone) {
-                        $(".checking_email"+loadingIcon).hide();
+                        $(".checking_updEmail"+loadingIcon).hide();
                         console.log(respone.responseText);
                         if (respone.responseText == "true") {
-                            $(".checking_email"+checkIcon).show().addClass("text-success");
+                            $(".checking_updEmail"+checkIcon).show().addClass("text-success");
                         }
                     }
                 }
@@ -371,7 +374,7 @@ function doExport(selector, params) {
             },
             email: {
                 required : function(){
-                    if(!$("#email").val().length)$(".checking_email"+checkIcon).hide();
+                    if(!$("#updEmail").val().length)$(".checking_updEmail"+checkIcon).hide();
                     return "Provide"
                 },
                 remote: "Email address already used !!!"
