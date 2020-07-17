@@ -23,6 +23,7 @@
             $.GHCore.upcomigMeetingHandler();
             $.GHCore.meetingTypeHandler();
             $.GHCore.inviteUserHandler.init();
+            $.GHCore.upadteUsersHandler();
         },
         ppath : function(){
 			var pageloc = $("#pagelo").val();
@@ -98,7 +99,8 @@
         meetingTimeHandler : function(){
             $collection = document.querySelector(".meetingTime");
             $editCollection = document.querySelector("#edit_meetingTime");
-            if(!$collection.length) return;
+            if($collection === null) return;
+            console.log($collection);
 
             // init meeting time
             var selectedMeetingTimeTxt = $collection.options[$collection.selectedIndex].value;
@@ -284,6 +286,18 @@
                     $.GHCore.inviteUserHandler.setInviteUsers();
                 });
             }
+        },
+        upadteUsersHandler : function(){
+            document.querySelector("#triggerUpdUserPsd").addEventListener('change', function(e){
+                
+                if(this.checked){
+                    console.log("no disable");
+                    document.querySelector("#user_updPass").disabled = false;
+                }else{
+                    console.log("disable")
+                    document.querySelector("#user_updPass").disabled = true;
+                }
+            })
         }
 
     }
