@@ -22,6 +22,7 @@
             $.GHCore.meetingRoomHandlder();
             $.GHCore.upcomigMeetingHandler();
             $.GHCore.meetingTypeHandler();
+            $.GHCore.meetingDateHandler();
             $.GHCore.inviteUserHandler.init();
             $.GHCore.upadteUsersHandler();
         },
@@ -106,7 +107,6 @@
             $collection = document.querySelector(".meetingTime");
             $editCollection = document.querySelector("#edit_meetingTime");
             if($collection === null) return;
-            console.log($collection);
 
             // init meeting time
             var selectedMeetingTimeTxt = $collection.options[$collection.selectedIndex].value;
@@ -192,6 +192,7 @@
 
             });
         },
+        
         dateToFromNowDaily : function( someDate ){
             // moment(someDate).fromNow(true);
             let date = moment(someDate);
@@ -267,9 +268,17 @@
                 }
             });
         },
+        meetingDateHandler : function(){
+            var $collection = $("#meetingDate");
+            $collection.datepicker({
+                dateFormat: "yy/mm/dd",
+                minDate: "0",
+            });
+        },
         inviteUserHandler : {
             init : function(){
-                this.onInviteUsersChange()
+                this.onInviteUsersChange();
+                this.setInviteUsers();
             },
             setInviteUsers : function(){
                 var invitedEmail = [];
