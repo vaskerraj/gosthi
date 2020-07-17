@@ -330,6 +330,9 @@ textarea.form-control.active ~ label{
   -webkit-transform: translateY(-16px) scale(.8);
   transform: translateY(-16px) scale(.8);
 }
+.form-control:disabled {
+  cursor: not-allowed;
+}
 
 #meetingTime.form-control ~ label,
 #meetingDuration.form-control ~ label{
@@ -537,7 +540,8 @@ button.copy{
 /* for modals */
 
 @media (min-width: 576px){
-    #addNewUser .modal-dialog {
+    #addNewUser .modal-dialog,
+    #userEdit_modal .modal-dialog {
       max-width: 676px;
     }
 
@@ -558,19 +562,26 @@ button.copy{
   outline: none;
 }
 
+/* invite user  */
 #inviteUserslist thead tr th:focus{
   outline: none;
+}
+#inviteUserslist tbody tr {
+  /* cursor: pointer; */
+}
+#inviteUser-scroll .dataTables_paginate {
+  display: none;
 }
 
 .checking_updusername,
 .checking_updEmail{
-    top: 35px;
-    right: 15px;
+    top: 10px;
+    right: 5px;
 }
 .checking_mac,
 .checking_updMac,
 .checking_username,
 .checking_email {
-    top: 16px;
+    top: 10px;
     right: 5px;
 }
