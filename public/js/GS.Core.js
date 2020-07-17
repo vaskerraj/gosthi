@@ -43,7 +43,6 @@
 			});
 			$collection.on('focusin', function(){
 				$(this).addClass("active");
-				console.log($(this));
 			});
 			$collection.on('focusout', function(){
 				if($(this).val() == ''){
@@ -68,7 +67,6 @@
                     var el = $(selectallcontrol).get(0);
 					if (el && el.checked && ('indeterminate' in el)) {
                         el.indeterminate = true;
-                        console.log("tbody on change");
 					}
 				}
 			});
@@ -77,14 +75,15 @@
             $collection = $("#messages");
             if(!$collection.length) return;
             setTimeout(function() {
-                console.log("meesage hide");
                 $("#messages").fadeOut();
             }, 4000);
         },
         createMeetingHandler : function(){
+            var collection = document.querySelector("#meetingDate");
+            if(collection === null) return;
             const currentMeetingDate = moment().format('YYYY/MM/DD');
-            document.querySelector("#meetingDate").value = currentMeetingDate;
-            document.querySelector("#meetingDate").classList.add("active");
+            collection.value = currentMeetingDate;
+            collection.classList.add("active");
         },
         remoteModalHandler : function(){
             $('#meetingEdit_modal').on('show.bs.modal', function (e) {
