@@ -153,7 +153,7 @@ router.post('/editMeeting', ensureAuthenticated, checkRole(['admin']),
         Promise.all(meetingRoomPromise)
             .then((meeting)=>{
                 res.render('admin/', {
-                    errors : errors['errors'],
+                    errors : error_updateMeeting['errors'],
                     title : "Index || Ghosti Hub",
                     page : "index",
                     currentUser : req.user,
@@ -195,6 +195,8 @@ router.get("/deleteMeeting/:id", ensureAuthenticated, checkRole(['admin']), (req
         res.send("done");
     });
 });
+
+// users route
 
 router.get('/users', ensureAuthenticated, checkRole(['admin']), async (req, res, next)=>{
     let userPromise = [
@@ -298,6 +300,19 @@ router.post('/checkUserEmail', ensureAuthenticated, checkRole(['admin']), async(
     connection.query("SELECT count(id) AS userEmailExit FROM login WHERE username =?", [userEmailToCheck], (err, userEmailCheckResult)=>{
         if(err) throw err;
        console.log(userEmailCheckResult[0].userEmailExit)
+        if(userEmailCheckResult[0].userEmailExit === 0){
+            return res.send("true");
+        }else{
+            return res.send("false");
+        }
+
+    });
+});
+router.post('/checkUpdUserEmail', ensureAuthenticated, checkRole(['admin']), async(req, res, next)=>{
+    const userEmailToCheck_upd = req.body.updEmail,
+        userId_upd = req.body.userId;
+    connection.query("SELECT count(id) AS userEmailExit FROM login WHERE username = ? AND user_id != ?", [userEmailToCheck_upd, userId_upd], (err, userEmailCheckResult)=>{
+        if(err) throw err;
         if(userEmailCheckResult[0].userEmailExit === 0){
             return res.send("true");
         }else{
