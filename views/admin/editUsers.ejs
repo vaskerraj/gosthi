@@ -1,0 +1,62 @@
+<form action="/admin/editUsers" method ="post" id="form_editUsers">
+    <input type="hidden" name="userId" value="<%- editUsersData.user_id%>">
+    <div class="row">
+        <div class="col-md-8 col-xs-12">
+          <div class="row">
+            <div class="col-md-12 col-xs-12 borderB">
+              <strong>Personal Details</strong>
+            </div>
+          <div class="col-md-6 col-xs-12 marT15">
+            <div class="clearfix">
+              <input type='text' class="form-control" name='first_name' id="first_name" value="<%- editUsersData.first_name%>" autocomplete="off" />
+              <label for="first_name">First name</label>
+            </div>
+          </div><!--./col-->
+          <div class="col-md-6 col-xs-12 marT15">
+            <div class="clearfix mr">
+              <input type='text' class="form-control" name='last_name' id="last_name" value="<%- editUsersData.last_name%>" autocomplete="off" />
+              <label for="li_name_name">Last name</label>
+            </div>
+          </div><!--/.col-->
+          <div class="col-md-6 col-xs-12 marT15">
+            <div class="clearfix mr">
+              <input type='number' class="form-control" name='mobile_no' id="mobile_no" value="<%- editUsersData.mobile_no%>" />
+              <label for="mobile_no">Mobile No.</label>
+            </div>
+          </div><!--/.col-->
+        </div><!--/.row-->
+            
+        </div><!--/.col-->
+        <div class="col-md-4 col-xs-12">
+          <div class="col-12 borderB">
+            <strong>Auth Details</strong> 
+          </div>
+          <div class="clearfix mr marT15">
+            <i class="checking_updEmail fa fa-spinner fa-spin mab" style="display: none"></i>
+            <i class="checking_updEmail fa fa-check mab" style="display: none"></i>
+            <input type='email' class="form-control" name="updEmail" id="updEmail"  value="<%- editUsersData.username%>" autocomplete="off" />
+            <label for="updEmail">Email</label>
+          </div>
+            <div class="clearfix marT10">
+                <div class="d-inline" style="padding-left: 20px;">
+                    <input type="checkbox" name="" id="triggerUpdUserPsd">
+                    <label for="triggerUpdUserPsd">Update Password</label>
+                </div>
+                <div class="clearfix mr marT10">
+                    <input type='text' class="form-control" name='password' id="user_updPass" autocomplete="off" disabled />
+                    <label for="user_updPass">Password</label>
+                </div>
+            </div><!--/.clearfix-->
+        </div><!--/.col-->
+    </div><!--/.row-->
+    <div class="d-block mt-4">
+        <button type="submit" class="btn btn-primary ml-3 fR">
+            <span class="fa fa-save"></span>
+            SAVE
+        </button>
+        <button class="btn btn-default fR" data-dismiss="modal" aria-label="Close">Cancel</button>
+    </div>
+</form>
+
+<%- include('../partials/js')%>
+<script src="/js/listing-js.js"></script>
