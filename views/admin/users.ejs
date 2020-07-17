@@ -7,8 +7,8 @@
     <title><%- title %></title>
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="/vendor/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="/vendor/fontawesome-free/css/v4-shims.min.css">
     <link rel="stylesheet" href="/css/main.min.css">
-    <link rel="stylesheet" href="/vendor/toastr/toastr.min.css">
     <link rel="stylesheet" href="/css/jquery-confirm.min.css">
     <link rel="stylesheet" href="/vendor/datatables/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="/css/style.css">
@@ -39,7 +39,7 @@
               <div class="card">
                 <div class="card-body">
                   <div class="clearfix borderBdm paddTB12 text-right">
-                    <button type="button" class="btn bg-gradient-success btn-sm fR" data-toggle="modal" data-target="#addNewUser">
+                    <button type="button" class="btn btn-primary btn-sm fR" data-toggle="modal" data-target="#addNewUser">
                       <span class="fa fa-plus"></span>
                       Add New User
                     </button>
@@ -79,9 +79,9 @@
                           <td><%=list.email%></td>
                           <td><%=list.mobile_no%></td>
                           <td>
-                            <button class="btn btn-info btn-sm">
+                            <a href="javascript:void(0)" class="btn btn-primary btn-sm" data-remote="/admin/editUsers/<%=list.id%>" data-toggle="modal" data-target="#userEdit_modal">
                               <i class="fa fa-edit"></i>
-                            </button>
+                            </a>
                             <button class="btn btn-sm btn-danger" data-confirm="ys" data-id=<%=list.id%> data-confirm-msg="Do you want to delete user '<%=list.first_name +' '+ list.last_name%>'?" data-confirm-function="deleteUser" data-toggle="tooltip" title="Delete">
                               <i class="fa fa-trash-alt"></i>
                             </button>
@@ -101,10 +101,10 @@
     <div class="modal-dialog" role="document">
           <div class="modal-content">
               <div class="modal-header">
-              <h5 class="modal-title" id="modalTitle">Add User</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-              </button>
+                <h5 class="modal-title" id="modalTitle">Add User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span class="fa fa-window-close-o" aria-hidden="true"></span>
+                </button>
               </div>
               <div class="modal-body">
                   <form action="" method ="post" id="form_addUsers">
@@ -142,22 +142,37 @@
                             <div class="clearfix mr marT15">
                               <i class="checking_email fa fa-spinner fa-spin mab" style="display: none"></i>
                               <i class="checking_email fa fa-check mab" style="display: none"></i>
-                              <input type='email' class="form-control" name="email" id="email" />
+                              <input type='email' class="form-control" name="email" id="email" autocomplete="off" />
                               <label for="email">Email</label>
                             </div>
-                            <div class="clearfix mr marT15">
+                            <div class="clearfix mr marT20">
                               <input type='text' class="form-control" name='password' id="user_pass" autocomplete="off" />
                               <label for="user_pass">Password</label>
                             </div><!--/.clearfix-->
                           </div><!--/.col-->
                       </div><!--/.row-->
                       <div class="col mt-3 text-right">
-                          <button type="submit" name="addNewMerchant" class="btn bg-gradient-success btn-sm">
+                          <button type="submit" name="addNewMerchant" class="btn btn-primary btn-sm">
                               <span class="fa fa-plus"></span>
                               ADD NEW USER
                           </button>
                       </div>
                   </form>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="modal fade" id="userEdit_modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="inviteUserTitle">Edit User</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span class="fa fa-window-close-o" aria-hidden="true"></span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  Loading ...
               </div>
           </div>
       </div>
