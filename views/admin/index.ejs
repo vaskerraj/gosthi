@@ -37,69 +37,6 @@
         </div>
         <div class="content">
           <div class="container-fluid">
-            <div class="row d-none">
-              <div class="col-12 col-sm-6 col-md-6">
-                  <div class="info-box">
-                  <span class="info-box-icon bg-info elevation-1"><i class="fas fa-fw fa-users "></i></span>
-
-                  <div class="info-box-content">
-                      <span class="info-box-text">Users</span>
-                      <span class="info-box-number">
-                      <%-data.totalUser%>
-                      </span>
-                  </div>
-                  <!-- /.info-box-content -->
-                  </div>
-                  <!-- /.info-box -->
-              </div>
-              <!-- /.col -->
-
-              <div class="col-12 col-sm-6 col-md-6">
-                  <div class="info-box">
-                  <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-fw fa-mobile-alt"></i></span>
-
-                  <div class="info-box-content">
-                      <span class="info-box-text">Active Users</span>
-                      <span class="info-box-number">
-                          <%-data.totalActiveUsers%>
-                      </span>
-                  </div>
-                  <!-- /.info-box-content -->
-                  </div>
-                  <!-- /.info-box -->
-              </div>
-              <!-- /.col -->
-
-              <div class="col-12 col-sm-6 col-md-6 d-none">
-                  <div class="info-box">
-                  <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-fw fa-map-marker-alt"></i></span>
-
-                  <div class="info-box-content">
-                      <span class="info-box-text"></span>
-                      <span class="info-box-number">
-                        
-                      </span>
-                  </div>
-                  <!-- /.info-box-content -->
-                  </div>
-                  <!-- /.info-box -->
-              </div>
-              <!-- /.col -->
-              <div class="col-12 col-sm-6 col-md-3 d-none">
-                  <div class="info-box">
-                  <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-fw fa-map-marked-alt"></i></span>
-
-                  <div class="info-box-content">
-                      <span class="info-box-text"></span>
-                      <span class="info-box-number">
-                      </span>
-                  </div>
-                  <!-- /.info-box-content -->
-                  </div>
-                  <!-- /.info-box -->
-              </div>
-              <!-- /.col -->
-            </div><!--/.row-->
             <div class="row mt-4">
                 <div class="col-md-4 col-12">
                     <div class="d-flex">
@@ -397,18 +334,16 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="/admin/inviteUsers" method ="post" id="form_inviteUser">
+                    <form action="/admin/inviteUsers" method="post" id="form_inviteUser">
                         <div class="d-block">
                             <div class="row">
-                                <div class="col-md-6 col-6 pl-4 pt-2">
-                                    
-                                    
-                                </div>
+                                <div class="col-md-6 col-6 pl-4 pt-2"></div>
                                 <div class="col-md-6 col-6 text-right">
                                     <input type="text" class="form-control" id="searchInviteUsers" placeholder="Search Users">
                                 </div>
                             </div>
                             <div id="inviteUser-scroll">
+                                <div class="invitedEmails_error"></div>
                                 <table class="table table-hover mt-2 hide" id="inviteUserslist" data-table="dt"
                                     data-dt_search="#searchInviteUsers"
                                     data-dt_entries="#datatableEntries"
