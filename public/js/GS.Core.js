@@ -80,7 +80,12 @@
             }, 4000);
         },
         remoteModalHandler : function(){
-            $('#meetingEdit_modal, #userEdit_modal').on('show.bs.modal', function (e) {
+            $('#meetingEdit_modal').on('show.bs.modal', function (e) {
+                var button = $(e.relatedTarget);
+                var modal = $(this);
+                modal.find('.modal-body').load(button.data("remote"));
+            });
+            $('#userEdit_modal').on('show.bs.modal', function (e) {
                 var button = $(e.relatedTarget);
                 var modal = $(this);
                 modal.find('.modal-body').load(button.data("remote"));
@@ -89,7 +94,8 @@
         meetingScrollBarHandler : function(){
             $('.tab-scroll').slimscroll({
                 alwaysVisible: true,
-                height: 290
+                height: 290,
+                size : '4px'
             });
         },
         customScrollBarOnLoadHandler : function(){
@@ -288,13 +294,13 @@
             }
         },
         upadteUsersHandler : function(){
+            var $collection = document.querySelector("#triggerUpdUserPsd");
+            if($collection === null) return;
             document.querySelector("#triggerUpdUserPsd").addEventListener('change', function(e){
                 
                 if(this.checked){
-                    console.log("no disable");
                     document.querySelector("#user_updPass").disabled = false;
                 }else{
-                    console.log("disable")
                     document.querySelector("#user_updPass").disabled = true;
                 }
             })
