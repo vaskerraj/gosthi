@@ -15,13 +15,14 @@
             $.GHCore.inputMask();
             $.GHCore.DTselectAll($applistDTtableCheckAll,$applistDTtable);
             $.GHCore.flashMessageHandler();
+            $.GHCore.meetingActivNavHandler();
             $.GHCore.createMeetingHandler();
             $.GHCore.remoteModalHandler();
             $.GHCore.customScrollBarOnLoadHandler();
             $.GHCore.meetingTimeHandler();
             $.GHCore.editMeetingTimeHandler()
             $.GHCore.meetingRoomHandlder();
-            $.GHCore.upcomigMeetingHandler();
+            $.GHCore.upcomigMeetingHandler.init();
             $.GHCore.meetingTypeHandler();
             $.GHCore.meetingDateHandler();
             $.GHCore.inviteUserHandler.init();
@@ -78,6 +79,29 @@
                 $("#messages").fadeOut();
             }, 4000);
         },
+        meetingActivNavHandler : function(){
+            var url = document.location.toString();
+            if (url.match('#')) {
+                $('.nav-tabs a[href="#' + url.split('#')[1] + '"]').tab('show');
+            } 
+
+            $('.nav-tabs a').on('shown.bs.tab', function (e) {
+                window.location.hash = e.target.hash;
+            });
+
+            if(window.location.hash){
+                $("#meeting-card-tab").each(function(el){
+                    $(this).find("a.nav-link").removeClass("active");
+                    $(this).find("a[href='"+window.location.hash+"']").addClass("active");
+                });
+                console.log(window.location.hash);
+                if(window.location.hash == '#upcoming'){
+                    $.GHCore.upcomigMeetingHandler.upcomingMeetingData();
+                }
+            }else{
+                $("#meeting-card-tab a.tab:first").addClass("active");
+            }
+        },
         createMeetingHandler : function(){
             var collection = document.querySelector("#meetingDate");
             if(collection === null) return;
@@ -86,10 +110,33 @@
             collection.classList.add("active");
         },
         remoteModalHandler : function(){
+
+            $('#meetingEdit_modal').on('hide.bs.modal', function (e) {
+                location.reload();
+            });
             $('#meetingEdit_modal').on('show.bs.modal', function (e) {
                 var button = $(e.relatedTarget);
                 var modal = $(this);
-                modal.find('.modal-body').load(button.data("remote"));
+                $.ajax({
+                    url: button.data("remote"),
+                    success: function(response) {
+                        modal.find('.modal-body').html(response);
+                        $("#edit_meetingDate").datepicker({
+                            dateFormat: "yy/mm/dd",
+                            minDate: "0",
+                        });
+                    },
+                    error:function(request) {
+                        console.log("error");
+                    }
+               });
+                // modal.find('.modal-body').load(button.data("remote"), function(){
+                //     console.log("callback for datepicker")
+                //     $("#edit_meetingDate").datepicker({
+                //         dateFormat: "yy/mm/dd",
+                //         minDate: "0",
+                //     });
+                // });                
             });
             $('#userEdit_modal').on('show.bs.modal', function (e) {
                 var button = $(e.relatedTarget);
@@ -166,7 +213,7 @@
                             var meetingDateTime = meetingDate+' '+meetingTime+' - '+meetingAddDuration
                         }
 
-                        var joinMeetingHref = "https://15.206.115.114/join/"+response.id;
+                        var joinMeetingHref = "/join/"+response.id;
                         document.querySelector('.meeting-details-title').innerHTML = response.title;
                         document.querySelector('.meeting-details-id').innerHTML = response.id;
                         document.querySelector('.meeting-share-href').innerHTML = joinMeetingHref;
@@ -182,6 +229,7 @@
                         document.querySelector('#inviteUser_meetingLink').value = joinMeetingHref;
                         document.querySelector('.deleteMeeting').setAttribute('data-id', response.id);
                         document.querySelector('#meeting_edit').setAttribute('data-remote', '/admin/editMeeting/'+response.id);
+                        document.querySelector('#meeting_edit').href = '/admin/editMeeting/'+response.id;
                         
                         $selectedMeetingSel.removeClass("d-none");
                         $instantMeetingSel.addClass("d-none");
@@ -213,10 +261,20 @@
                 return "H";
             }
         },
-        upcomigMeetingHandler : async function(){
-            $collection = $("#upcoming-tab");
-            if(!$collection.length) return;
-            $collection.on('click', function(){
+        upcomigMeetingHandler : {
+            init: function(){
+                this.onUpcomingTab();
+            },
+            onUpcomingTab : function(){
+                $collection = $("#upcoming-tab");
+                if(!$collection.length) return;
+                var $self = this;
+                $collection.on('click', function(){
+                    $self.upcomingMeetingData();
+                });
+            },
+            upcomingMeetingData : function(){
+            
                 $("#upcomingLoader").removeClass('d-none');
                 $.post('../admin/upcomingMeeting', { id: 4},
                 function(data){
@@ -254,7 +312,7 @@
                     $(".tab-scroll").slimscroll();
                     $.GHCore.meetingRoomHandlder();
                 });
-            });
+            }
         },
         meetingTypeHandler : function(){
             $collection = $(".meetingType");
@@ -274,10 +332,24 @@
         },
         meetingDateHandler : function(){
             var $collection = $("#meetingDate");
+            // if(!$collection.length) return;
             $collection.datepicker({
                 dateFormat: "yy/mm/dd",
                 minDate: "0",
             });
+
+            $(".editMeeting").colorbox({ iframe: true, innerWidth: "532px", innerHeight: "150px", opacity: 0.5 });
+
+            $("#editMeetingHeight").val($('body').height());
+
+            parent.$.colorbox.resize({
+				innerHeight:  $('#editMeetingHeight').val()
+			});
+            
+            // $("#edit_meetingDate").datepicker({
+            //     dateFormat: "yy/mm/dd",
+            //     minDate: "0",
+            // });                  
         },
         inviteUserHandler : {
             init : function(){
