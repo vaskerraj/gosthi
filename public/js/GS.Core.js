@@ -17,7 +17,7 @@
             $.GHCore.flashMessageHandler();
             $.GHCore.meetingActivNavHandler();
             $.GHCore.createMeetingHandler();
-            $.GHCore.remoteModalHandler();
+            $.GHCore.remoteModalHandler.init();
             $.GHCore.customScrollBarOnLoadHandler();
             $.GHCore.meetingTimeHandler();
             $.GHCore.editMeetingTimeHandler()
@@ -92,12 +92,14 @@
             if(window.location.hash){
                 $("#meeting-card-tab").each(function(el){
                     $(this).find("a.nav-link").removeClass("active");
+                    $(this).find("li.nav-item").removeClass("active");
                     $(this).find("a[href='"+window.location.hash+"']").addClass("active");
+                    if(window.location.hash == '#upcoming'){
+                        $.GHCore.upcomigMeetingHandler.upcomingMeetingData();
+                    }
                 });
                 console.log(window.location.hash);
-                if(window.location.hash == '#upcoming'){
-                    $.GHCore.upcomigMeetingHandler.upcomingMeetingData();
-                }
+                
             }else{
                 $("#meeting-card-tab a.tab:first").addClass("active");
             }
@@ -109,40 +111,124 @@
             collection.value = currentMeetingDate;
             collection.classList.add("active");
         },
-        remoteModalHandler : function(){
+        remoteModalHandler : {
+            init : function(){
+                this.onModalShowBs();
+            },
+            meetingTimeSel : function(time, selectedTime){
+                return time === selectedTime ? "selected" : "";
+            },
+            meetingDurationSel : function(duration, selectedDuration){
+                return duration === selectedDuration ? "selected" : "";
+            },
+            onModalShowBs : function(){
+                var $self = this;
+                $('#meetingEdit_modal').on('hide.bs.modal', function (e) {
+                    $(".scheduleMeeting_container").addClass("d-none");
+                    $("#scheduleMeetingContent").html('');
+                });
+                $('#meetingEdit_modal').on('show.bs.modal', function (e) {
+                    var editMeetingUrl = $(e.relatedTarget).attr('href');
+                    $.ajax({
+                        url: editMeetingUrl,
+                        success: function(response) {
+                            console.log(response);
+                            document.querySelector("#edit_meetingTitle").value = response.title;
+                            document.querySelector("#edit_meetingTitle").classList.add('active');
+                            if(response.type === 'schedule'){
+                                $(".scheduleMeeting_container").removeClass("d-none");
 
-            $('#meetingEdit_modal').on('hide.bs.modal', function (e) {
-                location.reload();
-            });
-            $('#meetingEdit_modal').on('show.bs.modal', function (e) {
-                var button = $(e.relatedTarget);
-                var modal = $(this);
-                $.ajax({
-                    url: button.data("remote"),
-                    success: function(response) {
-                        modal.find('.modal-body').html(response);
-                        $("#edit_meetingDate").datepicker({
-                            dateFormat: "yy/mm/dd",
-                            minDate: "0",
-                        });
-                    },
-                    error:function(request) {
-                        console.log("error");
-                    }
-               });
-                // modal.find('.modal-body').load(button.data("remote"), function(){
-                //     console.log("callback for datepicker")
-                //     $("#edit_meetingDate").datepicker({
-                //         dateFormat: "yy/mm/dd",
-                //         minDate: "0",
-                //     });
-                // });                
-            });
-            $('#userEdit_modal').on('show.bs.modal', function (e) {
-                var button = $(e.relatedTarget);
-                var modal = $(this);
-                modal.find('.modal-body').load(button.data("remote"));
-            });
+                                document.querySelector("#edit_meetingDate").value = ''+response.meeting_date;
+                                document.querySelector("#edit_meetingDate").classList.add("active");
+                                const meetingTimeSch = response.meeting_time,
+                                    meetingDurationSch = response.meeting_duration;
+                                const scheduleEditMeetingContent = '<div class="col-md-5 col-sm-12 marT10">'
+                                    +'<select name="meetingTime" class="form-control active" id="edit_meetingTime">'
+                                        +'<option '+ $self.meetingTimeSel("11:45 PM", meetingTimeSch)+'>11:45 PM</option>'
+                                        +'<option '+ $self.meetingTimeSel("12:30 AM", meetingTimeSch)+'>12:30 AM</option>'
+                                        +'<option '+ $self.meetingTimeSel("12:00 AM", meetingTimeSch)+'>12:00 AM</option>'
+                                        +'<option '+ $self.meetingTimeSel("01:00 AM", meetingTimeSch)+'>01:00 AM</option>'
+                                        +'<option '+ $self.meetingTimeSel("01:30 AM", meetingTimeSch)+'>01:30 AM</option>'
+                                        +'<option '+ $self.meetingTimeSel("02:00 AM", meetingTimeSch)+'>02:00 AM</option>'
+                                        +'<option '+ $self.meetingTimeSel("02:30 AM", meetingTimeSch)+'>02:30 AM</option>'
+                                        +'<option '+ $self.meetingTimeSel("03:00 AM", meetingTimeSch)+'>03:00 AM</option>'
+                                        +'<option '+ $self.meetingTimeSel("03:30 AM", meetingTimeSch)+'>03:30 AM</option>'
+                                        +'<option '+ $self.meetingTimeSel("04:00 AM", meetingTimeSch)+'>04:00 AM</option>'
+                                        +'<option '+ $self.meetingTimeSel("04:30 AM", meetingTimeSch)+'>04:30 AM</option>'
+                                        +'<option '+ $self.meetingTimeSel("05:00 AM", meetingTimeSch)+'>05:00 AM</option>'
+                                        +'<option '+ $self.meetingTimeSel("05:30 AM", meetingTimeSch)+'>05:30 AM</option>'
+                                        +'<option '+ $self.meetingTimeSel("06:00 AM", meetingTimeSch)+'>06:00 AM</option>'
+                                        +'<option '+ $self.meetingTimeSel("06:30 AM", meetingTimeSch)+'>06:30 AM</option>'
+                                        +'<option '+ $self.meetingTimeSel("07:00 AM", meetingTimeSch)+'>07:00 AM</option>'
+                                        +'<option '+ $self.meetingTimeSel("07:30 AM", meetingTimeSch)+'>07:30 AM</option>'
+                                        +'<option '+ $self.meetingTimeSel("08:00 AM", meetingTimeSch)+'>08:00 AM</option>'
+                                        +'<option '+ $self.meetingTimeSel("8:30 AM", meetingTimeSch)+'>8:30 AM</option>'
+                                        +'<option '+ $self.meetingTimeSel("09:00 AM", meetingTimeSch)+'>09:00 AM</option>'
+                                        +'<option '+ $self.meetingTimeSel("09:30 AM", meetingTimeSch)+'>09:30 AM</option>'
+                                        +'<option '+ $self.meetingTimeSel("10:00 AM", meetingTimeSch)+'>10:00 AM</option>'
+                                        +'<option '+ $self.meetingTimeSel("10:30 AM", meetingTimeSch)+'>10:30 AM</option>'
+                                        +'<option '+ $self.meetingTimeSel("11:00 AM", meetingTimeSch)+'>11:00 AM</option>'
+                                        +'<option '+ $self.meetingTimeSel("11:30 AM", meetingTimeSch)+'>11:30 AM</option>'
+                                        +'<option '+ $self.meetingTimeSel("12:00 PM", meetingTimeSch)+'>12:00 PM</option>'
+                                        +'<option '+ $self.meetingTimeSel("12:30 PM", meetingTimeSch)+'>12:30 PM</option>'
+                                        +'<option '+ $self.meetingTimeSel("01:00 PM", meetingTimeSch)+'>01:00 PM</option>'
+                                        +'<option '+ $self.meetingTimeSel("01:30 PM", meetingTimeSch)+'>01:30 PM</option>'
+                                        +'<option '+ $self.meetingTimeSel("02:00 PM", meetingTimeSch)+'>02:00 PM</option>'
+                                        +'<option '+ $self.meetingTimeSel("02:30 PM", meetingTimeSch)+'>02:30 PM</option>'
+                                        +'<option '+ $self.meetingTimeSel("03:00 PM", meetingTimeSch)+'>03:00 PM</option>'
+                                        +'<option '+ $self.meetingTimeSel("03:30 PM", meetingTimeSch)+'>03:30 PM</option>'
+                                        +'<option '+ $self.meetingTimeSel("04:00 PM", meetingTimeSch)+'>04:00 PM</option>'
+                                        +'<option '+ $self.meetingTimeSel("04:30 PM", meetingTimeSch)+'>04:30 PM</option>'
+                                        +'<option '+ $self.meetingTimeSel("05:00 PM", meetingTimeSch)+'>05:00 PM</option>'
+                                        +'<option '+ $self.meetingTimeSel("05:30 PM", meetingTimeSch)+'>05:30 PM</option>'
+                                        +'<option '+ $self.meetingTimeSel("06:00 PM", meetingTimeSch)+'>06:00 PM</option>'
+                                        +'<option '+ $self.meetingTimeSel("06:30 PM", meetingTimeSch)+'>06:30 PM</option>'
+                                        +'<option '+ $self.meetingTimeSel("07:00 PM", meetingTimeSch)+'>07:00 PM</option>'
+                                        +'<option '+ $self.meetingTimeSel("07:30 PM", meetingTimeSch)+'>07:30 PM</option>'
+                                        +'<option '+ $self.meetingTimeSel("08:00 PM", meetingTimeSch)+'>08:00 PM</option>'
+                                        +'<option '+ $self.meetingTimeSel("08:30 PM", meetingTimeSch)+'>08:30 PM</option>'
+                                        +'<option '+ $self.meetingTimeSel("09:00 PM", meetingTimeSch)+'>09:00 PM</option>'
+                                        +'<option '+ $self.meetingTimeSel("09:30 PM", meetingTimeSch)+'>09:30 PM</option>'
+                                        +'<option '+ $self.meetingTimeSel("10:00 PM", meetingTimeSch)+'>10:00 PM</option>'
+                                        +'<option '+ $self.meetingTimeSel("10:30 PM", meetingTimeSch)+'>10:30 PM</option>'
+                                        +'<option '+ $self.meetingTimeSel("11:00 PM", meetingTimeSch)+'>11:00 PM</option>'
+                                        +'<option '+ $self.meetingTimeSel("11:30 PM", meetingTimeSch)+'>11:30 PM</option>'
+                                +'</select>'
+                                +'<label for="edit_meetingTime">Time</label>'
+                            +'</div>'
+                            +'<div class="col-md-7 col-sm-12 marT10">'
+                                +'<select name="meetingDuration" class="form-control active" id="edit_meetingDuration">'
+                                    +'<option value="15_minutes" '+ $self.meetingDurationSel("15_minutes", meetingDurationSch)+'>15 Min</option>'
+                                    +'<option value="30_minutes" '+ $self.meetingDurationSel("30_minutes", meetingDurationSch)+'>30 Min</option>'
+                                    +'<option value="45_minutes" '+ $self.meetingDurationSel("45_minutes", meetingDurationSch)+'>45 Min</option>'
+                                    +'<option value="60_minutes" '+ $self.meetingDurationSel("60_minutes", meetingDurationSch)+'>60 Min</option>'
+                                    +'<option value="1.5_hours" '+ $self.meetingDurationSel("1.5_hours", meetingDurationSch)+'>1.5 H</option>'
+                                    +'<option value="2_hours" '+ $self.meetingDurationSel("2_hours", meetingDurationSch)+'>2 H</option>'
+                                    +'<option value="2.5_hours" '+ $self.meetingDurationSel("2.5_hours", meetingDurationSch)+'>2.5 H</option>'
+                                    +'<option value="3_hours" '+ $self.meetingDurationSel("3_hours", meetingDurationSch)+'>3 H</option>'
+                                    +'<option value="4_hours" '+ $self.meetingDurationSel("4_hours", meetingDurationSch)+'>4 H</option>'
+                                    +'<option value="5_hours" '+ $self.meetingDurationSel("5_hours", meetingDurationSch)+'>5 H</option>'
+                                    +'<option value="6_hours" '+ $self.meetingDurationSel("6_hours", meetingDurationSch)+'>6 H</option>'
+                                    +'<option value="7_hours" '+ $self.meetingDurationSel("7_hours", meetingDurationSch)+'>7 H</option>'
+                                    +'<option value="8_hours" '+ $self.meetingDurationSel("8_hours", meetingDurationSch)+'>8 H</option>'
+                                +'</select>'
+                                +'<label for="edit_meetingDuration">Duration</label>'
+                            +'</div>';
+                                $("#scheduleMeetingContent").append(scheduleEditMeetingContent);
+                                $.GHCore.editMeetingTimeHandler();
+                            }
+                        },
+                        error:function(request) {
+                            console.log("error");
+                        }
+                });              
+                });
+                $('#userEdit_modal').on('show.bs.modal', function (e) {
+                    var button = $(e.relatedTarget);
+                    var modal = $(this);
+                    modal.find('.modal-body').load(button.data("remote"));
+                });
+            }
         },
         meetingScrollBarHandler : function(){
             $('.tab-scroll').slimscroll({
@@ -179,6 +265,8 @@
             document.querySelector('.edit_meetingTimeTxt').innerText = edit_selectedMeetingTimeTxt;
 
             docEditMeetingSel.addEventListener('change', (e)=>{
+                
+            console.log("trigger");
                 var edit_selectedMeetingTime = e.target.value;
                 document.querySelector('.edit_meetingTimeTxt').innerText = edit_selectedMeetingTime;
             });
@@ -274,10 +362,10 @@
                 });
             },
             upcomingMeetingData : function(){
-            
                 $("#upcomingLoader").removeClass('d-none');
                 $.post('../admin/upcomingMeeting', { id: 4},
                 function(data){
+                    console.log(data);
                     var upcomingMeetingList =  data.map(function(item){
                         const upcoming_M_D_Format = moment(item.meeting_date).format('YYYY, MM, DD');
                         const upcomingDisplayFormat = moment(item.meeting_date).format('ddd, MMM DD');
@@ -337,19 +425,18 @@
                 dateFormat: "yy/mm/dd",
                 minDate: "0",
             });
-
-            $(".editMeeting").colorbox({ iframe: true, innerWidth: "532px", innerHeight: "150px", opacity: 0.5 });
+            
 
             $("#editMeetingHeight").val($('body').height());
 
             parent.$.colorbox.resize({
 				innerHeight:  $('#editMeetingHeight').val()
-			});
-            
-            // $("#edit_meetingDate").datepicker({
-            //     dateFormat: "yy/mm/dd",
-            //     minDate: "0",
-            // });                  
+            });
+
+            $(".edit_meetingDate").datepicker({
+                dateFormat: "yy/mm/dd",
+                minDate: "0",
+            });                
         },
         inviteUserHandler : {
             init : function(){
