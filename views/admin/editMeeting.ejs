@@ -1,18 +1,18 @@
 
-<form action="/admin/editMeeting" method ="post" id="form_editMeeting">
+<form action="/admin/editMeeting" method ="post" class="clearfix" id="form_editMeeting">
     <input type="hidden" name="meetingId" value="<%- editMeetingData.id%>">
     <input type="hidden" name="meetingType" value="<%- editMeetingData.type%>">
     <div class="d-block mt-2 mr">
         <input type='text' class="form-control" name='meetingTitle' id="edit_meetingTitle" value="<%-editMeetingData.title%>" autocomplete="off" />
         <label for="edit_meetingTitle">Meeting Title</label>
     </div>
-    
-    <div class="row scheduleMeeting_container mt-4 <%- editMeetingData.type === 'schedule' ? 'd-flex' : 'd-none'%> ">
-        <div class="col-md-5 col-sm-12 mt-1">
-            <input type='text' class="form-control" name='meetingDate' id="edit_meetingDate" value="<%=editMeetingData.meeting_date%>" autocomplete="off" />
+    <% if(editMeetingData.type === 'schedule'){ %>
+    <div class="row scheduleMeeting_container mt-3 <%- editMeetingData.type === 'schedule' ? 'd-flex' : 'd-none'%> ">
+        <div class="col-md-5 col-sm-12 marT5">
+            <input type='text' class="form-control edit_meetingDate" name='meetingDate' id="edit_meetingDate" value="<%=editMeetingData.meeting_date%>" autocomplete="off" />
             <label for="edit_meetingDate">Date</label>
         </div>
-        <div class="col-md-3 col-sm-12 mt-1">
+        <div class="col-md-3 col-sm-12 marT10">
             <select name="meetingTime" class="form-control" id="edit_meetingTime">
                 <option <%- editMeetingData.meeting_time === "11:45 PM" ? 'selected' : '' %>>11:45 PM</option>
                 <option <%- editMeetingData.meeting_time === "12:30 AM" ? 'selected' : '' %>>12:30 AM</option>
@@ -66,7 +66,7 @@
             </select>
             <label for="edit_meetingTime">Time</label>
         </div>
-        <div class="col-md-4 col-sm-12 mt-1">
+        <div class="col-md-4 col-sm-12 marT10">
             <select name="meetingDuration" class="form-control" id="edit_meetingDuration">
                 <option value="15_minutes" <%- editMeetingData.meeting_duration === "15_minutes" ? 'selected' : '' %>>15 Min</option>
                 <option value="30_minutes" <%- editMeetingData.meeting_duration === "30_minutes" ? 'selected' : '' %>>30 Min</option>
@@ -88,14 +88,15 @@
             The event starts at <span class="edit_meetingTimeTxt"></span> in Kathmadnu time zone.
         </div>
     </div><!--/.row-->
+    <%}%>
     <div class="d-block mt-4">
-        <button type="submit" class="btn btn-primary ml-3 fR">
+        <button type="submit" class="btn btn-primary btn_saveEditedMeeting ml-3 fR">
             <span class="fa fa-save"></span>
             SAVE
         </button>
-        <button class="btn btn-default fR" data-dismiss="modal" aria-label="Close">Cancel</button>
+        <button type="button" class="btn btn-default modalClose fR" data-dismiss="modal" aria-label="Close">Cancel</button>
     </div>
 </form>
 
-<%- include('../partials/js')%>
+<%-include('../partials/js')-%>
 <script src="/js/listing-js.js"></script>
