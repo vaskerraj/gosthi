@@ -126,21 +126,19 @@ router.get('/editMeeting/:id', ensureAuthenticated, checkRole(['admin']), async 
     const editMeetingId = req.params.id;
     
     connection.query("SELECT id, title, type, meeting_date, meeting_time, meeting_duration FROM meeting WHERE id = ?", [editMeetingId], (err, editMettingResult)=>{
-        res.render('admin/editMeeting',{
-            editMeetingData : editMettingResult[0]
-        });
+        res.status(200).json( editMettingResult[0] );
     });
 });
 
 router.post('/editMeeting', ensureAuthenticated, checkRole(['admin']),
-    check("meetingTitle", "Provide metting title").not().isEmpty(),
+    check("edit_meetingTitle", "Provide metting title").not().isEmpty(),
 (req, res, next)=>{
     const edit_meetingId =  req.body.meetingId,
-        edit_meetingTitle = req.body.meetingTitle,
-        edit_meetingType = req.body.meetingType,
-        edit_meetingDate = req.body.meetingDate,
-        edit_meetingTime = req.body.meetingTime,
-        edit_meetingDuration = req.body.meetingDuration;
+        edit_meetingTitle = req.body.edit_meetingTitle,
+        edit_meetingType = req.body.edit_meetingType,
+        edit_meetingDate = req.body.edit_meetingDate,
+        edit_meetingTime = req.body.edit_meetingTime,
+        edit_meetingDuration = req.body.edit_meetingDuration;
 
     const error_updateMeeting = validationResult(req);
     
