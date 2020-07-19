@@ -55,8 +55,16 @@ function doExport(selector, params) {
 
         $("button.close").click(function () {
             parent.$.colorbox.close();
-            //parent.location.reload();
         });
+
+        $("button.modalClose").click(function () {
+            parent.$.colorbox.close();
+        });
+        
+        $("button.btn_saveEditedMeeting").click(function () {
+            parent.location.reload();
+        });
+
         $("button.close.success").click(function () {
             parent.location.reload();
         });
@@ -241,6 +249,27 @@ function doExport(selector, params) {
 				error.insertAfter(element)
 			}
 		}
+    });
+    
+    $("#form_editMeeting").validate({
+        errorElement: 'span',
+        errorClass: 'error',
+        rules : {
+            edit_meetingTitle : {
+                required : true
+            },
+            edit_meetingDate : {
+                required : true
+            }
+        },
+        messages : {
+            edit_meetingTitle : {
+                required : "Provide"
+            },
+            edit_meetingDate: {
+                required : "Provide"
+            }
+        }
     });
 
     $("#form_inviteUser").validate({
