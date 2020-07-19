@@ -302,7 +302,8 @@
                             var meetingDateTime = meetingDate+' '+meetingTime+' - '+meetingAddDuration
                         }
 
-                        var joinMeetingHref = "/join/"+response.id;
+                        var joinMeetingHref = window.location.origin+"/join/"+response.id;
+                        document.querySelector('#startSelectedMeeting').href = joinMeetingHref;
                         document.querySelector('.meeting-details-title').innerHTML = response.title;
                         document.querySelector('.meeting-details-id').innerHTML = response.id;
                         document.querySelector('.meeting-share-href').innerHTML = joinMeetingHref;
