@@ -124,7 +124,7 @@
             onModalShowBs : function(){
                 var $self = this;
                 $('#meetingEdit_modal').on('hide.bs.modal', function (e) {
-                    $(".scheduleMeeting_container").addClass("d-none");
+                    $(".editScheduleMeeting_container").addClass("d-none");
                     $("#scheduleMeetingContent").html('');
                 });
                 $('#meetingEdit_modal').on('show.bs.modal', function (e) {
@@ -138,9 +138,9 @@
                             document.querySelector("#edit_meetingTitle").value = response.title;
                             document.querySelector("#edit_meetingTitle").classList.add('active');
                             if(response.type === 'schedule'){
-                                $(".scheduleMeeting_container").removeClass("d-none");
+                                $(".editScheduleMeeting_container").removeClass("d-none");
 
-                                document.querySelector("#edit_meetingDate").value = ''+response.meeting_date;
+                                document.querySelector("#edit_meetingDate").value = response.meeting_date;
                                 document.querySelector("#edit_meetingDate").classList.add("active");
                                 const meetingTimeSch = response.meeting_time,
                                     meetingDurationSch = response.meeting_duration;
