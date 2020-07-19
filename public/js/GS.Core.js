@@ -80,28 +80,27 @@
             }, 4000);
         },
         meetingActivNavHandler : function(){
-            var url = document.location.toString();
-            if (url.match('#')) {
-                $('.nav-tabs a[href="#' + url.split('#')[1] + '"]').tab('show');
-            } 
 
-            $('.nav-tabs a').on('shown.bs.tab', function (e) {
-                window.location.hash = e.target.hash;
+            
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+                localStorage.setItem('activeTab', $(e.target).attr('href'));
             });
-
-            if(window.location.hash){
-                $("#meeting-card-tab").each(function(el){
+            var activeTab = localStorage.getItem('activeTab');
+            console.log(activeTab);
+            if(activeTab){
+                if(activeTab == '#upcoming'){
+                    $.GHCore.upcomigMeetingHandler.upcomingMeetingData();
+                }
+                $("#meeting-card-tab, .tab-content").each(function(el){
                     $(this).find("a.nav-link").removeClass("active");
-                    $(this).find("li.nav-item").removeClass("active");
-                    $(this).find("a[href='"+window.location.hash+"']").addClass("active");
-                    if(window.location.hash == '#upcoming'){
-                        $.GHCore.upcomigMeetingHandler.upcomingMeetingData();
-                    }
+                    $(this).find(".tab-pane").removeClass("active show");
                 });
-                console.log(window.location.hash);
-                
+
+                $('.nav-tabs a[href="' + activeTab + '"]').addClass('active');
+                $('.tab-pane'+ activeTab).addClass('active show');
             }else{
-                $("#meeting-card-tab a.tab:first").addClass("active");
+                $("#meeting-card-tab a.nav-link:first").addClass("active");
+                $(".tab-content tab-pane:first").addClass("active show");
             }
         },
         createMeetingHandler : function(){
