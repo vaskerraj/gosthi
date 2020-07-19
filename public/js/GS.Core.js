@@ -133,6 +133,8 @@
                         url: editMeetingUrl,
                         success: function(response) {
                             console.log(response);
+                            document.querySelector("#editMeetingId").value = response.id;
+                            document.querySelector("#editMeetingType").value = response.type;
                             document.querySelector("#edit_meetingTitle").value = response.title;
                             document.querySelector("#edit_meetingTitle").classList.add('active');
                             if(response.type === 'schedule'){
@@ -143,7 +145,7 @@
                                 const meetingTimeSch = response.meeting_time,
                                     meetingDurationSch = response.meeting_duration;
                                 const scheduleEditMeetingContent = '<div class="col-md-5 col-sm-12 marT10">'
-                                    +'<select name="meetingTime" class="form-control active" id="edit_meetingTime">'
+                                    +'<select name="edit_meetingTime" class="form-control active" id="edit_meetingTime">'
                                         +'<option '+ $self.meetingTimeSel("11:45 PM", meetingTimeSch)+'>11:45 PM</option>'
                                         +'<option '+ $self.meetingTimeSel("12:30 AM", meetingTimeSch)+'>12:30 AM</option>'
                                         +'<option '+ $self.meetingTimeSel("12:00 AM", meetingTimeSch)+'>12:00 AM</option>'
@@ -197,7 +199,7 @@
                                 +'<label for="edit_meetingTime">Time</label>'
                             +'</div>'
                             +'<div class="col-md-7 col-sm-12 marT10">'
-                                +'<select name="meetingDuration" class="form-control active" id="edit_meetingDuration">'
+                                +'<select name="edit_meetingDuration" class="form-control active" id="edit_meetingDuration">'
                                     +'<option value="15_minutes" '+ $self.meetingDurationSel("15_minutes", meetingDurationSch)+'>15 Min</option>'
                                     +'<option value="30_minutes" '+ $self.meetingDurationSel("30_minutes", meetingDurationSch)+'>30 Min</option>'
                                     +'<option value="45_minutes" '+ $self.meetingDurationSel("45_minutes", meetingDurationSch)+'>45 Min</option>'
