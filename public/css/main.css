@@ -139,6 +139,29 @@ body {
 .mab{ position: absolute; }
 .cp{ cursor: pointer;}
 
+.navbar{
+  background-color: #c3e6cb;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: rgba(0,0,0,0.2);
+  box-shadow: 0 0 3px rgba(0,0,0,0.2);
+}
+.navbar-light .navbar-brand {
+  font-weight: 700;
+  color: rgb(95 95 95);
+}
+.navbar-light .navbar-brand:hover {
+  color: rgb(95 95 95);
+}
+.navbar-expand .navbar-nav .nav-link {
+  padding: 15px 15px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.navbar-expand .navbar-nav .nav-link button {
+  margin: -5px 15px 0px 15px;
+}
+
 /* for express-messages & flash */
 
 #messages {
@@ -167,23 +190,91 @@ list-style: none;
 /* margin-left: -25px; */
 }
 
-/* for modal */
+/* custom modal */
+.modal-backdrop.in{
+  opacity: 0.5;
+}
 @media (min-width: 576px){
   #meetingRefereModal .modal-dialog {
     max-width: 550px;
     min-height: calc(100vh - 40px);
+  }
+  #signInContainer .modal-dialog {
+    max-width: 400px;
   }
 }
 .modal .modal-content{
   box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 10px 0px;
   border-radius: 4px;
   border-top-style: solid;
-  border-top-color: #96bd30;
+  border-top-color: rgba(75, 95, 24, 1);
   border-top-width: 5px;
 }
 
 .modal .modal-header .close:focus{
   outline: none;
+}
+.profileImage img {
+  height: 40px;
+  margin-top: 5px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+}
+.profileImage img:hover,
+.profileImage img:focus {
+  border-color: #96bd30;
+}
+
+.profileDetails.dropdown-menu {
+  min-width: 220px;
+  right: 0px;
+  left: auto;
+  border: 1px solid #d3d3d3;
+  box-sizing: border-box;
+  border-radius: 4px;
+  padding: 8px 0px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.15);
+}
+.profileDetails.dropdown-menu .profileType {
+  font-size: 14px;
+  position: absolute;
+  right: 10px;
+  top : 20px
+}
+.profileDetails.dropdown-menu a.profileMainInfo {
+  display: block;
+  padding: 8px 16px;
+  font-size: 14px;
+  color : #272727;
+  padding-right: 75px;
+}
+
+.profileDetails.dropdown-menu a.profileMainInfo:hover {
+  color: #007bff;
+}
+
+.profileDetails.dropdown-menu a.singOut:hover {
+  background-color: #ffc107;
+}
+
+
+#signInContainer .form-control{
+  width: 100%;
+  height: 45px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  line-height: 34px;
+  padding: 5px 15px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+#signInContainer .form-control:focus{
+  box-shadow: 0 0 0 1.5px rgba(48, 48, 48, 0.3) !important;
+}
+
+#signInContainer .modal-header {
+  border-bottom : none
 }
 
 #meetingRoomSearch{
@@ -264,128 +355,6 @@ list-style: none;
 
 .meeting-details .meeting-details-title{
   font-weight: 500;
-}
-
-.popup-container {
-  display: block;
-}
-.popup-container .popup-button {
-  line-height: 34px;
-  cursor: pointer;
-}
-.popup-container .popup-button:hover {
-  /* background: #444; */
-}
-.popup-container .popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.6);
-  z-index: 10;
-  opacity: 0;
-  visibility: hidden;
-  transition: 250ms all;
-}
-.popup-container .popup .popup-inner {
-  width: 400px;
-  box-sizing: border-box;
-  padding: 20px;
-  background: #fff;
-  position: absolute;
-  border: 3px solid #9b765b;
-  border-radius: 2px;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  top: 150%;
-  transition: 250ms all;
-}
-.popup-container .popup .popup-inner .popup-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-.popup-container .popup .popup-inner .popup-title h6 {
-  font-size: 18px;
-  font-weight: 500;
-}
-.popup-container .popup .popup-inner .popup-title .popup-close-btn {
-  cursor: pointer;
-  background: #eee;
-  display: block;
-  line-height: 30px;
-  padding: 0 15px;
-  font-size: 14px;
-  color: #222;
-  border-radius: 3px;
-}
-.popup-container .popup .popup-inner .popup-content ul li {
-  margin-bottom: 10px;
-  list-style: none;
-}
-.popup-container .popup .popup-inner .popup-content ul li:last-child {
-  margin-bottom: 0;
-}
-.popup-container .popup .popup-inner .popup-content ul li input {
-  width: 100%;
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  line-height: 34px;
-  padding: 5px 15px;
-  font-size: 14px;
-  box-sizing: border-box;
-}
-.popup-container .popup .popup-inner .popup-content ul li button {
-  width: 100%;
-  line-height: 34px;
-  background: #666;
-  color: #fff;
-  cursor: pointer;
-  border-radius: 3px;
-  border: none;
-  font-size: 14px;
-}
-.popup-container .popup .popup-inner .popup-content ul li button:hover {
-  background: #444;
-}
-.popup-container .popup .transparent-label {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  cursor: pointer;
-}
-.popup-container > input {
-  display: none;
-}
-.popup-container > input:checked + .popup {
-  opacity: 1;
-  visibility: visible;
-}
-.popup-container > input:checked + .popup .popup-inner {
-  top: 50%;
-}
-
-.login_container {
-  position: absolute;
-  right: 15px;
-}
-
-
-.header {
-  display: -webkit-box;
-  display: flex;
-  -webkit-box-align: center;
-          align-items: center;
-  font-size: 2rem;
-  font-weight: 600;
-  border-bottom: 1px solid #d6d6d6;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
 }
 
 .count {
