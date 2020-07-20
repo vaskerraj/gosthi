@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><%- title %></title>
-    <link rel="shortcut icon" href="favicon.ico">
-    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/vendor/fontawesome-free/css/all.min.css">
-    <link rel="stylesheet" href="/vendor/fontawesome-free/css/v4-shims.min.css">
-    <link rel="stylesheet" href="/css/main.css">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%- title %></title>
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/vendor/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="/vendor/fontawesome-free/css/v4-shims.min.css">
+  <link rel="stylesheet" href="/css/main.css">
 </head>
-<body class="main <% if(loginPage) { %> login-page <% }else{ %> sidebar-mini <% } if(currentUser !== 'notLogin' && rel !== 'undefined'){  %>modal-open<% } %>">
+
+<body
+  class="main <% if(loginPage) { %> login-page <% }else{ %> sidebar-mini <% } if(currentUser !== 'notLogin' && rel !== 'undefined'){  %>modal-open<% } %>">
   <div class="container-fluid">
     <nav class="navbar navbar-expand fixed-top navbar-light bg-light">
       <div class="container clearfix">
@@ -19,14 +22,37 @@
           <img src="/img/logo.png" alt="Gosthi logo" height="45px">
           GOSTHI
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+          aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav ml-auto">
-            <a href="" class="nav-item nav-link text-primary">JOIN A MEETING</a>
-            <% if (currentUser != 'notLogin') { %>
+            <% if (currentUser === 'notLogin') { %>
+            <a href="/joinMeeting" class="nav-item nav-link text-primary">JOIN A MEETING</a>
+            <% }else if(currentUser.role === 'user'){ %>
+            <a href="javascript:void(0)" class="nav-item nav-link text-primary" id="joinMeeting">JOIN A MEETING</a>
+            <% } else if(currentUser.role === 'client'){ %>
+            <a href="javascript:void(0)" class="nav-item nav-link text-primary">JOIN A MEETING</a>
+            <% } %>
 
+            <% if (currentUser != 'notLogin') { %>
+              <div class="dropdown">
+                <a href="javascript:void(0)" role="button" class="profileImage" id="profileImage" data-toggle="dropdown">
+                  <img src="/img/blank_user.png" alt="">
+                </a>
+                <div class="profileDetails dropdown-menu" role="menu">
+                  <span class="profileType text-uppercase txt-gray"><%-currentUser.role%></span>
+                  <a href="" class="profileMainInfo dropdown-item">
+                    <div class="d-block fontb font18 font-weight-normal"><%-currentUser.first_name +' '+currentUser.last_name %></div>
+                    <div class="d-block"><%-currentUser.username %></div>
+                  </a>
+                  <div class="dropdown-divider"></div>
+                  <a href="/logout" class="singOut dropdown-item">
+                    SIGN OUT
+                  </a>
+                </div>
+              </div>
             <% }else{ %>
             <a href="javascript:void(0)" class="nav-item nav-link text-primary" id="signIn">SIGN IN</a>
             <a href="javascript:void(0)" class="nav-item nav-link">
@@ -45,21 +71,6 @@
         <img src="/img/right.png" width="70%">
       </div>
       <div class="col-md-4 col-xs-12 mt-5">
-        <div class="popup-container text-right">
-          <% if (currentUser != 'notLogin') { %>
-            <div class="clearfix marT15 marB30">
-              Welcome, <%-currentUser.first_name-%>
-              <a href="/logout" class="btn btn-danger btn-xs">
-                <span class="fa fa-power-off"></span>
-                Logout
-              </a>
-            </div>
-          <%} else{ %>
-            <label class="popup-button" for="login-popup"><img class="float-right" src="/img/login.png" width="150px"></label>
-            <input type="checkbox" id="login-popup" <% if ((messages && currentUser == 'notLogin') || rel !== 'undefined') { %> checked <% } %> >
-          <%}%>
-          
-        </div><!--/.popup-container-->
         <div class="clearfix">
           <img src="/img/logo.png" width="100%">
         </div>
@@ -67,162 +78,169 @@
     </div>
   </div>
   <% if(currentUser !== 'notLogin' && rel !== 'undefined' && relOrError === '') {%>
-  
-  <div class="modal fade show in" id="meetingRefereModal" tabindex="-1" role="dialog" aria-labelledby="newMeetingTitle" aria-hidden="true">
+  <div class="modal fade show" id="meetingRefereModal" tabindex="-1" role="dialog"
+    aria-labelledby="newMeetingTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
-          <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="newMeetingTitle">Meetings</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span class="fa fa-window-close-o" aria-hidden="true"></span>
-                </button>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="newMeetingTitle">Meetings</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span class="fa fa-window-close-o" aria-hidden="true"></span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="container" id="mettingRooms">
+            <div class="row">
+              <div class="tags col-md-7 mt-2">
+                <div>Type :</div>
+                <div class="tag filter" data-filter="normal">Rooms</div>
+                <div class="tag filter" data-filter="schedule">Schedule</div>
               </div>
-              <div class="modal-body">
-                <div class="container" id="mettingRooms">
+              <div class="col-md-5">
+                <input class="search" placeholder="Search" id="meetingRoomSearch" autocomplete="off" />
+              </div>
+            </div>
+
+            <div class="controls d-none">
+              <div>Sort by:</div><a class="sort" href="#" data-sort="date">Date</a>
+            </div>
+            <div class="meeting-search-items d-none border-top pt-2 font18 fontb text-secondary text-center"
+              style="font-weight: 500;"></div>
+            <div class="list" id="meeting-scroll">
+              <% relData.forEach((list, index) => { %>
+              <li class="meeting-card row" data-id="<%=list.id%>">
+                <div class="col-md-8 col-8">
                   <div class="row">
-                    <div class="tags col-md-7 mt-2">
-                      <div>Type :</div>
-                      <div class="tag filter" data-filter="normal">Rooms</div>
-                      <div class="tag filter" data-filter="schedule">Schedule</div>
+                    <div class="col-md-2 col-2 mt-2 text-right mt-2">
+                      <span class="fa fa-calendar-o text-black font26"></span>
                     </div>
-                    <div class="col-md-5">
-                      <input class="search" placeholder="Search" id="meetingRoomSearch" autocomplete="off" />
+                    <div class="col-md-10 col-10">
+                      <div class="meeting-card-title d-block"><%= list.title%></div>
+                      <div class="meeting-card-desc">ID : <%= list.id%></div>
+                      <div class="meetingType d-none"><%= list.type%></div>
+                      <div class="date d-none"><%= list.id%></div>
                     </div>
                   </div>
-                  
-                  <div class="controls d-none">
-                    <div>Sort by:</div><a class="sort" href="#" data-sort="date">Date</a>
-                  </div>      
-                  <div class="meeting-search-items d-none border-top pt-2 font18 fontb text-secondary text-center" style="font-weight: 500;"></div>
-                  <div class="list" id="meeting-scroll">
-                    <% relData.forEach((list, index) => { %>
-                      <li class="meeting-card row d-none" data-id="<%=list.id%>">
-                        <div class="col-md-8 col-8">
-                          <div class="row">
-                            <div class="col-md-2 col-2 mt-2 text-right mt-2">
-                                <span class="fa fa-calendar-o text-black font26"></span>
-                            </div>
-                            <div class="col-md-10 col-10">
-                                <div class="meeting-card-title d-block"><%= list.title%></div>
-                                <div class="meeting-card-desc">ID : <%= list.id%></div>
-                                <div class="meetingType d-none"><%= list.type%></div>
-                                <div class="date d-none"><%= list.id%></div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-md-4 col-4 text-right">
-                          <a href="https://15.206.115.114/<%= list.title %>" target="_blank" class="btn btn-warning btn-sm mr-3 mt-2">
-                            JOIN
-                          </a>
-                        </div>
-                      </li>
-                    <%});%>
-                  </div>
-                
                 </div>
-              </div>
+                <div class="col-md-4 col-4 text-right">
+                  <a href="https://15.206.115.114/<%= list.title %>" target="_blank"
+                    class="btn btn-warning btn-sm mr-3 mt-2">
+                    JOIN
+                  </a>
+                </div>
+              </li>
+              <%});%>
+            </div>
+
           </div>
+        </div>
       </div>
+    </div>
   </div>
   <% } %>
-  
+
   <div class="modal fade show" id="signInContainer" role="dialog">
-      <div class="modal-dialog" role="document">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="signinTitle">SIGN IN</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span class="fa fa-window-close-o" aria-hidden="true"></span>
-                  </button>
-              </div>
-              <div class="modal-body">
-                  <% if (messages) { %>
-                    <%- messages -%>
-                  <% } %>
-                  <form action="/login" method="post" id="form_signIn">
-                    <div class="d-block">
-                      <input type="text" name="username" class="form-control" placeholder="Email" autocomplete="off">
-                    </div>
-                    <div class="d-block marT25">
-                      <input type="password" name="password" class="form-control" placeholder="Password">
-                    </div>
-                    <div class="d-block marT30 mb-2">
-                      
-                      <input type="hidden" name="joinRel" value="<%=rel%>">
-                      <button type="submit" class="btn btn-block btn-secondary">SIGN IN</button>
-                    </div>
-                  </form>
-              </div>
-          </div>
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="signinTitle">SIGN IN</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span class="fa fa-window-close-o" aria-hidden="true"></span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <% if (messages) { %>
+          <%- messages -%>
+          <% } %>
+          <form action="/login" method="post" id="form_signIn">
+            <div class="d-block">
+              <input type="text" name="username" class="form-control" placeholder="Email" autocomplete="off">
+            </div>
+            <div class="d-block marT25">
+              <input type="password" name="password" class="form-control" placeholder="Password">
+            </div>
+            <div class="d-block marT30 mb-2">
+
+              <input type="hidden" name="joinRel" value="<%=rel%>">
+              <button type="submit" class="btn btn-block btn-secondary">SIGN IN</button>
+            </div>
+          </form>
+        </div>
       </div>
+    </div>
   </div>
-  <%- currentUser %>
-  <%- rel %>
+          <%- currentUser %>
+          <%- rel %>
   <%-include('partials/frontJs')-%>
   <script src="/vendor/listjs/list.min.js"></script>
   <% if ((messages && currentUser === 'notLogin') || (rel !== 'undefined' && currentUser.username === '')) { %>
-    <script>
-      console.log("dd"); 
-        $("#signInContainer").modal('show');
-    </script> 
-  <% } %>
   <script>
+            console.log("dd");
+            $("#signInContainer").modal('show');
+          </script>
+          <% } %>
+          <script>
 
-      $('#signIn').on('click', function(){
-        $("#signInContainer").modal('show');
-      });
-     
-    const currentLocation = location.href;
-                        
-    var index = currentLocation.indexOf("/");
-    
-    var fileNameWithExt = currentLocation.substr(index);
-    console.log(fileNameWithExt);
-    
-      // Create the List
-      var options = {
-        valueNames: [ 'meeting-card-title', 'date', 'meetingType' ]
-      };
+            $('#signIn').on('click', function () {
+              $("#signInContainer").modal('show');
+            });
+            
+            $('#joinMeeting').on('click', function () {
+              $("#meetingRefereModal").modal('show');
+            });
 
-      // Run the list with default sort
-      var mettingRooms = new List('mettingRooms', options);
-      mettingRooms.sort("meeting-card-title", {
-        order: "asc"
-      })
+            const currentLocation = location.href;
 
-      // Create Filters
-      $('.filter').on('click',function(){
-        var $q = $(this).attr('data-filter');
-        if($(this).hasClass('active')){
-          mettingRooms.filter();
-          customScroll();
-          $('.filter').removeClass('active');
-        } else {
-          customScroll();
-          mettingRooms.filter(function(item) {
-            return (item.values().meetingType == $q);
-          });
-          $('.filter').removeClass('active');
-          $(this).addClass('active');
-        }
-      });
+            var index = currentLocation.indexOf("/");
 
-      // Return # of items
-      var $count = $('.meeting-search-items')
-      $count.append(mettingRooms.size());
-      mettingRooms.on('searchComplete', function(){
-        customScroll();
-        var totalMeetingRooms = mettingRooms.update().matchingItems.length;
-        if(totalMeetingRooms === 0){
-          $count.removeClass('d-none').html("There aren't any meetings as you search");
-        }else{
-          $count.addClass('d-none');
-        }
-      });
+            var fileNameWithExt = currentLocation.substr(index);
+            console.log(fileNameWithExt);
 
-    if(performance.navigation.type == 2){
-      location.reload(true);
-    }
-  </script>
+            // Create the List
+            var options = {
+              valueNames: ['meeting-card-title', 'date', 'meetingType']
+            };
+
+            // Run the list with default sort
+            var mettingRooms = new List('mettingRooms', options);
+            mettingRooms.sort("meeting-card-title", {
+              order: "asc"
+            })
+
+            // Create Filters
+            $('.filter').on('click', function () {
+              var $q = $(this).attr('data-filter');
+              if ($(this).hasClass('active')) {
+                mettingRooms.filter();
+                customScroll();
+                $('.filter').removeClass('active');
+              } else {
+                customScroll();
+                mettingRooms.filter(function (item) {
+                  return (item.values().meetingType == $q);
+                });
+                $('.filter').removeClass('active');
+                $(this).addClass('active');
+              }
+            });
+
+            // Return # of items
+            var $count = $('.meeting-search-items')
+            $count.append(mettingRooms.size());
+            mettingRooms.on('searchComplete', function () {
+              customScroll();
+              var totalMeetingRooms = mettingRooms.update().matchingItems.length;
+              if (totalMeetingRooms === 0) {
+                $count.removeClass('d-none').html("There aren't any meetings as you search");
+              } else {
+                $count.addClass('d-none');
+              }
+            });
+
+            if (performance.navigation.type == 2) {
+              location.reload(true);
+            }
+          </script>
 </body>
+
 </html>
