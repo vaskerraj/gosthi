@@ -6,23 +6,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><%- title %></title>
     <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/vendor/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="/vendor/fontawesome-free/css/v4-shims.min.css">
-    <link rel="stylesheet" href="/vendor/scrollbar/jquery.mCustomScrollbar.min.css">
-    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/main.css">
-
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 <body class="main <% if(loginPage) { %> login-page <% }else{ %> sidebar-mini <% } if(currentUser !== 'notLogin' && rel !== 'undefined'){  %>modal-open<% } %>">
-  <div class="container">
-    <div class="row">
-      <!-- <img src="/img/indexpage.png" width="100%"> -->
+  <div class="container-fluid">
+    <nav class="navbar navbar-expand fixed-top navbar-light bg-light">
+      <div class="container clearfix">
+        <a class="navbar-brand" href="/">
+          <img src="/img/logo.png" alt="Gosthi logo" height="45px">
+          GOSTHI
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav ml-auto">
+            <a href="" class="nav-item nav-link text-primary">JOIN A MEETING</a>
+            <% if (currentUser != 'notLogin') { %>
 
-      <div class="col-md-8 col-xs-12">
+            <% }else{ %>
+            <a href="javascript:void(0)" class="nav-item nav-link text-primary" id="signIn">SIGN IN</a>
+            <a href="javascript:void(0)" class="nav-item nav-link">
+              <button type="button" class="btn btn-warning btn-sm">SIGN UP</button>
+            </a>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+  </div>
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col-md-8 col-xs-12 mt-5">
         <img src="/img/right.png" width="70%">
       </div>
-      <div class="col-md-4 col-xs-12">
+      <div class="col-md-4 col-xs-12 mt-5">
         <div class="popup-container text-right">
           <% if (currentUser != 'notLogin') { %>
             <div class="clearfix marT15 marB30">
@@ -33,39 +55,10 @@
               </a>
             </div>
           <%} else{ %>
-          <label class="popup-button" for="login-popup"><img class="float-right" src="/img/login.png" width="150px"></label>
-          <input type="checkbox" id="login-popup" <% if ((messages && currentUser == 'notLogin') || rel !== 'undefined') { %> checked <% } %> >
+            <label class="popup-button" for="login-popup"><img class="float-right" src="/img/login.png" width="150px"></label>
+            <input type="checkbox" id="login-popup" <% if ((messages && currentUser == 'notLogin') || rel !== 'undefined') { %> checked <% } %> >
           <%}%>
-          <div class="popup">
-            <label for="login-popup" class="transparent-label"></label>
-            <div class="popup-inner">
-              <div class="popup-title">
-                <h6>Login</h6>
-                <label for="login-popup" class="popup-close-btn">
-                  <span class="fa fa-times"></span>
-                </label>
-              </div>
-              <% if (messages) { %>
-                <%- messages -%>
-              <% } %>
-              <div class="popup-content">
-                <form action="/login" method="POST">
-                  <ul>
-                    <li>
-                      <input type="text" name="username" placeholder="Email" autocomplete="off">
-                    </li>
-                    <li>
-                      <input type="password" name="password" class="marT10" placeholder="Password" autocomplete="off">
-                    </li>
-                    <li>
-                      <input type="hidden" name="joinRel" value="<%=rel%>">
-                      <button type="submit" class="marT15">Log in</button>
-                    </li>
-                  </ul>
-                </form>
-              </div>
-            </div>
-          </div>
+          
         </div><!--/.popup-container-->
         <div class="clearfix">
           <img src="/img/logo.png" width="100%">
@@ -75,11 +68,14 @@
   </div>
   <% if(currentUser !== 'notLogin' && rel !== 'undefined' && relOrError === '') {%>
   
-  <div class="modal fade show in" id="meetingRefereModal" tabindex="-1" role="dialog" aria-labelledby="newMeetingTitle" aria-hidden="true" style="display: block;">
+  <div class="modal fade show in" id="meetingRefereModal" tabindex="-1" role="dialog" aria-labelledby="newMeetingTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
           <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="newMeetingTitle">Meetings</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span class="fa fa-window-close-o" aria-hidden="true"></span>
+                </button>
               </div>
               <div class="modal-body">
                 <div class="container" id="mettingRooms">
@@ -128,12 +124,54 @@
           </div>
       </div>
   </div>
-  <div class="modal-backdrop fade show"></div>
   <% } %>
-  <%-include('partials/js')-%>
-  <script src="/vendor/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+  
+  <div class="modal fade show" id="signInContainer" role="dialog">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="signinTitle">SIGN IN</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span class="fa fa-window-close-o" aria-hidden="true"></span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  <% if (messages) { %>
+                    <%- messages -%>
+                  <% } %>
+                  <form action="/login" method="post" id="form_signIn">
+                    <div class="d-block">
+                      <input type="text" name="username" class="form-control" placeholder="Email" autocomplete="off">
+                    </div>
+                    <div class="d-block marT25">
+                      <input type="password" name="password" class="form-control" placeholder="Password">
+                    </div>
+                    <div class="d-block marT30 mb-2">
+                      
+                      <input type="hidden" name="joinRel" value="<%=rel%>">
+                      <button type="submit" class="btn btn-block btn-secondary">SIGN IN</button>
+                    </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
+  <%- currentUser %>
+  <%- rel %>
+  <%-include('partials/frontJs')-%>
   <script src="/vendor/listjs/list.min.js"></script>
+  <% if ((messages && currentUser === 'notLogin') || (rel !== 'undefined' && currentUser.username === '')) { %>
+    <script>
+      console.log("dd"); 
+        $("#signInContainer").modal('show');
+    </script> 
+  <% } %>
   <script>
+
+      $('#signIn').on('click', function(){
+        $("#signInContainer").modal('show');
+      });
+     
     const currentLocation = location.href;
                         
     var index = currentLocation.indexOf("/");
@@ -141,18 +179,6 @@
     var fileNameWithExt = currentLocation.substr(index);
     console.log(fileNameWithExt);
     
-    function customScroll(){
-        $("#meeting-scroll").mCustomScrollbar({
-            theme : "minimal-dark"
-        });
-      }
-    $(function(){
-      
-			$(window).on("load",function(){
-        customScroll();
-        $(".meeting-card").removeClass("d-none");
-      });
-    });
       // Create the List
       var options = {
         valueNames: [ 'meeting-card-title', 'date', 'meetingType' ]
