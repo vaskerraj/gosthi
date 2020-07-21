@@ -153,12 +153,12 @@ body {
 .navbar-light .navbar-brand:hover {
   color: rgb(95 95 95);
 }
-.navbar-expand .navbar-nav .nav-link {
+.navbar-expand-lg .navbar-nav .nav-link {
   padding: 15px 15px;
   font-size: 14px;
   font-weight: 600;
 }
-.navbar-expand .navbar-nav .nav-link button {
+.navbar-expand-lg .navbar-nav .nav-link button {
   margin: -5px 15px 0px 15px;
 }
 
@@ -255,9 +255,13 @@ list-style: none;
 
 .profileDetails.dropdown-menu a.singOut:hover {
   background-color: #ffc107;
+} 
+.intro {
+  position: absolute;
+  left: 0px;
+  top: 100px;
+  z-index: 2;
 }
-
-
 #signInContainer .form-control{
   width: 100%;
   height: 45px;
@@ -299,9 +303,6 @@ list-style: none;
 #meeting-scroll{
   padding: 7px 0;
   height: 200px;
-}
-.mCSB_scrollTools{
-  z-index: 2;
 }
 
 /* meeting card */
@@ -512,4 +513,9 @@ list-style: none;
 }
 .tags .tag:hover, .tags .tag.active {
   background: #E27;
+}
+
+.pageHeader h2{
+  font-size: 32px;
+  font-weight: 400;
 }

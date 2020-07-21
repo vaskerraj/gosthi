@@ -16,13 +16,13 @@
 <body
   class="main <% if(loginPage) { %> login-page <% }else{ %> sidebar-mini <% } if(currentUser !== 'notLogin' && rel !== 'undefined'){  %>modal-open<% } %>">
   <div class="container-fluid">
-    <nav class="navbar navbar-expand fixed-top navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light">
       <div class="container clearfix">
         <a class="navbar-brand" href="/">
           <img src="/img/logo.png" alt="Gosthi logo" height="45px">
           GOSTHI
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+        <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
           aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -67,8 +67,11 @@
   </div>
   <div class="container mt-5">
     <div class="row">
-      <div class="col-md-8 col-xs-12 mt-5">
-        <img src="/img/right.png" width="70%">
+      <div class="intro">
+        <h1>Gosthi is  a powerfull browser-based video conferencing solution suitable for organizations of all sizes</h1>
+          <div>Go ahead, video chat with the whole team. In fact, invite everyone you know. Gosthi is a fully encrypted video conferencing solution that you can use all day, every day — with no account needed.</div>
+      </div>
+      <div class="col-md-8 col-xs-12 mt-5" style="background-image:url('/img/right.png'); min-height: 100vh;">
       </div>
       <div class="col-md-4 col-xs-12 mt-5">
         <div class="clearfix">
@@ -157,7 +160,7 @@
               <input type="text" name="username" class="form-control" placeholder="Email" autocomplete="off">
             </div>
             <div class="d-block marT25">
-              <input type="password" name="password" class="form-control" placeholder="Password">
+              <input type="password" name="password" class="form-control" placeholder="Password" autocomplete="off">
             </div>
             <div class="d-block marT30 mb-2">
 
@@ -169,78 +172,20 @@
       </div>
     </div>
   </div>
-          <%- currentUser %>
-          <%- rel %>
   <%-include('partials/frontJs')-%>
   <script src="/vendor/listjs/list.min.js"></script>
+  <script src="/js/GS.Front.js"></script>
+
   <% if ((messages && currentUser === 'notLogin') || (rel !== 'undefined' && currentUser.username === '')) { %>
-  <script>
-            console.log("dd");
-            $("#signInContainer").modal('show');
-          </script>
-          <% } %>
-          <script>
-
-            $('#signIn').on('click', function () {
-              $("#signInContainer").modal('show');
-            });
-            
-            $('#joinMeeting').on('click', function () {
-              $("#meetingRefereModal").modal('show');
-            });
-
-            const currentLocation = location.href;
-
-            var index = currentLocation.indexOf("/");
-
-            var fileNameWithExt = currentLocation.substr(index);
-            console.log(fileNameWithExt);
-
-            // Create the List
-            var options = {
-              valueNames: ['meeting-card-title', 'date', 'meetingType']
-            };
-
-            // Run the list with default sort
-            var mettingRooms = new List('mettingRooms', options);
-            mettingRooms.sort("meeting-card-title", {
-              order: "asc"
-            })
-
-            // Create Filters
-            $('.filter').on('click', function () {
-              var $q = $(this).attr('data-filter');
-              if ($(this).hasClass('active')) {
-                mettingRooms.filter();
-                customScroll();
-                $('.filter').removeClass('active');
-              } else {
-                customScroll();
-                mettingRooms.filter(function (item) {
-                  return (item.values().meetingType == $q);
-                });
-                $('.filter').removeClass('active');
-                $(this).addClass('active');
-              }
-            });
-
-            // Return # of items
-            var $count = $('.meeting-search-items')
-            $count.append(mettingRooms.size());
-            mettingRooms.on('searchComplete', function () {
-              customScroll();
-              var totalMeetingRooms = mettingRooms.update().matchingItems.length;
-              if (totalMeetingRooms === 0) {
-                $count.removeClass('d-none').html("There aren't any meetings as you search");
-              } else {
-                $count.addClass('d-none');
-              }
-            });
-
-            if (performance.navigation.type == 2) {
-              location.reload(true);
-            }
-          </script>
+    <script>
+      $("#signInContainer").modal('show');
+    </script>
+  <% } %>
+    <script>
+      if (performance.navigation.type == 2) {
+        location.reload(true);
+      }
+    </script>
 </body>
 
 </html>
