@@ -15,6 +15,7 @@
             $.GHCore.inputMask();
             $.GHCore.DTselectAll($applistDTtableCheckAll,$applistDTtable);
             $.GHCore.flashMessageHandler();
+            $.GHCore.singInHandler();
             $.GHCore.meetingActivNavHandler();
             $.GHCore.createMeetingHandler();
             $.GHCore.remoteModalHandler.init();
@@ -80,8 +81,6 @@
             }, 4000);
         },
         meetingActivNavHandler : function(){
-
-            
             $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
                 localStorage.setItem('activeTab', $(e.target).attr('href'));
             });
