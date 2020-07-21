@@ -33,7 +33,7 @@ router.get('/',  (req, res, next)=>{
         // if have meeting join refere
         if(meetingJoinId === undefined){
             res.render('index', {
-                title: "Index || Gosthi",
+                title: "Index | Gosthi",
                 page : 'index',
                 loginPage : false,
                 currentUser : req.user || "notLogin",
@@ -42,7 +42,7 @@ router.get('/',  (req, res, next)=>{
             });
         }else{
             res.render('index', {
-                title: "Index || Gosthi",
+                title: "Index | Gosthi",
                 page : 'index',
                 loginPage : false,
                 currentUser : req.user || "notLogin",
@@ -56,7 +56,7 @@ router.get('/',  (req, res, next)=>{
             connection.query("SELECT * FROM meeting WHERE admin_id = ?",[ adminIdAfterLoginAsUser ], (err, relResultOnLoginIn)=>{
                 console.log(`relResultOnLoginIn : ${relResultOnLoginIn}`);
                 res.render('index', {
-                    title: "Index || Gosthi",
+                    title: "Index | Gosthi",
                     page : 'index',
                     loginPage : false,
                     currentUser : req.user || "notLogin",
@@ -127,6 +127,17 @@ router.get('/join/:id', async (req, res, next)=>{
     }else{
         return res.redirect('/?rel=join/'+req.params.id);
     }
+});
+
+// join meeting
+
+router.get('/joinMeeting', (req, res, next)=>{
+    res.render('joinMeeting',{
+        title: "Index | Gosthi",
+        page : 'joinmeeting',
+        loginPage : false,
+        currentUser : req.user || "notLogin"
+    })
 });
 
 router.get('/logout', (req, res, next) => {

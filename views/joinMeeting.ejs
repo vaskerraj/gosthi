@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%- title %></title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/vendor/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="/vendor/fontawesome-free/css/v4-shims.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <div class="container">
+
+        <div class="row align-items-center">
+            <div class="col-4 mx-auto mt-5 text-center">
+                <div class="d-block pageHeader">
+                    <h2>Join a Meeting</h2>
+                </div>
+                <div class="d-block mt-4">
+                    <input type="text" class="form-control" placeholder="Meeting ID">
+                </div>
+                <div class="d-block mt-3">
+                    <button class="btn btn-block btn-warning btn-lg">JOIN</button>
+                </div>
+            </div>
+        </div>
+    </div>    
+  <%-include('partials/frontJs')-%>
+</body>
+</html>
