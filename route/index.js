@@ -128,6 +128,11 @@ router.get('/global/:id', async (req, res, next)=>{
     connection.query("SELECT title FROM meeting WHERE meeting_id =?", [req.params.id], (err, relResultOnInstant)=>{
         if(err) throw err;
         if(relResultOnInstant.length){
+            // update on join meeting
+            connection.query("UPDATE meeting SET meeting_status = ?, start_at = ? WHERE meeting_id= ?", ['running', new Date(), req.params.id], (err)=>{
+                if(err) throw err;
+            });
+
             res.redirect('https://15.206.115.114/'+relResultOnInstant[0].title);
         }else{
             if(instantMeetingReferer === 'undefined'){
