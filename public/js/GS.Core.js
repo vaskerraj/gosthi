@@ -84,11 +84,14 @@
             init : function(){
                 const startInstantMeetBtn = $("#startInstantMeeting");
                 this.startInstantMeet(startInstantMeetBtn);
+                this.joinInstantMeet();
+                this.endInstantMeet();
             },
             startInstantMeet : function($collection){
                 if(!$collection.length) return;
                 var $instantMeetingStart = $("#instantMeetingStart"),
-                    $instantMeetingDetail = $("#instantMeetingDetails");
+                    $instantMeetingDetail = $("#instantMeetingDetails"),
+                    $meetingEndSel = $("#meeting_end");
                 $collection.on('click', function(){
                     var _this = $(this),
                     thisId = $(this).data('id');
@@ -110,7 +113,31 @@
                         
                         $instantMeetingStart.addClass("d-none");
                         $instantMeetingDetail.removeClass("d-none");
+                        $meetingEndSel.addClass("d-none");
 
+                    });
+                });
+            },
+            joinInstantMeet : function(){
+                $collection = $("#joinInstantMeeting");
+                if(!$collection.length) return;
+                $collection.on('click', function(){
+                    $("#meeting_end").removeClass("d-none");
+                });
+            },
+            endInstantMeet : function(){
+                $collection = $("#meeting_end");
+                if(!$collection.length) return;
+                var $selector = $("#instantMeetingDetails"),
+                    $parent = $("#instantMeetingStart");
+                $collection.on('click', function(){
+                    var thisId = $(this).data('id');
+                    $.post('/../admin/endInstantMeeting', { id : thisId },
+                    function(response){
+                        if(response){
+                            $selector.addClass("d-none");
+                            $parent.removeClass("d-none");
+                        }
                     });
                 });
             }

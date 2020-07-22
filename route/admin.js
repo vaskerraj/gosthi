@@ -111,6 +111,17 @@ router.post('/instantMeeting', ensureAuthenticated, checkRole(['admin']), (req, 
     });
 });
 
+router.post('/endInstantMeeting', ensureAuthenticated, checkRole(['admin']), (req, res)=>{
+    const endInstantMeetId = req.body.id;
+    connection.query("UPDATE meeting SET meeting_status = ?, end_at = ? WHERE id= ?", ['end', new Date(), endInstantMeetId], (err)=>{
+        if(err){
+            res.status(200).send(false)
+        }else{
+            res.status(200).send(true)
+        }
+    });
+});
+
 router.post('/meetingDetails', ensureAuthenticated, checkRole(['admin']), async (req, res, next)=>{
     var meetingId = req.body.id;
     connection.query("SELECT * FROM meeting WHERE id = ?", [meetingId], (err, meetingDetails)=>{
