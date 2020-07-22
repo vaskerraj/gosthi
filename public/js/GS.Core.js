@@ -102,7 +102,7 @@
                             location.reload(true);
                             return false;
                         }
-                        var splitMeetingId = (response.meetingId).toString().split( /(?=(?:...)*$)/ );
+                        var splitMeetingId = (response.meetingId).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
                         const instantMeetingHref = window.location.origin+"/global/"+response.meetingId;
                         document.querySelector('.instant-details-id').innerText = splitMeetingId;
                         document.querySelector('#joinInstantMeeting').href = instantMeetingHref;
