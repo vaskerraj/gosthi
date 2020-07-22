@@ -103,6 +103,7 @@
                         const instantMeetingHref = window.location.origin+"/global/"+response.meetingId;
                         document.querySelector('.instant-details-id').innerText = splitMeetingId;
                         document.querySelector('#joinInstantMeeting').href = instantMeetingHref;
+                        document.querySelector('#meeting_end').setAttribute("data-id", response.id);
                         document.querySelector('.instant-share-href').innerHTML = instantMeetingHref;
                         document.querySelector('.instant-share-href').href = instantMeetingHref;
                         document.querySelector('.instant-share-id').innerHTML = splitMeetingId;
