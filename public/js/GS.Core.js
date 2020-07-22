@@ -15,7 +15,7 @@
             $.GHCore.inputMask();
             $.GHCore.DTselectAll($applistDTtableCheckAll,$applistDTtable);
             $.GHCore.flashMessageHandler();
-            $.GHCore.singInHandler();
+            $.GHCore.instatMeetingHandler.init();
             $.GHCore.meetingActivNavHandler();
             $.GHCore.createMeetingHandler();
             $.GHCore.remoteModalHandler.init();
@@ -80,12 +80,46 @@
                 $("#messages").fadeOut();
             }, 4000);
         },
+        instatMeetingHandler : {
+            init : function(){
+                const startInstantMeetBtn = $("#startInstantMeeting");
+                this.startInstantMeet(startInstantMeetBtn);
+            },
+            startInstantMeet : function($collection){
+                if(!$collection.length) return;
+                var $instantMeetingStart = $("#instantMeetingStart"),
+                    $instantMeetingDetail = $("#instantMeetingDetails");
+                $collection.on('click', function(){
+                    var _this = $(this),
+                    thisId = $(this).data('id');
+                    $.post('/../admin/instantMeeting', {id : thisId},
+                    function(response){
+                        console.log(response);
+                        if(response.id === undefined){
+                            location.reload(true);
+                            return false;
+                        }
+                        var splitMeetingId = (response.meetingId).toString().split( /(?=(?:...)*$)/ );
+                        const instantMeetingHref = window.location.origin+"/global/"+response.meetingId;
+                        document.querySelector('.instant-details-id').innerText = splitMeetingId;
+                        document.querySelector('#joinInstantMeeting').href = instantMeetingHref;
+                        document.querySelector('.instant-share-href').innerHTML = instantMeetingHref;
+                        document.querySelector('.instant-share-href').href = instantMeetingHref;
+                        document.querySelector('.instant-share-id').innerHTML = splitMeetingId;
+                        
+                        $instantMeetingStart.addClass("d-none");
+                        $instantMeetingDetail.removeClass("d-none");
+
+                    });
+                });
+            }
+        },
         meetingActivNavHandler : function(){
             $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
                 localStorage.setItem('activeTab', $(e.target).attr('href'));
             });
             var activeTab = localStorage.getItem('activeTab');
-            console.log(activeTab);
+
             if(activeTab){
                 if(activeTab == '#upcoming'){
                     $.GHCore.upcomigMeetingHandler.upcomingMeetingData();
@@ -265,8 +299,6 @@
             document.querySelector('.edit_meetingTimeTxt').innerText = edit_selectedMeetingTimeTxt;
 
             docEditMeetingSel.addEventListener('change', (e)=>{
-                
-            console.log("trigger");
                 var edit_selectedMeetingTime = e.target.value;
                 document.querySelector('.edit_meetingTimeTxt').innerText = edit_selectedMeetingTime;
             });

@@ -8,6 +8,7 @@ const { ensureAuthenticated, checkRole } = require('../config/auth');
 
 var connection = require('../db');
 
+const  { meetingId }  = require('../models/meetingId');
 const { totalUsers, totalActiveUsers } = require('../models/dashboard');
 const { meetingRooms, upcomingMeetingRooms, inviteUsersList } = require('../models/meeting');
 const { usersList } = require('../models/users');
@@ -93,6 +94,21 @@ router.post('/', ensureAuthenticated, checkRole(['admin']),
         res.redirect('/admin/');
     }
 
+});
+
+
+router.post('/instantMeeting', ensureAuthenticated, checkRole(['admin']), (req, res, next)=>{
+    const instantMeet_adminId = req.body.id;
+    meetingId().then((meetingId)=>{
+        connection.query("INSERT INTO meeting SET admin_id = ?, meeting_id = ?, title = ?, type = ?, created_at = ?", [instantMeet_adminId, meetingId, 'Instant Meet', 'instant', new Date()], (err, instatMeetResult)=>{
+            if(err) throw err;
+            res.status(200).json({
+                id: instatMeetResult.insertId,
+                callbackId : instantMeet_adminId,
+                meetingId : meetingId,
+            })
+        });
+    });
 });
 
 router.post('/meetingDetails', ensureAuthenticated, checkRole(['admin']), async (req, res, next)=>{

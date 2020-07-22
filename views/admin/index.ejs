@@ -121,23 +121,63 @@
                     <div class="card">
                         <div class="card-body meeting-details">
                             <div class="clearfix" id="instantMeeting">
-                                <div class="d-block">
-                                    <div class="clearfix">Meet Now</div>
-                                    <div class="clearfix">Start an instant meeting within a seconds</div>
-                                </div>
-                                <div class="row mt-4 text-center">
-                                    <div class="col-md-2 col-sm-12 col-12">
-                                        <a href="" target="_blank" class="btn btn-primary btn-block mb-3">
-                                            <span class="fa fa-fw fa-play"></span>
-                                            Start
-                                        </a>
+                                <div class="clearfix" id="instantMeetingStart">
+                                    <div class="d-block">
+                                        <div class="clearfix">Meet Now</div>
+                                        <div class="clearfix">Start an instant meeting within a seconds</div>
                                     </div>
-                                </div><!--/.row-->
-                                <div class="d-block border-top mt-2">
-                                    <div class="d-block mt-3">
-                                        <div class="font15 font-weight-bold">Start a meeting then invite others.</div>
+                                    <div class="row mt-4 text-center">
+                                        <div class="col-md-2 col-sm-12 col-12">
+                                            <a href="javascript:void(0)" class="btn btn-primary btn-block mb-3" id="startInstantMeeting" data-id=<%-currentUser.relId%>>
+                                                <span class="fa fa-fw fa-play"></span>
+                                                Start
+                                            </a>
+                                        </div>
+                                    </div><!--/.row-->
+                                    <div class="d-block border-top mt-2">
+                                        <div class="d-block mt-3">
+                                            <div class="font15 font-weight-bold">Start a meeting then invite others.</div>
+                                        </div>
+                                    </div><!--/.d-block-->
+                                </div><!--/#instantMeetingStart-->
+                                <div class="clearfix d-none" id="instantMeetingDetails">
+                                    <div class="d-block">
+                                        <div class="d-block">Meet Now</div>
+                                        <div class="clearfix">ID : <span class="instant-details-id"></span></div>
                                     </div>
-                                </div><!--/.d-block-->
+                                    <div class="row mt-4 text-center">
+                                        <div class="col-md-2 col-sm-12 col-12">
+                                            <a href="" target="_blank" class="btn btn-primary btn-block mb-3" id="joinInstantMeeting">
+                                                <span class="fa fa-fw fa-plus"></span>
+                                                Join
+                                            </a>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4 col-12 marT7">
+                                            <button class="copy text-primary" data-text="Copy Invitation" data-text-copied="COPIED Invitation">
+                                                <i class="fa fa-fw fa-copy"></i>
+                                                <span>Copy Invitation</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-md-2 col-sm-4 col-12 marT7">
+                                            <a href="javascript:void(0)" class="endMeeting text-danger" id="meeting_end">
+                                                <span class="fa fa-fw fa-sign-out"></span>
+                                                End
+                                            </a>
+                                        </div>
+                                    </div><!--/.row-->
+                                    <div class="d-block border-top mt-2" id="invitationText">
+                                        <div class="d-block instant-share-title mt-3"></div>
+                                        
+                                        <div class="d-block" style="margin-top: -20px;"><br>
+                                            <div class="font15 font-weight-bold">Please join my meeting from your computer, tablet or smartphone.</div>
+                                            
+                                            <a href="" target="_blank" class="d-block instant-share-href"></a>
+                                        </div>
+                                        <div class="d-block fontb font15 mb-3"><br>
+                                            Meeting ID : <span class="instant-share-id"></span>
+                                        </div>
+                                    </div><!--/.d-block-->
+                                </div><!--/#instantMeetingDetails-->
                             </div><!--/#instantMeeting-->
                             <div class="clearfix d-none" id="selectedMeeting">
                                 <div class="d-block">
@@ -164,7 +204,7 @@
                                         </button>
                                     </div>
                                     <div class="col-md-2 col-sm-4 col-12 marT7">
-                                        <a href="/admin/editMeeting/6" class="editMeetings" id="meeting_edit" data-remote="" data-toggle="modal" data-target="#meetingEdit_modal">
+                                        <a href="" class="editMeetings" id="meeting_edit" data-remote="" data-toggle="modal" data-target="#meetingEdit_modal">
                                             <span class="fa fa-fw fa-edit"></span>
                                             Edit
                                         </a>
@@ -176,7 +216,7 @@
                                         </a>
                                     </div>
                                 </div><!--/.row-->
-                                <div class="d-block border-top mt-2" id="invitationText">
+                                <div class="d-block border-top mt-2">
                                     <div class="d-block meeting-share-title mt-3"></div>
                                     <div class="d-block meeting-share-dateTime"></div>
                                     
@@ -447,7 +487,7 @@
   <script>
     $(function(){
         $('button').copiq({
-            parent: '#selectedMeeting',
+            parent: '#instantMeetingDetails',
             content: '#invitationText',
             onSuccess: function($element, source, selection) {
                 $('span', $element).text($element.attr("data-text-copied"));
