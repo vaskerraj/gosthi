@@ -1,15 +1,9 @@
 var express = require('express');
 var router = express.Router();
-var {check, validationResult} = require('express-validator');
+var { check, validationResult } = require('express-validator');
 var passport = require('passport');
 
-const { ensureAuthenticated, checkRole  } = require('../config/auth');
-
 var connection = require('../db');
-
-const { npkdata, tempHumData, totalDevices } = require('../models/dashboard');
-// const { deviceList, deviceDetails, deviceReport } = require('../models/deviceList');
-
 
 router.get('/',  (req, res, next)=>{
     const refereUrlTitle = req.originalUrl.split('=')[0];
@@ -25,8 +19,6 @@ router.get('/',  (req, res, next)=>{
         var relOrError = "";
         var meetingJoinId = undefined;
     }
-    console.log(`meetingJoinId : ${meetingJoinId}`);
-    console.log(`relOrError : ${relOrError}`);
 
     // if not logged in
     if(req.user === undefined){
@@ -54,7 +46,6 @@ router.get('/',  (req, res, next)=>{
         if(meetingJoinId === undefined){
             const adminIdAfterLoginAsUser = req.user.admin_id;
             connection.query("SELECT * FROM meeting WHERE admin_id = ?",[ adminIdAfterLoginAsUser ], (err, relResultOnLoginIn)=>{
-                console.log(`relResultOnLoginIn : ${relResultOnLoginIn}`);
                 res.render('index', {
                     title: "Index | Gosthi",
                     page : 'index',
@@ -66,8 +57,7 @@ router.get('/',  (req, res, next)=>{
                 });
             });
         }else{
-            connection.query("SELECT * FROM meeting WHERE id = ?", [meetingJoinId], (err, relResultOnLoginIn)=>{
-                console.log(relResultOnLoginIn.length);
+            connection.query("SELECT * FROM meeting WHERE meeting_id = ?", [meetingJoinId], (err, relResultOnLoginIn)=>{
                 if(relResultOnLoginIn.length){
                     res.redirect('https://15.206.115.114/'+relResultOnLoginIn[0].title);
                 }else{
@@ -91,7 +81,6 @@ router.post('/login',
             res.redirect('/admin/');
         }else{
             // if user
-           console.log(`meeing rel: ${req.body.joinRel}`);
             // if having meeting room refere
             if(req.body.joinRel !== 'undefined'){
                 connection.query("SELECT title FROM meeting WHERE id =?", [req.body.joinRel], (err, relResult)=>{
@@ -127,6 +116,27 @@ router.get('/join/:id', async (req, res, next)=>{
     }else{
         return res.redirect('/?rel=join/'+req.params.id);
     }
+});
+
+router.get('/global/:id', async (req, res, next)=>{
+    console.log(req.headers.referer);
+    const instantMeetingReferer = req.headers.referer;
+    // for pass at client (video call)
+    if(req.user !==  undefined){
+        
+    }
+    connection.query("SELECT title FROM meeting WHERE meeting_id =?", [req.params.id], (err, relResultOnInstant)=>{
+        if(err) throw err;
+        if(relResultOnInstant.length){
+            res.redirect('https://15.206.115.114/'+relResultOnInstant[0].title);
+        }else{
+            if(instantMeetingReferer === 'undefined'){
+                res.redirect('/?error=meeting');
+            }else{
+                res.redirect(instantMeetingReferer+'?error=meeting');
+            }
+        }
+    });
 });
 
 // join meeting
