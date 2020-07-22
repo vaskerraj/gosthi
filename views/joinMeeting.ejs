@@ -19,7 +19,7 @@
                     <h2>Join a Meeting</h2>
                 </div>
                 <div class="d-block mt-4">
-                    <input type="text" class="form-control" placeholder="Meeting ID">
+                    <input type="text" class="form-control input-lg input-meetingId" placeholder="Meeting ID" maxlength="11">
                 </div>
                 <div class="d-block mt-3">
                     <button class="btn btn-block btn-warning btn-lg">JOIN</button>
@@ -28,5 +28,6 @@
         </div>
     </div>    
   <%-include('partials/frontJs')-%>
+  <script src="/js/GS.Front.js"></script>
 </body>
 </html>

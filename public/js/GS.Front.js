@@ -6,14 +6,13 @@
 $(function(){
     $.GHFront = {
         init : function() {
-            var inputFocusStateSel = $('.form-control'),
-				$applistDTtable = $("#inviteUserslist"),
-				$applistDTtableCheckAll = $("#dt_checkAll");
+            var inputFocusStateSel = $('.form-control');
             $.GHFront.ppath();
             $.GHFront.inputFocusState(inputFocusStateSel);
             $.GHFront.inputMask();
             $.GHFront.flashMessageHandler();
             $.GHFront.indexPageHandler.init();
+            $.GHFront.joinMeetingHandler.init();
         },
         ppath : function(){
 			var pageloc = $("#pagelo").val();
@@ -122,6 +121,18 @@ $(function(){
                     $count.addClass('d-none');
                     }
                 });
+            }
+        },
+        joinMeetingHandler : {
+            init : function(){
+                const meetingIdSearchInput = $(".input-meetingId");
+                this.meetingIdSearchInput(meetingIdSearchInput);
+            },
+            meetingIdSearchInput : function($collection){
+                if(!$collection.length) return;
+                document.querySelector(".input-meetingId").addEventListener('input', function (e) {
+                    e.target.value = e.target.value.replace(/[^\dA-Z]/g, '').replace(/(.{3})/g, '$1 ').trim();
+                  });
             }
         }
     }
