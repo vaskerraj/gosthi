@@ -13,8 +13,10 @@
   <link rel="stylesheet" href="/css/main.css">
 </head>
 
-<body
-  class="main <% if(loginPage) { %> login-page <% }else{ %> sidebar-mini <% } if(currentUser !== 'notLogin' && rel !== 'undefined'){  %>modal-open<% } %>">
+<body class="<% if(currentUser !== 'notLogin' && rel !== 'undefined'){  %>modal-open<% } %>">
+  <% if (messages) { %>
+      <%- messages -%>
+  <% } %>
   <%- include('partials/frontHeader')%>
   <div class="container mt-5">
     <div class="row">
@@ -31,7 +33,7 @@
       </div>
     </div>
   </div>
-  <% if(currentUser !== 'notLogin' && rel !== 'undefined' && relOrError === '') {%>
+  <% if(currentUser !== 'notLogin' && rel !== 'undefined') {%>
   <div class="modal fade show" id="meetingRefereModal" tabindex="-1" role="dialog"
     aria-labelledby="newMeetingTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -103,9 +105,6 @@
           </button>
         </div>
         <div class="modal-body">
-          <% if (messages) { %>
-          <%- messages -%>
-          <% } %>
           <form action="/login" method="post" id="form_signIn">
             <div class="d-block">
               <input type="text" name="username" class="form-control" placeholder="Email" autocomplete="off">
@@ -127,7 +126,7 @@
   <script src="/vendor/listjs/list.min.js"></script>
   <script src="/js/GS.Front.js"></script>
 
-  <% if ((messages && currentUser === 'notLogin') || (rel !== 'undefined' && currentUser.username === '')) { %>
+  <% if ((messages && currentUser === 'notLogin') || (rel !== 'undefined' && currentUser === 'notLogin')) { %>
     <script>
       $("#signInContainer").modal('show');
     </script>
