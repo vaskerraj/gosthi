@@ -450,7 +450,7 @@
                                             +'</div>'
                                             +'<div class="col-7">'
                                                 +'<div class="meeting-card-title d-block">'+item.title+'</div>'
-                                                +'<div class="meeting-card-desc">ID : '+item.id+'</div>'
+                                                +'<div class="meeting-card-desc">ID : '+item.meeting_id+'</div>'
                                             +'</div>'
                                         +'</div>'
                                    +'</li>';
