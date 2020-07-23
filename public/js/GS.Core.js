@@ -102,7 +102,7 @@
                             location.reload(true);
                             return false;
                         }
-                        var splitMeetingId = (response.meetingId).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+                        var splitMeetingId = (response.meeting_id).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
                         const instantMeetingHref = window.location.origin+"/global/"+response.meetingId;
                         document.querySelector('.instant-details-id').innerText = splitMeetingId;
                         document.querySelector('#joinInstantMeeting').href = instantMeetingHref;
@@ -360,16 +360,17 @@
                            var meetingAddDuration =  moment(meetingTime, 'hh:mm A').add(meetingDuration[0], meetingDuration[1]).format('hh:mm A');
                             var meetingDateTime = meetingDate+' '+meetingTime+' - '+meetingAddDuration
                         }
-
-                        var joinMeetingHref = window.location.origin+"/join/"+response.id;
+                        
+                        var splitMeetingId = (response.meeting_id).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+                        var joinMeetingHref = window.location.origin+"/join/"+response.meeting_id;
                         document.querySelector('#startSelectedMeeting').href = joinMeetingHref;
                         document.querySelector('.meeting-details-title').innerHTML = response.title;
-                        document.querySelector('.meeting-details-id').innerHTML = response.id;
+                        document.querySelector('.meeting-details-id').innerHTML = splitMeetingId;
                         document.querySelector('.meeting-share-href').innerHTML = joinMeetingHref;
                         document.querySelector('.meeting-share-href').href = joinMeetingHref;
                         document.querySelector('.meeting-share-title').innerHTML = response.title;
                         document.querySelector('.meeting-share-dateTime').innerHTML = meetingDateTime;
-                        document.querySelector('.meeting-share-id').innerHTML = response.id;
+                        document.querySelector('.meeting-share-id').innerHTML = splitMeetingId;
                         
                         // 
                         document.querySelector('#inviteUser_meetingId').value = response.id;
