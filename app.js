@@ -8,7 +8,7 @@ const createError = require('http-errors'),
     expressValidator = require("express-validator"),
     session = require("express-session"),
     passport = require("passport"),
-    {PythonShell} = require('python-shell');
+    { PythonShell } = require('python-shell');
 
 // connect mysql
 var mysql = require('./db');

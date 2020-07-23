@@ -1,0 +1,9 @@
+version: '3.8'
+services: 
+    web:
+        container_name: nodejs
+        restart: always
+        build: .
+        ports: 
+            - '80:3000'
+    mysql:
