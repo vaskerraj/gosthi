@@ -25,7 +25,7 @@ router.get('/', ensureAuthenticated, checkRole(['admin']), async (req, res, next
     ];
     Promise.all(meetingRoomPromise)
         .then((meeting)=>{
-            res.render('admin/', {
+            res.render('admin', {
                 title : "Index || Ghosti Hub",
                 page : "index",
                 currentUser : req.user,
@@ -76,21 +76,24 @@ router.post('/', ensureAuthenticated, checkRole(['admin']),
                 if(err) throw err;
             });
     }else{
-        if(meetingType === "normal"){
-            var meetingSql = "INSERT INTO meeting SET admin_id = ?, title = ?, type = ?, created_at = ?";
-            var meetingSqlData = [req.user.relId, meetingTitle, meetingType, new Date()];
-        }else{
-            var meetingSql = "INSERT INTO meeting SET admin_id = ?, title = ?, type = ?, meeting_date =?, meeting_time = ?, meeting_duration = ?, created_at = ?";
-            var meetingSqlData = [req.user.relId, meetingTitle, meetingType, meetingDate, meetingTime, meetingDuration, new Date()];
-        }
-        connection.query(meetingSql, meetingSqlData, (err, results, fields)=>{
-            if(err) throw err;
+        meetingId().then((meetingId)=>{
+            if(meetingType === "normal"){
+                var meetingSql = "INSERT INTO meeting SET admin_id = ?, meeting_id = ?, title = ?, type = ?, created_at = ?";
+                var meetingSqlData = [req.user.relId, meetingId, meetingTitle, meetingType, new Date()];
+            }else{
+                var meetingSql = "INSERT INTO meeting SET admin_id = ?, meeting_id = ?, title = ?, type = ?, meeting_date =?, meeting_time = ?, meeting_duration = ?, created_at = ?";
+                var meetingSqlData = [req.user.relId, meetingId, meetingTitle, meetingType, meetingDate, meetingTime, meetingDuration, new Date()];
+            }
+        
+            connection.query(meetingSql, meetingSqlData, (err, results, fields)=>{
+                if(err) throw err;
+            });
         });
         
         // req.toastr.success("Successfully added new protfolio");
         req.flash("success","<span class='fa fa-fw fa-check'></span> Successfully created new meeting");
 
-        res.location('/admin/');
+        res.location('/admin');
         res.redirect('/admin/');
     }
 
