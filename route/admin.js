@@ -94,7 +94,7 @@ router.post('/', ensureAuthenticated, checkRole(['admin']),
         req.flash("success","<span class='fa fa-fw fa-check'></span> Successfully created new meeting");
 
         res.location('/admin');
-        res.redirect('/admin/');
+        res.redirect('/admin');
     }
 
 });
