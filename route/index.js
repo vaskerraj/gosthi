@@ -260,43 +260,56 @@ router.post('/checkMeeting', async(req, res)=>{
         meetingPassword = req.body.globalPassword;
         console.log(meetingPassword);
 
-    connection.query("SELECT id, meeting_password FROM meeting WHERE meeting_id =?", [globalMeetingId], (err, checkGlobalResult)=>{
-        if(err) throw err;
-        // prevent url edit and hack
-        if(!checkGlobalResult.length){
-            req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
-            res.redirect('/');
-        }else{
-            if(checkGlobalResult[0].meeting_password !== null){
-                connection.query("SELECT * FROM meeting WHERE meeting_id =? AND meeting_password =?", [globalMeetingId, meetingPassword], (err, checkGlobalPwdResult)=>{
-                    if(err) throw err;
-                    if(checkGlobalPwdResult.length){
+        connection.query("SELECT id, meeting_password FROM meeting WHERE meeting_id =?", [meetingId], (err, checkGlobalResult)=>{
+            if(err) throw err;
+            // prevent url edit and hack
+            if(!checkGlobalResult.length){
+                req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
+                res.redirect('/');
+            }else{
+                if(meetingType === 'global'){
+                    if(checkGlobalResult[0].meeting_password !== null){
+                        connection.query("SELECT * FROM meeting WHERE meeting_id =? AND meeting_password =?", [meetingId, meetingPassword], (err, checkGlobalPwdResult)=>{
+                            if(err) throw err;
+                            if(checkGlobalPwdResult.length){
+                                res.render('meetingStatus',{
+                                    title: "Wait for meeting | Gosthi",
+                                    page : 'waitMeeting',
+                                    currentUser : req.user || "notLogin",
+                                    data : checkGlobalNoPwdResult[0],
+                                    meeter : meeterName
+                                });
+                            }else{
+                                req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting password.");
+                                return res.redirect('/?re=global/'+meetingId);
+                            }
+                        });
+                    }else{
+                        connection.query("SELECT * FROM meeting WHERE meeting_id =?", [meetingId], (err, checkGlobalNoPwdResult)=>{
+                            if(err) throw err;
+                            res.render('meetingStatus',{
+                                title: "Wait for meeting | Gosthi",
+                                page : 'waitMeeting',
+                                currentUser : req.user || "notLogin",
+                                data : checkGlobalNoPwdResult[0],
+                                meeter : meeterName
+                            });
+                        });
+                    }
+                }else{
+                    connection.query("SELECT meeting.title, meeting.meeting_id, meeting.meeting_date, meeting.meeting_time, meeting.meeting_duration,meeting.meeting_status, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?", [meetingId], (err, checkJoinResult)=>{
+                        if(err) throw err;
                         res.render('meetingStatus',{
                             title: "Wait for meeting | Gosthi",
                             page : 'waitMeeting',
                             currentUser : req.user || "notLogin",
-                            data : checkGlobalNoPwdResult[0],
-                            meeter : meeterName
+                            data : checkJoinResult[0],
+                            meeter : checkJoinResult[0].first_name + ' '+ checkJoinResult[0].last_name
                         });
-                    }else{
-                        req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting password.");
-                        return res.redirect('/?re=global/'+globalMeetingId);
-                    }
-                });
-            }else{
-                connection.query("SELECT * FROM meeting WHERE meeting_id =?", [globalMeetingId], (err, checkGlobalNoPwdResult)=>{
-                    if(err) throw err;
-                    res.render('meetingStatus',{
-                        title: "Wait for meeting | Gosthi",
-                        page : 'waitMeeting',
-                        currentUser : req.user || "notLogin",
-                        data : checkGlobalNoPwdResult[0],
-                        meeter : meeterName
                     });
-                });
+                }
             }
-        }
-    });
+        });
 });
 
 // join meeting
