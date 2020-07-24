@@ -15,6 +15,12 @@ router.get('/',  (req, res, next)=>{
     }else if(refereUrlTitle === "/?error"){
         var relOrError = "error";
         var meetingJoinId = undefined;
+    }else if(refereUrlTitle === "/?re"){
+        var relOrError = "check";
+        var meetingJoinId = refereUrlSeond.split('/')[1];
+    }else if(refereUrlTitle === "/?rep"){
+        var relOrError = "checkPwd";
+        var meetingJoinId = refereUrlSeond.split('/')[1];
     }else{
         var relOrError = "";
         var meetingJoinId = undefined;
@@ -197,7 +203,8 @@ router.get('/global/:id', async (req, res, next)=>{
 
             });
 
-            res.redirect('https://15.206.115.114/'+relResultOnInstant[0].title);
+            return res.redirect('/?re=global/'+req.params.id);
+            // res.redirect('https://15.206.115.114/'+relResultOnInstant[0].title);
         }else{
             if(instantMeetingReferer === undefined){
                 req.flash("global_invalid", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
@@ -211,7 +218,6 @@ router.get('/global/:id', async (req, res, next)=>{
 });
 
 // join meeting
-
 router.get('/joinMeeting', (req, res, next)=>{
     res.render('joinMeeting',{
         title: "Index | Gosthi",
