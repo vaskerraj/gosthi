@@ -175,11 +175,13 @@ body {
 }
 #messages .error, 
 #messages .success,
-#messages .meeting_del_success {
+#messages .meeting_del_success,
+#messages .global_invalid {
     padding: 18px 0px;
     color: #fff;
 }
-#messages .error {
+#messages .error,
+#messages .global_invalid {
     background-color: rgb(224, 37, 54) !important;
 }
 
@@ -200,6 +202,10 @@ body {
     min-height: calc(100vh - 40px);
   }
   #signInContainer .modal-dialog {
+    max-width: 400px;
+  }
+
+  #checkGlobalMeet .modal-dialog {
     max-width: 400px;
   }
 }
