@@ -63,10 +63,11 @@ router.get('/',  (req, res, next)=>{
                 });
             });
         }else{
-            connection.query("SELECT title, meeting_status FROM meeting WHERE meeting_id = ?", [meetingJoinId], (err, relResultOnLoginIn)=>{
-                if(relResultOnLoginIn.length){
-                    if(relResultOnLoginIn[0].meeting_status === 'running'){
-                        res.redirect('https://15.206.115.114/'+relResultOnLoginIn[0].title);
+            connection.query("SELECT meeting.title, meeting.meeting_status, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?", [meetingJoinId], (err, relResultLoginIn)=>{
+                if(relResultLoginIn.length){
+                    if(relResultLoginIn[0].meeting_status === 'running'){
+                        var redirectUrlOnRunning = 'https://15.206.115.114/'+relResultLoginIn[0].title+'/'+relResultLoginIn[0].first_name+' '+relResultLoginIn[0].last_name;
+                        return res.redirect(redirectUrlOnRunning);
                     }else{
                         res.render('preMeeting', {
                             title: "Check join meeting | Gosthi",
@@ -158,10 +159,11 @@ router.post('/login',
             // if user
             // if having meeting room refere
             if(req.body.joinRel !== 'undefined'){
-                connection.query("SELECT title, meeting_status FROM meeting WHERE meeting_id =?", [req.body.joinRel], (err, relResult)=>{
+                connection.query("SELECT meeting.title, meeting.meeting_status, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?", [req.body.joinRel], (err, relResult)=>{
                     if(relResult.length){
                         if(relResult[0].meeting_status === 'running'){
-                            res.redirect('https://15.206.115.114/'+relResult[0].title);
+                        var redirectUrlOnRunning = 'https://15.206.115.114/'+relResult[0].title+'/'+relResult[0].first_name+' '+relResult[0].last_name;
+                        return res.redirect(redirectUrlOnRunning);
                         }else{
                             res.render('preMeeting', {
                                 title: "Check join meeting | Gosthi",
@@ -184,11 +186,12 @@ router.get('/join/:id', async (req, res, next)=>{
     console.log(req.headers.referer);
     const joinMeetingReferer = req.headers.referer;
     if(req.user !==  undefined){
-        connection.query("SELECT title, meeting_status FROM meeting WHERE meeting_id =?", [req.params.id], (err, relResultOnJoin)=>{
+        connection.query("SELECT meeting.title, meeting.meeting_status, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?", [req.params.id], (err, relResultOnJoin)=>{
             if(err) throw err;
             if(relResultOnJoin.length){
                 if(relResultOnJoin[0].meeting_status === 'running'){
-                    res.redirect('https://15.206.115.114/'+relResultOnJoin[0].title);
+                    var redirectUrlOnRunning = 'https://15.206.115.114/'+relResultOnJoin[0].title+'/'+relResultOnJoin[0].first_name+' '+relResultOnJoin[0].last_name;
+                    return res.redirect(redirectUrlOnRunning);
                 }else{
                     res.render('preMeeting', {
                         title: "Check join meeting | Gosthi",
@@ -269,7 +272,7 @@ router.post('/checkMeeting', async(req, res)=>{
             }else{
                 if(checkGlobalResult[0].meeting_status === "running"){
                     var redirectUrlOnRunning = 'https://15.206.115.114/'+checkGlobalResult[0].title+'/'+checkGlobalResult[0].first_name+' '+checkGlobalResult[0].last_name;
-                   return res.redirect(redirectUrlOnRunning);
+                    return res.redirect(redirectUrlOnRunning);
                 }else{
                     if(meetingType === 'global'){
                         if(checkGlobalResult[0].meeting_password !== null){
