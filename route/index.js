@@ -224,12 +224,16 @@ router.get('/global/:id', async (req, res, next)=>{
                 
             });
         }
-        connection.query("SELECT meeting.title, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?",[req.params.id], (err, inAdminMeetingJoinResult)=>{
+        connection.query("SELECT meeting.title, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?",[req.params.id], (err, signInMeetingJoinResult)=>{
             if(err) throw err;
-        
-            var redirectUrl = 'https://15.206.115.114/'+inAdminMeetingJoinResult[0].title+'/'+inAdminMeetingJoinResult[0].first_name+' '+inAdminMeetingJoinResult[0].last_name;
+        if(!signInMeetingJoinResult.length){
+            req.flash("global_invalid", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
+            res.redirect('/?error=global');
+        }else{
+            var redirectUrl = 'https://15.206.115.114/'+signInMeetingJoinResult[0].title+'/'+signInMeetingJoinResult[0].first_name+' '+signInMeetingJoinResult[0].last_name;
             // res.location(redirectUrl);
             return res.redirect(redirectUrl);
+        }
         });
     }else{
         connection.query("SELECT title, meeting_password FROM meeting WHERE meeting_id =?", [req.params.id], (err, relResultOnInstant)=>{
