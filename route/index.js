@@ -223,8 +223,6 @@ router.get('/global/:id', async (req, res, next)=>{
         }
         connection.query("SELECT meeting.title, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?",[req.params.id], (err, inAdminMeetingJoinResult)=>{
             if(err) throw err;
-            
-            // res.location('https://15.206.115.114/'+inAdminMeetingJoinResult[0].title/inAdminMeetingJoinResult[0].first_name+' '+inAdminMeetingJoinResult[0].last_name);
         
             var redirectUrl = 'https://15.206.115.114/'+inAdminMeetingJoinResult[0].title+'/'+inAdminMeetingJoinResult[0].first_name+' '+inAdminMeetingJoinResult[0].last_name;
             // res.location(redirectUrl);
@@ -256,7 +254,8 @@ router.get('/global/:id', async (req, res, next)=>{
 
 // check global
 router.post('/checkMeeting', async(req, res)=>{
-    var globalMeetingId = req.body.globalMeetingId,
+    var meetingType = req.body.meetingTpe,
+        meetingId = req.body.meetingId,
         meeterName = req.body.globalName,
         meetingPassword = req.body.globalPassword;
         console.log(meetingPassword);
