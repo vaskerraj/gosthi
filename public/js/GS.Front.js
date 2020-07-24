@@ -138,8 +138,25 @@ $(function(){
         },
         checkMeetingHandler : {
             init : function(){
+                this.waitingMeeting();
                 this.meetingIdHandler();
                 this.meetingDurationHandler();
+            },
+            waitingMeeting : function(){
+                var $collection = $("#rawMeetingId");
+                if(!$collection.length) return;
+                var meetingId = $collection.val(),
+                    $dataKey = $("#meetinglink");
+                setInterval(() => {
+                    $.post("meetingStatus", { id : meetingId },
+                    function(response){
+                        console.log(response.status);
+                        if(response.status == true){
+                            console.log("clicked");
+                            document.querySelector("#meetinglink").click();
+                        }
+                    });
+                }, 3000);
             },
             meetingIdHandler : function(){
                 $collection = $("#rawMeetingId");
