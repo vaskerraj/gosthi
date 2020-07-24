@@ -19,6 +19,7 @@
   <% } %>
   <%- include('partials/frontHeader')%>
   <div class="container mt-5">
+    
     <div class="row">
       <div class="intro">
         <h1>Gosthi is  a powerfull browser-based video conferencing solution suitable for organizations of all sizes</h1>
@@ -122,11 +123,13 @@
       </div>
     </div>
   </div>
+  <%- relOrError %>
+  <%- rel %>
   <%-include('partials/frontJs')-%>
   <script src="/vendor/listjs/list.min.js"></script>
   <script src="/js/GS.Front.js"></script>
 
-  <% if ((messages && currentUser === 'notLogin') || (rel !== 'undefined' && currentUser === 'notLogin')) { %>
+  <% if ((messages || relOrError === 'rel') && currentUser === 'notLogin' && relOrError !== 'error' ) { %>
     <script>
       $("#signInContainer").modal('show');
     </script>

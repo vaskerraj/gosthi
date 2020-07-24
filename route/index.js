@@ -194,16 +194,17 @@ router.get('/global/:id', async (req, res, next)=>{
             // update on join meeting
             connection.query("UPDATE meeting SET meeting_status = ?, start_at = ? WHERE meeting_id= ?", ['running', new Date(), req.params.id], (err)=>{
                 if(err) throw err;
+
             });
 
             res.redirect('https://15.206.115.114/'+relResultOnInstant[0].title);
         }else{
             if(instantMeetingReferer === undefined){
-                req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
-                res.redirect('/');
+                req.flash("global_invalid", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
+                res.redirect('/?error=global');
             }else{
-                req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
-                res.redirect(instantMeetingReferer);
+                req.flash("global_invalid", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
+                res.redirect(instantMeetingReferer+'?error=global');
             }
         }
     });
