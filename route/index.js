@@ -215,7 +215,21 @@ router.get('/global/:id', async (req, res, next)=>{
     // console.log(req.headers.referer);
     const instantMeetingReferer = req.headers.referer;
     if(req.user !==  undefined){
+        if(req.user.role === 'admin'){
+            connection.query("UPDATE meeting SET meeting_status = ?, start_at = ? WHERE meeting_id= ?", ['running', new Date(), req.params.id], (err)=>{
+                if(err) throw err;
+                
+            });
+        }
+        connection.query("SELECT meeting.title, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?",[req.params.id], (err, inAdminMeetingJoinResult)=>{
+            if(err) throw err;
+            
+            // res.location('https://15.206.115.114/'+inAdminMeetingJoinResult[0].title/inAdminMeetingJoinResult[0].first_name+' '+inAdminMeetingJoinResult[0].last_name);
         
+            var redirectUrl = 'https://15.206.115.114/'+inAdminMeetingJoinResult[0].title+'/'+inAdminMeetingJoinResult[0].first_name+' '+inAdminMeetingJoinResult[0].last_name;
+            // res.location(redirectUrl);
+            return res.redirect(redirectUrl);
+        });
     }else{
         connection.query("SELECT title, meeting_password FROM meeting WHERE meeting_id =?", [req.params.id], (err, relResultOnInstant)=>{
             if(err) throw err;
