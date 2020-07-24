@@ -223,18 +223,21 @@ router.get('/global/:id', async (req, res, next)=>{
                 if(err) throw err;
                 
             });
-        }
-        connection.query("SELECT meeting.title, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?",[req.params.id], (err, signInMeetingJoinResult)=>{
-            if(err) throw err;
-        if(!signInMeetingJoinResult.length){
-            req.flash("global_invalid", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
-            res.redirect('/?error=global');
+            connection.query("SELECT meeting.title, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?",[req.params.id], (err, signInMeetingJoinResult)=>{
+                if(err) throw err;
+                if(!signInMeetingJoinResult.length){
+                    req.flash("global_invalid", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
+                    res.redirect('/?error=global');
+                }else{
+                    var redirectUrl = 'https://15.206.115.114/'+signInMeetingJoinResult[0].title+'/'+signInMeetingJoinResult[0].first_name+' '+signInMeetingJoinResult[0].last_name;
+                    // res.location(redirectUrl);
+                    return res.redirect(redirectUrl);
+                }
+            });
         }else{
-            var redirectUrl = 'https://15.206.115.114/'+signInMeetingJoinResult[0].title+'/'+signInMeetingJoinResult[0].first_name+' '+signInMeetingJoinResult[0].last_name;
-            // res.location(redirectUrl);
-            return res.redirect(redirectUrl);
+            req.flash("global_invalid", "<span class='fa fa-fw fa-exclamation-circle'></span>Unauthorize meeting ID.");
+            res.redirect('/?error=global');
         }
-        });
     }else{
         connection.query("SELECT title, meeting_password FROM meeting WHERE meeting_id =?", [req.params.id], (err, relResultOnInstant)=>{
             if(err) throw err;
