@@ -13,8 +13,25 @@
 <body>
     <%- include('partials/frontHeader')%>
     <div class="container mt-5">
-        <div class="row">
-            
+        <div class="row align-items-center">
+            <div class="col-md-4 col-sm-10 col-12 mx-auto mt-5 text-center">
+                <div class="clearfix font18 text-left border-bottom pl-2 pr-2 mt-4">
+                    <%= data.title %>
+                </div>
+                <div class="clearfix mt-3">
+                    <span class="fa fa-spinner fa-spin"></span> Waiting for host to start meeting.
+                </div>
+                <div class="clearfix card pt-2 pb-2 mt-3">
+                    <div class="clearfix font18">
+                        ID : <%= data.meeting_id %>
+                    </div>
+                    <% if(data.type === 'schedule'){ %>
+                    <div class="clearfix">
+                        <%=data.meeting_date%>
+                    </div>
+                    <% } %>
+                </div>
+            </div>
         </div>
     </div>
   <%-include('partials/frontJs')-%>
