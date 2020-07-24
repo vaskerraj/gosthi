@@ -123,6 +123,35 @@
       </div>
     </div>
   </div>
+  
+  <% if(relOrError === 'check' && rel !== 'undefined'){ %>
+  <div class="modal fade show" id="checkGlobalMeet" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        
+        <div class="modal-body">
+          <form action="/checkGlobalMeet" method="post" id="form_checkGlobal">
+            <div class="font16 fontb" style="font-weight: 500;">Please enter you name and the meeting password</div>
+            <div class="clearfix mt-3">
+              <input type="text" name="globalName" class="form-control" placeholder="Name" autocomplete="off">
+            </div>
+            <div class="clearfix marT25 <% if( relOrError === 'check' ){ %> d-none <% } %>">
+              <input type="password" name="globalPassword" class="form-control" placeholder="Password" autocomplete="off">
+            </div>
+            <div class="row marT30 mb-2">
+
+              <input type="hidden" name="globalMeetingId" value="<%=rel%>">
+              <div class="col-md-6 col-6 border-right">
+                <a href="/" class="btn btn-block btn-info">Cancel</a>
+              </div>
+              <div class="col-md-6 col-6"><button type="submit" class="btn btn-block btn-warning">OK</button></div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } %>
   <%- relOrError %>
   <%- rel %>
   <%-include('partials/frontJs')-%>
@@ -134,6 +163,12 @@
       $("#signInContainer").modal('show');
     </script>
   <% } %>
+  if(relOrError === 'check' || relOrError === 'checkPwd' && rel !== 'undefined'){
+    <script>
+      $("#checkGlobalMeet").modal('show');
+      $(".modal-backdrop.in").css('opacity', '1');
+    </script>
+  }
     <script>
       if (performance.navigation.type == 2) {
         location.reload(true);

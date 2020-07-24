@@ -194,7 +194,7 @@ router.get('/global/:id', async (req, res, next)=>{
     if(req.user !==  undefined){
         
     }
-    connection.query("SELECT title FROM meeting WHERE meeting_id =?", [req.params.id], (err, relResultOnInstant)=>{
+    connection.query("SELECT title, meeting_password FROM meeting WHERE meeting_id =?", [req.params.id], (err, relResultOnInstant)=>{
         if(err) throw err;
         if(relResultOnInstant.length){
             // update on join meeting
@@ -202,8 +202,12 @@ router.get('/global/:id', async (req, res, next)=>{
                 if(err) throw err;
 
             });
+            if(relResultOnInstant[0].meeting_password === null){
+                return res.redirect('/?re=global/'+req.params.id);
+            }else{
+                return res.redirect('/?rep=global/'+req.params.id);
+            }
 
-            return res.redirect('/?re=global/'+req.params.id);
             // res.redirect('https://15.206.115.114/'+relResultOnInstant[0].title);
         }else{
             if(instantMeetingReferer === undefined){
