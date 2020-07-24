@@ -221,6 +221,52 @@ router.get('/global/:id', async (req, res, next)=>{
     });
 });
 
+// check global
+router.post('/checkMeeting', async(req, res)=>{
+    var globalMeetingId = req.body.globalMeetingId,
+        meeterName = req.body.globalName,
+        meetingPassword = req.body.globalPassword;
+        console.log(meetingPassword);
+
+    connection.query("SELECT id, meeting_password FROM meeting WHERE meeting_id =?", [globalMeetingId], (err, checkGlobalResult)=>{
+        if(err) throw err;
+        // prevent url edit and hack
+        if(!checkGlobalResult.length){
+            req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
+            req.redirect('/');
+        }else{
+            if(checkGlobalResult[0].meeting_password !== null){
+                connection.query("SELECT * FROM meeting WHERE meeting_id =? AND meeting_password =?", [globalMeetingId, meetingPassword], (err, checkGlobalPwdResult)=>{
+                    if(err) throw err;
+                    if(checkGlobalPwdResult.length){
+                        res.render('meetingStatus',{
+                            title: "Wait for meeting | Gosthi",
+                            page : 'waitMeeting',
+                            currentUser : req.user || "notLogin",
+                            data : checkGlobalNoPwdResult[0],
+                            meeter : meeterName
+                        });
+                    }else{
+                        req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting password.");
+                        return res.redirect('/?re=global/'+globalMeetingId);
+                    }
+                });
+            }else{
+                connection.query("SELECT * FROM meeting WHERE meeting_id =?", [globalMeetingId], (err, checkGlobalNoPwdResult)=>{
+                    if(err) throw err;
+                    res.render('meetingStatus',{
+                        title: "Wait for meeting | Gosthi",
+                        page : 'waitMeeting',
+                        currentUser : req.user || "notLogin",
+                        data : checkGlobalNoPwdResult[0],
+                        meeter : meeterName
+                    });
+                });
+            }
+        }
+    });
+});
+
 // join meeting
 router.get('/joinMeeting', (req, res, next)=>{
     res.render('joinMeeting',{
