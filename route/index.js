@@ -283,7 +283,7 @@ router.post('/checkMeeting', async(req, res)=>{
                 }else{
                     if(meetingType === 'global'){
                         if(checkGlobalResult[0].meeting_password !== null){
-                            connection.query("SELECT * FROM meeting WHERE meeting_id =? AND meeting_password =?", [meetingId, meetingPassword], (err, checkGlobalPwdResult)=>{
+                            connection.query("SELECT *, DATE_FORMAT(meeting.meeting_date, '%a, %d %M %Y') as meeting_date FROM meeting WHERE meeting_id =? AND meeting_password =?", [meetingId, meetingPassword], (err, checkGlobalPwdResult)=>{
                                 if(err) throw err;
                                 if(checkGlobalPwdResult.length){
                                     res.render('meetingStatus',{
@@ -299,7 +299,7 @@ router.post('/checkMeeting', async(req, res)=>{
                                 }
                             });
                         }else{
-                            connection.query("SELECT * FROM meeting WHERE meeting_id =?", [meetingId], (err, checkGlobalNoPwdResult)=>{
+                            connection.query("SELECT *, DATE_FORMAT(meeting.meeting_date, '%a, %d %M %Y') as meeting_date FROM meeting WHERE meeting_id =?", [meetingId], (err, checkGlobalNoPwdResult)=>{
                                 if(err) throw err;
                                 res.render('meetingStatus',{
                                     title: "Wait for meeting | Gosthi",
@@ -311,7 +311,7 @@ router.post('/checkMeeting', async(req, res)=>{
                             });
                         }
                     }else{
-                        connection.query("SELECT meeting.title, meeting.meeting_id, meeting.meeting_date, meeting.meeting_time, meeting.meeting_duration,meeting.meeting_status, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?", [meetingId], (err, checkJoinResult)=>{
+                        connection.query("SELECT meeting.title, meeting.meeting_id, meeting.type, DATE_FORMAT(meeting.meeting_date, '%a, %d %M %Y') as meeting_date, meeting.meeting_time, meeting.meeting_duration, meeting.meeting_status, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?", [meetingId], (err, checkJoinResult)=>{
                             if(err) throw err;
                             res.render('meetingStatus',{
                                 title: "Wait for meeting | Gosthi",

@@ -13,6 +13,7 @@ $(function(){
             $.GHFront.flashMessageHandler();
             $.GHFront.indexPageHandler.init();
             $.GHFront.joinMeetingHandler.init();
+            $.GHFront.checkMeetingHandler.init();
         },
         ppath : function(){
 			var pageloc = $("#pagelo").val();
@@ -133,6 +134,24 @@ $(function(){
                 document.querySelector(".input-meetingId").addEventListener('input', function (e) {
                     e.target.value = e.target.value.replace(/[^\dA-Z]/g, '').replace(/(.{3})/g, '$1 ').trim();
                   });
+            }
+        },
+        checkMeetingHandler : {
+            init : function(){
+                this.meetingIdHandler();
+                this.meetingDurationHandler();
+            },
+            meetingIdHandler : function(){
+                $collection = $("#rawMeetingId");
+                if(!$collection.length) return;
+                var thisVal = $collection.val().toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+                $("#meetingId").text(thisVal);
+            },
+            meetingDurationHandler : function(){
+                $collection = $("#rawMeetingDuration");
+                if(!$collection.length) return;
+                var thisVal = $collection.val().replace(/_/g, ' ');
+                $("#meetingDuration").text(thisVal);
             }
         }
     }
