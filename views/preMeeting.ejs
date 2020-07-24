@@ -7,8 +7,8 @@
 </head>
 <body onload="document.preMeeting.submit()">
     <form method="POST" action="/checkMeeting" name="preMeeting" id="form_preMeeting">
-        <input type="text" name="meetingType" value="join">
-        <input type="text" name="meetingId" value="<%=meetingId%>">
+        <input type="hidden" name="meetingType" value="join">
+        <input type="hidden" name="meetingId" value="<%=meetingId%>">
     </form>
 </body>
 </html>
