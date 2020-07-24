@@ -63,9 +63,17 @@ router.get('/',  (req, res, next)=>{
                 });
             });
         }else{
-            connection.query("SELECT * FROM meeting WHERE meeting_id = ?", [meetingJoinId], (err, relResultOnLoginIn)=>{
+            connection.query("SELECT title, meeting_status FROM meeting WHERE meeting_id = ?", [meetingJoinId], (err, relResultOnLoginIn)=>{
                 if(relResultOnLoginIn.length){
-                    res.redirect('https://15.206.115.114/'+relResultOnLoginIn[0].title);
+                    if(relResultOnLoginIn[0].meeting_status === 'running'){
+                        res.redirect('https://15.206.115.114/'+relResultOnLoginIn[0].title);
+                    }else{
+                        res.render('preMeeting', {
+                            title: "Check join meeting | Gosthi",
+                            page : 'preMeeting',
+                            meetingId : meetingJoinId
+                        });
+                    }
                 }else{
                     req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
                     res.redirect('/');
@@ -150,9 +158,17 @@ router.post('/login',
             // if user
             // if having meeting room refere
             if(req.body.joinRel !== 'undefined'){
-                connection.query("SELECT title FROM meeting WHERE meeting_id =?", [req.body.joinRel], (err, relResult)=>{
+                connection.query("SELECT title, meeting_status FROM meeting WHERE meeting_id =?", [req.body.joinRel], (err, relResult)=>{
                     if(relResult.length){
-                        res.redirect('https://15.206.115.114/'+relResult[0].title);
+                        if(relResult[0].meeting_status === 'running'){
+                            res.redirect('https://15.206.115.114/'+relResult[0].title);
+                        }else{
+                            res.render('preMeeting', {
+                                title: "Check join meeting | Gosthi",
+                                page : 'preMeeting',
+                                meetingId : req.body.joinRel
+                            });
+                        }
                     }else{
                         // req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
                         res.redirect('/?error=meeting');
@@ -168,10 +184,18 @@ router.get('/join/:id', async (req, res, next)=>{
     console.log(req.headers.referer);
     const joinMeetingReferer = req.headers.referer;
     if(req.user !==  undefined){
-        connection.query("SELECT title FROM meeting WHERE meeting_id =?", [req.params.id], (err, relResultOnJoin)=>{
+        connection.query("SELECT title, meeting_status FROM meeting WHERE meeting_id =?", [req.params.id], (err, relResultOnJoin)=>{
             if(err) throw err;
             if(relResultOnJoin.length){
-                res.redirect('https://15.206.115.114/'+relResultOnJoin[0].title);
+                if(relResultOnJoin[0].meeting_status === 'running'){
+                    res.redirect('https://15.206.115.114/'+relResultOnJoin[0].title);
+                }else{
+                    res.render('preMeeting', {
+                        title: "Check join meeting | Gosthi",
+                        page : 'preMeeting',
+                        meetingId : req.params.id
+                    });
+                }
             }else{
                 if(joinMeetingReferer === undefined){
                     req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
@@ -188,37 +212,32 @@ router.get('/join/:id', async (req, res, next)=>{
 });
 
 router.get('/global/:id', async (req, res, next)=>{
-    console.log(req.headers.referer);
+    // console.log(req.headers.referer);
     const instantMeetingReferer = req.headers.referer;
-    // for pass at client (video call)
     if(req.user !==  undefined){
         
+    }else{
+        connection.query("SELECT title, meeting_password FROM meeting WHERE meeting_id =?", [req.params.id], (err, relResultOnInstant)=>{
+            if(err) throw err;
+            if(relResultOnInstant.length){
+                // update on join meeting
+                
+                if(relResultOnInstant[0].meeting_password === null){
+                    res.redirect('/?re=global/'+req.params.id);
+                }else{
+                    res.redirect('/?rep=global/'+req.params.id);
+                }
+            }else{
+                if(instantMeetingReferer === undefined){
+                    req.flash("global_invalid", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
+                    res.redirect('/?error=global');
+                }else{
+                    req.flash("global_invalid", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
+                    res.redirect(instantMeetingReferer+'?error=global');
+                }
+            }
+        });
     }
-    connection.query("SELECT title, meeting_password FROM meeting WHERE meeting_id =?", [req.params.id], (err, relResultOnInstant)=>{
-        if(err) throw err;
-        if(relResultOnInstant.length){
-            // update on join meeting
-            connection.query("UPDATE meeting SET meeting_status = ?, start_at = ? WHERE meeting_id= ?", ['running', new Date(), req.params.id], (err)=>{
-                if(err) throw err;
-
-            });
-            if(relResultOnInstant[0].meeting_password === null){
-                return res.redirect('/?re=global/'+req.params.id);
-            }else{
-                return res.redirect('/?rep=global/'+req.params.id);
-            }
-
-            // res.redirect('https://15.206.115.114/'+relResultOnInstant[0].title);
-        }else{
-            if(instantMeetingReferer === undefined){
-                req.flash("global_invalid", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
-                res.redirect('/?error=global');
-            }else{
-                req.flash("global_invalid", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
-                res.redirect(instantMeetingReferer+'?error=global');
-            }
-        }
-    });
 });
 
 // check global
@@ -233,7 +252,7 @@ router.post('/checkMeeting', async(req, res)=>{
         // prevent url edit and hack
         if(!checkGlobalResult.length){
             req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
-            req.redirect('/');
+            res.redirect('/');
         }else{
             if(checkGlobalResult[0].meeting_password !== null){
                 connection.query("SELECT * FROM meeting WHERE meeting_id =? AND meeting_password =?", [globalMeetingId, meetingPassword], (err, checkGlobalPwdResult)=>{
