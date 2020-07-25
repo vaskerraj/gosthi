@@ -263,10 +263,17 @@ body {
   background-color: #ffc107;
 } 
 .intro {
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #ffffff;
+  padding: 20px 20px;
+  border-radius: 4px;
   position: absolute;
   left: 0px;
-  top: 100px;
+  top: 55px;
   z-index: 2;
+}
+.intro h1{
+  font-weight: 350;
 }
 #signInContainer .form-control{
   width: 100%;
