@@ -164,6 +164,17 @@
   <script src="/vendor/listjs/list.min.js"></script>
   <script src="/js/GS.Front.js"></script>
 
+  <%
+    if(currentUser !== 'notLogin' && rel !== 'undefined') {
+      if(currentUser.role ==='user'){  
+  %>
+    <script>
+      $("#meetingRefereModal").modal('show');
+    </script>
+  <%
+      }
+    }
+  %>
   <% if ((messages || relOrError === 'rel') && currentUser === 'notLogin' && relOrError !== 'error' ) { %>
     <script>
       $("#signInContainer").modal('show');
