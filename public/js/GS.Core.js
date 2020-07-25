@@ -87,34 +87,63 @@
                 this.joinInstantMeet();
                 this.endInstantMeet();
             },
-            startInstantMeet : function($collection){
-                if(!$collection.length) return;
+            startInstantMeetData : function(id, pwd){
                 var $instantMeetingStart = $("#instantMeetingStart"),
                     $instantMeetingDetail = $("#instantMeetingDetails"),
+                    $instantMeetingPwdSel = $("#instantMeetingPwd_txt"),
                     $meetingEndSel = $("#meeting_end");
+
+                $.post('/../admin/instantMeeting', { id : id, mpwd : pwd },
+                function(response){
+                    console.log(response);
+                    if(response.id === undefined){
+                        location.reload(true);
+                        return false;
+                    }
+                    if(response.meetingPwd === null){
+                        var meetingPassword = "";
+                        $instantMeetingPwdSel.addClass("d-none");
+                    }else{
+                        var meetingPassword = response.meetingPwd;
+                        $instantMeetingPwdSel.removeClass("d-none");
+                    }
+                    var splitMeetingId = (response.meetingId).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+                    const instantMeetingHref = window.location.origin+"/global/"+response.meetingId;
+                    document.querySelector('.instant-details-id').innerText = splitMeetingId;
+                    document.querySelector('#joinInstantMeeting').href = instantMeetingHref;
+                    document.querySelector('#meeting_end').setAttribute("data-id", response.id);
+                    document.querySelector('.instant-share-href').innerHTML = instantMeetingHref;
+                    document.querySelector('.instant-share-href').href = instantMeetingHref;
+                    document.querySelector('.instant-share-id').innerHTML = splitMeetingId;
+                    document.querySelector('.instant-password').innerHTML = meetingPassword;
+                    
+                    $instantMeetingStart.addClass("d-none");
+                    $instantMeetingDetail.removeClass("d-none");
+                    $meetingEndSel.addClass("d-none");
+
+                });
+            },
+            startInstantMeet : function($collection){
+                if(!$collection.length) return;
+                var $self = this;
                 $collection.on('click', function(){
                     var _this = $(this),
-                    thisId = $(this).data('id');
-                    $.post('/../admin/instantMeeting', {id : thisId},
-                    function(response){
-                        console.log(response);
-                        if(response.id === undefined){
-                            location.reload(true);
-                            return false;
-                        }
-                        var splitMeetingId = (response.meetingId).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-                        const instantMeetingHref = window.location.origin+"/global/"+response.meetingId;
-                        document.querySelector('.instant-details-id').innerText = splitMeetingId;
-                        document.querySelector('#joinInstantMeeting').href = instantMeetingHref;
-                        document.querySelector('#meeting_end').setAttribute("data-id", response.id);
-                        document.querySelector('.instant-share-href').innerHTML = instantMeetingHref;
-                        document.querySelector('.instant-share-href').href = instantMeetingHref;
-                        document.querySelector('.instant-share-id').innerHTML = splitMeetingId;
-                        
-                        $instantMeetingStart.addClass("d-none");
-                        $instantMeetingDetail.removeClass("d-none");
-                        $meetingEndSel.addClass("d-none");
+                        thisId = _this.data('id');
+                    
+                    $("#setInstantMeetingPsd").modal('show');
+                    $(".modal-backdrop.in").css('opacity', '0.5');
 
+                    $('#setInstantMeetingPsd').on('hide.bs.modal', function (e) {
+        
+                        var instantMeetPwd = $("#instantMeetPwd").val();
+                        if(instantMeetPwd === 'undefined'){
+                            $("#instantMeetingPwd").val('');
+                        }else{
+                            $("#instantMeetingPwd").val(instantMeetPwd);
+                        }
+
+                        var meetingPassword  = $("#instantMeetingPwd").val();
+                        $self.startInstantMeetData(thisId, meetingPassword);
                     });
                 });
             },

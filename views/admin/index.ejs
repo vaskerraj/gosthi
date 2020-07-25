@@ -130,6 +130,7 @@
                                         <div class="col-md-2 col-sm-12 col-12">
                                             <a href="javascript:void(0)" class="btn btn-primary btn-block mb-3" id="startInstantMeeting" data-id=<%-currentUser.relId%>>
                                                 <span class="fa fa-fw fa-play"></span>
+                                                <input type="hidden" id="instantMeetingPwd" value="undefined">
                                                 Start
                                             </a>
                                         </div>
@@ -173,8 +174,12 @@
                                             
                                             <a href="" target="_blank" class="d-block instant-share-href"></a>
                                         </div>
-                                        <div class="d-block fontb font15 mb-3"><br>
+                                        <br>
+                                        <div class="d-block instantMeetingId_txt fontb font15" >
                                             Meeting ID : <span class="instant-share-id"></span>
+                                        </div>
+                                        <div class="clearfix fontb font15 mb-3 d-none" id="instantMeetingPwd_txt">
+                                            Password : <span class="instant-password"></span>
                                         </div>
                                     </div><!--/.d-block-->
                                 </div><!--/#instantMeetingDetails-->
@@ -476,6 +481,29 @@
                             <button type="button" class="btn btn-default modalClose fR" data-dismiss="modal" aria-label="Close">Cancel</button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade show" id="setInstantMeetingPsd" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Set Password</h5>
+                </div>
+                <div class="modal-body">
+                        <input type="hidden" name="setPwdMeetingId" id="setPwdMeetingId">
+                        <div class="d-block mt-2 mr">
+                            <input type='text' class="form-control" name='instantMeetPwd' id="instantMeetPwd" autocomplete="off" />
+                            <label for="instantMeetPwd">Password</label>
+                        </div>
+                        <div class="d-block mt-4">
+                            <button type="button" class="btn btn-primary ml-3 fR" data-dismiss="modal" aria-label="Close">
+                                <span class="fa fa-save"></span>
+                                OK
+                            </button>
+                            <button type="button" class="btn btn-default fR" data-dismiss="modal" aria-label="Close">Cancel</button>
+                        </div>
                 </div>
             </div>
         </div>

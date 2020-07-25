@@ -102,13 +102,21 @@ router.post('/', ensureAuthenticated, checkRole(['admin']),
 
 router.post('/instantMeeting', ensureAuthenticated, checkRole(['admin']), (req, res, next)=>{
     const instantMeet_adminId = req.body.id;
+    var instantMeet_password = req.body.mpwd;
+    if(instantMeet_password === ""){
+        instantMeet_password = null;
+    }else{
+        instantMeet_password = instantMeet_password;
+    }
+
     meetingId().then((meetingId)=>{
-        connection.query("INSERT INTO meeting SET admin_id = ?, meeting_id = ?, title = ?, type = ?, created_at = ?", [instantMeet_adminId, meetingId, 'Meet Now', 'instant', new Date()], (err, instatMeetResult)=>{
+        connection.query("INSERT INTO meeting SET admin_id = ?, meeting_id = ?, meeting_password = ?, title = ?, type = ?, created_at = ?", [instantMeet_adminId, meetingId, instantMeet_password, 'Meet Now', 'instant', new Date()], (err, instatMeetResult)=>{
             if(err) throw err;
             res.status(200).json({
                 id: instatMeetResult.insertId,
                 callbackId : instantMeet_adminId,
                 meetingId : meetingId,
+                meetingPwd : instantMeet_password
             })
         });
     });

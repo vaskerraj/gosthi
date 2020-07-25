@@ -285,66 +285,76 @@ router.get('/global/:id', async (req, res, next)=>{
 
 // check global
 router.post('/checkMeeting', async(req, res)=>{
-    var meetingType = req.body.meetingTpe,
+    var meetingType = req.body.meetingType,
         meetingId = req.body.meetingId,
         meeterName = req.body.globalName,
         meetingPassword = req.body.globalPassword;
 
-        connection.query("SELECT REPLACE(meeting.title, ' ', '') AS title, meeting.meeting_password, meeting.meeting_status, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?", [meetingId], (err, checkGlobalResult)=>{
-            if(err) throw err;
-            // prevent url edit and hack
-            if(!checkGlobalResult.length){
-                req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
-                res.redirect('/?error=global');
-            }else{
-                if(checkGlobalResult[0].meeting_status === "running"){
-                    var redirectUrlOnRunning = 'https://15.206.115.114/'+checkGlobalResult[0].title+'#userInfo.displayName="'+checkGlobalResult[0].first_name+' '+checkGlobalResult[0].last_name+'"';
-                    return res.redirect(redirectUrlOnRunning);
-                }else{
-                    if(meetingType === 'global'){
-                        if(checkGlobalResult[0].meeting_password !== null){
-                            connection.query("SELECT *, REPLACE(meeting.title, ' ', '') AS title, DATE_FORMAT(meeting.meeting_date, '%a, %d %M %Y') as meeting_date FROM meeting WHERE meeting_id =? AND meeting_password =?", [meetingId, meetingPassword], (err, checkGlobalPwdResult)=>{
-                                if(err) throw err;
-                                if(checkGlobalPwdResult.length){
-                                    res.render('meetingStatus',{
-                                        title: "Wait for meeting | Gosthi",
-                                        page : 'waitMeeting',
-                                        currentUser : req.user || "notLogin",
-                                        data : checkGlobalNoPwdResult[0],
-                                        meeter : meeterName
-                                    });
-                                }else{
-                                    req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting password.");
-                                    return res.redirect('/?re=global/'+meetingId);
-                                }
-                            });
-                        }else{
-                            connection.query("SELECT *, REPLACE(meeting.title, ' ', '') AS title, DATE_FORMAT(meeting.meeting_date, '%a, %d %M %Y') as meeting_date FROM meeting WHERE meeting_id =?", [meetingId], (err, checkGlobalNoPwdResult)=>{
-                                if(err) throw err;
+    connection.query("SELECT id FROM meeting WHERE meeting_id = ?", [meetingId], (err, checkGlobalResult)=>{
+        if(err) throw err;
+        // prevent url edit and hack
+        if(!checkGlobalResult.length){
+            req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
+            res.redirect('/?error=global');
+        }else{
+            if(meetingType === 'global'){
+                if(checkGlobalResult[0].meeting_password !== null){
+                    connection.query("SELECT *, REPLACE(meeting.title, ' ', '') AS title, DATE_FORMAT(meeting.meeting_date, '%a, %d %M %Y') as meeting_date FROM meeting WHERE meeting_id =? AND meeting_password =?", [meetingId, meetingPassword], (err, checkGlobalPwdResult)=>{
+                        if(err) throw err;
+                        if(checkGlobalPwdResult.length){
+                            if(checkGlobalPwdResult[0].meeting_status === "running"){
+                                var redirectUrlOnRunning = 'https://15.206.115.114/'+checkGlobalPwdResult[0].title+'#userInfo.displayName="'+checkGlobalPwdResult[0].first_name+' '+checkGlobalPwdResult[0].last_name+'"';
+                                return res.redirect(redirectUrlOnRunning);
+                            }else{
                                 res.render('meetingStatus',{
                                     title: "Wait for meeting | Gosthi",
                                     page : 'waitMeeting',
                                     currentUser : req.user || "notLogin",
-                                    data : checkGlobalNoPwdResult[0],
+                                    data : checkGlobalPwdResult[0],
                                     meeter : meeterName
                                 });
-                            });
+                            }
+                        }else{
+                            req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting password.");
+                            return res.redirect('/?rep=global/'+meetingId);
                         }
-                    }else{
-                        connection.query("SELECT REPLACE(meeting.title, ' ', '') as title, meeting.meeting_id, meeting.type, DATE_FORMAT(meeting.meeting_date, '%a, %d %M %Y') as meeting_date, meeting.meeting_time, meeting.meeting_duration, meeting.meeting_status, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?", [meetingId], (err, checkJoinResult)=>{
-                            if(err) throw err;
+                    });
+                }else{
+                    connection.query("SELECT *, REPLACE(meeting.title, ' ', '') AS title, DATE_FORMAT(meeting.meeting_date, '%a, %d %M %Y') as meeting_date FROM meeting WHERE meeting_id =?", [meetingId], (err, checkGlobalNoPwdResult)=>{
+                        if(err) throw err;
+                        if(checkGlobalNoPwdResult[0].meeting_status === "running"){
+                            var redirectUrlOnRunning = 'https://15.206.115.114/'+checkGlobalNoPwdResult[0].title+'#userInfo.displayName="'+checkGlobalNoPwdResult[0].first_name+' '+checkGlobalNoPwdResult[0].last_name+'"';
+                            return res.redirect(redirectUrlOnRunning);
+                        }else{
                             res.render('meetingStatus',{
                                 title: "Wait for meeting | Gosthi",
                                 page : 'waitMeeting',
                                 currentUser : req.user || "notLogin",
-                                data : checkJoinResult[0],
-                                meeter : checkJoinResult[0].first_name + ' '+ checkJoinResult[0].last_name
+                                data : checkGlobalNoPwdResult[0],
+                                meeter : meeterName
                             });
+                        }
+                    });
+                }
+            }else{
+                connection.query("SELECT REPLACE(meeting.title, ' ', '') as title, meeting.meeting_id, meeting.type, DATE_FORMAT(meeting.meeting_date, '%a, %d %M %Y') as meeting_date, meeting.meeting_time, meeting.meeting_duration, meeting.meeting_status, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?", [meetingId], (err, checkJoinResult)=>{
+                    if(err) throw err;
+                    if(checkJoinResult[0].meeting_status === "running"){
+                        var redirectUrlOnRunning = 'https://15.206.115.114/'+checkJoinResult[0].title+'#userInfo.displayName="'+checkJoinResult[0].first_name+' '+checkJoinResult[0].last_name+'"';
+                        return res.redirect(redirectUrlOnRunning);
+                    }else{
+                        res.render('meetingStatus',{
+                            title: "Wait for meeting | Gosthi",
+                            page : 'waitMeeting',
+                            currentUser : req.user || "notLogin",
+                            data : checkJoinResult[0],
+                            meeter : checkJoinResult[0].first_name + ' '+ checkJoinResult[0].last_name
                         });
                     }
-                }
+                });
             }
-        });
+        }
+    });
 });
 // check meeting status using ajax
 router.post('/meetingStatus', (req, res)=>{

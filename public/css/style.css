@@ -608,6 +608,11 @@ button.copy{
 .meeting-details .meeting-details-title{
   font-weight: 500;
 }
+.instantMeetingId_txt,
+#instantMeetingPwd_txt{
+  font-weight: 600;
+}
+}
 
 /* for express-messages & flash */
 
@@ -674,9 +679,7 @@ button.copy{
 #inviteUserslist thead tr th:focus{
   outline: none;
 }
-#inviteUserslist tbody tr {
-  /* cursor: pointer; */
-}
+
 #inviteUser-scroll .dataTables_paginate {
   display: none;
 }
