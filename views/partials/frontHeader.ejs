@@ -11,12 +11,10 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav ml-auto">
-            <% if (currentUser === 'notLogin') { %>
-            <a href="/joinMeeting" class="nav-item nav-link text-primary">JOIN A MEETING</a>
-            <% }else if(currentUser.role === 'user'){ %>
-            <a href="javascript:void(0)" class="nav-item nav-link text-primary" id="joinMeeting">JOIN A MEETING</a>
-            <% } else if(currentUser.role === 'client'){ %>
-            <a href="javascript:void(0)" class="nav-item nav-link text-primary">JOIN A MEETING</a>
+            <% if(page !== 'waitMeeting') { %>
+            <% if(currentUser.role === 'user'){ %>
+                <a href="javascript:void(0)" class="nav-item nav-link text-primary" id="joinMeeting">JOIN A MEETING</a>
+            <% } %>
             <% } %>
 
             <% if (currentUser != 'notLogin') { %>
@@ -37,7 +35,9 @@
                 </div>
                 </div>
             <% }else{ %>
-            <a href="javascript:void(0)" class="nav-item nav-link text-primary" id="signIn">SIGN IN</a>
+                <% if(page !== 'waitMeeting') { %>
+                <a href="javascript:void(0)" class="nav-item nav-link text-primary" id="signIn">SIGN IN</a>
+                <% } %>
             <% } %>
             </div>
         </div>
