@@ -207,29 +207,47 @@ router.get('/join/:id', async (req, res, next)=>{
     // console.log(req.headers.referer);
     const joinMeetingReferer = req.headers.referer;
     if(req.user !==  undefined){
-        connection.query("SELECT REPLACE(meeting.title, ' ', '') AS title, meeting.meeting_status, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?", [req.params.id], (err, relResultOnJoin)=>{
-            if(err) throw err;
-            if(relResultOnJoin.length){
-                if(relResultOnJoin[0].meeting_status === 'running'){
-                    var redirectUrlOnRunning = 'https://15.206.115.114/'+relResultOnJoin[0].title+'#userInfo.displayName="'+relResultOnJoin[0].first_name+' '+relResultOnJoin[0].last_name+'"'
-                    return res.redirect(redirectUrlOnRunning);
-                }else{
-                    res.render('preMeeting', {
-                        title: "Check join meeting | Gosthi",
-                        page : 'preMeeting',
-                        meetingId : req.params.id
-                    });
-                }
-            }else{
-                if(joinMeetingReferer === undefined){
-                    req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
-                    res.redirect('/');
-                }else{
+        if(req.user.role === 'admin'){
+            connection.query("UPDATE meeting SET meeting_status = ?, start_at = ? WHERE meeting_id= ?", ['running', new Date(), req.params.id], (err)=>{
+                if(err) throw err;
+                
+            });
+            connection.query("SELECT REPLACE(meeting.title, ' ', '') AS title, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?",[req.params.id], (err, relResultOnJoinAsAdmin)=>{
+                if(err) throw err;
+                if(!relResultOnJoinAsAdmin.length){
                     req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.")
                     res.redirect(joinMeetingReferer);
+                }else{
+                    var redirectUrl = 'https://15.206.115.114/'+relResultOnJoinAsAdmin[0].title+'#userInfo.displayName="'+relResultOnJoinAsAdmin[0].first_name+' '+relResultOnJoinAsAdmin[0].last_name+'"';
+                    return res.redirect(redirectUrl);
                 }
-            }
-        });
+            });
+        }else{
+            // if role is user
+            connection.query("SELECT REPLACE(meeting.title, ' ', '') AS title, meeting.meeting_status, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?", [req.params.id], (err, relResultOnJoin)=>{
+                if(err) throw err;
+                if(relResultOnJoin.length){
+                    if(relResultOnJoin[0].meeting_status === 'running'){
+                        var redirectUrlOnRunning = 'https://15.206.115.114/'+relResultOnJoin[0].title+'#userInfo.displayName="'+relResultOnJoin[0].first_name+' '+relResultOnJoin[0].last_name+'"'
+                        return res.redirect(redirectUrlOnRunning);
+                    }else{
+                        res.render('preMeeting', {
+                            title: "Check join meeting | Gosthi",
+                            page : 'preMeeting',
+                            meetingId : req.params.id
+                        });
+                    }
+                }else{
+                    if(joinMeetingReferer === undefined){
+                        req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
+                        res.redirect('/');
+                    }else{
+                        req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.")
+                        res.redirect(joinMeetingReferer);
+                    }
+                }
+            });
+        }
     }else{
         return res.redirect('/?rel=join/'+req.params.id);
     }
