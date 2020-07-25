@@ -73,17 +73,19 @@
                     </div>
                     <div class="col-md-10 col-10">
                       <div class="meeting-card-title d-block"><%= list.title%></div>
-                      <div class="meeting-card-desc">ID : <%= list.id%></div>
+                      <div class="meeting-card-desc">ID : <%= list.meeting_id%></div>
                       <div class="meetingType d-none"><%= list.type%></div>
-                      <div class="date d-none"><%= list.id%></div>
+                      <div class="date d-none"><%= list.meeting_id%></div>
                     </div>
                   </div>
                 </div>
                 <div class="col-md-4 col-4 text-right">
-                  <a href="https://15.206.115.114/<%= list.title %>" target="_blank"
-                    class="btn btn-warning btn-sm mr-3 mt-2">
-                    JOIN
-                  </a>
+                  <form method="POST" action="checkMeetingOnJoin">
+                    <input type="hidden" name="join_meetingId" value="<%=list.meeting_id%>" readonly>
+                    <button type="submit" class="btn btn-warning btn-sm mr-3 mt-2">
+                      JOIN
+                    </button>
+                  </form>
                 </div>
               </li>
               <%});%>

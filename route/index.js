@@ -8,7 +8,7 @@ var connection = require('../db');
 router.get('/',  (req, res, next)=>{
     const refereUrlTitle = req.originalUrl.split('=')[0];
     const refereUrlSeond = req.originalUrl.split('=')[1];
-    console.log(refereUrlTitle);
+    // console.log(refereUrlTitle);
     if(refereUrlTitle === "/?rel"){
         var relOrError = "rel";
         var meetingJoinId = refereUrlSeond.split('/')[1];
@@ -51,7 +51,8 @@ router.get('/',  (req, res, next)=>{
     }else{
         if(meetingJoinId === undefined){
             const adminIdAfterLoginAsUser = req.user.admin_id;
-            connection.query("SELECT * FROM meeting WHERE admin_id = ?",[ adminIdAfterLoginAsUser ], (err, relResultOnLoginIn)=>{
+            connection.query("SELECT meeting.title, meeting.meeting_id, meeting.type, meeting.meeting_status, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting.admin_id = ? AND meeting.type != ?",[ adminIdAfterLoginAsUser, 'instant'], (err, relResultOnLoginIn)=>{
+                if(err) throw err;
                 res.render('index', {
                     title: "Index | Gosthi",
                     page : 'index',
@@ -182,8 +183,28 @@ router.post('/login',
         }
 });
 
+router.post('/checkMeetingOnJoin', async(req, res)=>{
+    connection.query("SELECT REPLACE(meeting.title, ' ', '') AS title, meeting.meeting_status, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?", [req.body.join_meetingId], (err, relResultOnJoin)=>{
+        if(relResultOnJoin.length){
+            if(relResultOnJoin[0].meeting_status === 'running'){
+            var redirectUrlOnRunning = 'https://15.206.115.114/'+relResultOnJoin[0].title+'#userInfo.displayName="'+relResultOnJoin[0].first_name+' '+relResultOnJoin[0].last_name+'"'
+            return res.redirect(redirectUrlOnRunning);
+            }else{
+                res.render('preMeeting', {
+                    title: "Check join meeting | Gosthi",
+                    page : 'preMeeting',
+                    meetingId : req.body.join_meetingId
+                });
+            }
+        }else{
+            req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
+            res.redirect('/?error=meeting');
+        }
+    });
+});
+
 router.get('/join/:id', async (req, res, next)=>{
-    console.log(req.headers.referer);
+    // console.log(req.headers.referer);
     const joinMeetingReferer = req.headers.referer;
     if(req.user !==  undefined){
         connection.query("SELECT REPLACE(meeting.title, ' ', '') AS title, meeting.meeting_status, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?", [req.params.id], (err, relResultOnJoin)=>{
@@ -268,7 +289,6 @@ router.post('/checkMeeting', async(req, res)=>{
         meetingId = req.body.meetingId,
         meeterName = req.body.globalName,
         meetingPassword = req.body.globalPassword;
-        console.log(meetingPassword);
 
         connection.query("SELECT REPLACE(meeting.title, ' ', '') AS title, meeting.meeting_password, meeting.meeting_status, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?", [meetingId], (err, checkGlobalResult)=>{
             if(err) throw err;
