@@ -103,7 +103,7 @@ router.post('/', ensureAuthenticated, checkRole(['admin']),
 router.post('/instantMeeting', ensureAuthenticated, checkRole(['admin']), (req, res, next)=>{
     const instantMeet_adminId = req.body.id;
     meetingId().then((meetingId)=>{
-        connection.query("INSERT INTO meeting SET admin_id = ?, meeting_id = ?, title = ?, type = ?, created_at = ?", [instantMeet_adminId, meetingId, 'Instant Meet', 'instant', new Date()], (err, instatMeetResult)=>{
+        connection.query("INSERT INTO meeting SET admin_id = ?, meeting_id = ?, title = ?, type = ?, created_at = ?", [instantMeet_adminId, meetingId, 'Meet Now', 'instant', new Date()], (err, instatMeetResult)=>{
             if(err) throw err;
             res.status(200).json({
                 id: instatMeetResult.insertId,
