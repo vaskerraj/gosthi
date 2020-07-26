@@ -3,6 +3,8 @@ var router = express.Router();
 var { check, validationResult } = require('express-validator');
 var passport = require('passport');
 
+const { APP_URL } = require('../config/index');
+
 var connection = require('../db');
 
 router.get('/',  (req, res, next)=>{
@@ -67,7 +69,7 @@ router.get('/',  (req, res, next)=>{
             connection.query("SELECT REPLACE(meeting.title, ' ', '') AS title, meeting.meeting_status, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?", [meetingJoinId], (err, relResultLoginIn)=>{
                 if(relResultLoginIn.length){
                     if(relResultLoginIn[0].meeting_status === 'running'){
-                        var redirectUrlOnRunning = 'https://15.206.115.114/'+relResultLoginIn[0].title+'#userInfo.displayName="'+relResultLoginIn[0].first_name+' '+relResultLoginIn[0].last_name+'"'
+                        var redirectUrlOnRunning = APP_URL+'/'+relResultLoginIn[0].title+'#userInfo.displayName="'+relResultLoginIn[0].first_name+' '+relResultLoginIn[0].last_name+'"'
                         return res.redirect(redirectUrlOnRunning);
                     }else{
                         res.render('preMeeting', {
@@ -138,7 +140,7 @@ router.get('/signin',  (req, res, next)=>{
         }else{
             connection.query("SELECT * FROM meeting WHERE meeting_id = ?", [meetingJoinId], (err, relResultOnLoginIn)=>{
                 if(relResultOnLoginIn.length){
-                    res.redirect('https://15.206.115.114/'+relResultOnLoginIn[0].title);
+                    res.redirect(APP_URL+'/'+relResultOnLoginIn[0].title);
                 }else{
                     req.flash("rel_error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
                     res.redirect('/');
@@ -163,7 +165,7 @@ router.post('/login',
                 connection.query("SELECT REPLACE(meeting.title, ' ', '') AS title, meeting.meeting_status, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?", [req.body.joinRel], (err, relResult)=>{
                     if(relResult.length){
                         if(relResult[0].meeting_status === 'running'){
-                        var redirectUrlOnRunning = 'https://15.206.115.114/'+relResult[0].title+'#userInfo.displayName="'+relResult[0].first_name+' '+relResult[0].last_name+'"'
+                        var redirectUrlOnRunning = APP_URL+'/'+relResult[0].title+'#userInfo.displayName="'+relResult[0].first_name+' '+relResult[0].last_name+'"'
                         return res.redirect(redirectUrlOnRunning);
                         }else{
                             res.render('preMeeting', {
@@ -187,7 +189,7 @@ router.post('/checkMeetingOnJoin', async(req, res)=>{
     connection.query("SELECT REPLACE(meeting.title, ' ', '') AS title, meeting.meeting_status, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?", [req.body.join_meetingId], (err, relResultOnJoin)=>{
         if(relResultOnJoin.length){
             if(relResultOnJoin[0].meeting_status === 'running'){
-            var redirectUrlOnRunning = 'https://15.206.115.114/'+relResultOnJoin[0].title+'#userInfo.displayName="'+relResultOnJoin[0].first_name+' '+relResultOnJoin[0].last_name+'"'
+            var redirectUrlOnRunning = APP_URL+'/'+relResultOnJoin[0].title+'#userInfo.displayName="'+relResultOnJoin[0].first_name+' '+relResultOnJoin[0].last_name+'"'
             return res.redirect(redirectUrlOnRunning);
             }else{
                 res.render('preMeeting', {
@@ -218,7 +220,7 @@ router.get('/join/:id', async (req, res, next)=>{
                     req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.")
                     res.redirect(joinMeetingReferer);
                 }else{
-                    var redirectUrl = 'https://15.206.115.114/'+relResultOnJoinAsAdmin[0].title+'#userInfo.displayName="'+relResultOnJoinAsAdmin[0].first_name+' '+relResultOnJoinAsAdmin[0].last_name+'"';
+                    var redirectUrl = APP_URL+'/'+relResultOnJoinAsAdmin[0].title+'#userInfo.displayName="'+relResultOnJoinAsAdmin[0].first_name+' '+relResultOnJoinAsAdmin[0].last_name+'"';
                     return res.redirect(redirectUrl);
                 }
             });
@@ -228,7 +230,7 @@ router.get('/join/:id', async (req, res, next)=>{
                 if(err) throw err;
                 if(relResultOnJoin.length){
                     if(relResultOnJoin[0].meeting_status === 'running'){
-                        var redirectUrlOnRunning = 'https://15.206.115.114/'+relResultOnJoin[0].title+'#userInfo.displayName="'+relResultOnJoin[0].first_name+' '+relResultOnJoin[0].last_name+'"'
+                        var redirectUrlOnRunning = APP_URL+'/'+relResultOnJoin[0].title+'#userInfo.displayName="'+relResultOnJoin[0].first_name+' '+relResultOnJoin[0].last_name+'"'
                         return res.redirect(redirectUrlOnRunning);
                     }else{
                         res.render('preMeeting', {
@@ -268,7 +270,7 @@ router.get('/global/:id', async (req, res, next)=>{
                     req.flash("global_invalid", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
                     res.redirect('/?error=global');
                 }else{
-                    var redirectUrl = 'https://15.206.115.114/'+signInMeetingJoinResult[0].title+'#userInfo.displayName="'+signInMeetingJoinResult[0].first_name+' '+signInMeetingJoinResult[0].last_name+'"'
+                    var redirectUrl = APP_URL+'/'+signInMeetingJoinResult[0].title+'#userInfo.displayName="'+signInMeetingJoinResult[0].first_name+' '+signInMeetingJoinResult[0].last_name+'"'
                     // res.location(redirectUrl);
                     return res.redirect(redirectUrl);
                 }
@@ -321,7 +323,7 @@ router.post('/checkMeeting', async(req, res)=>{
                         if(err) throw err;
                         if(checkGlobalPwdResult.length){
                             if(checkGlobalPwdResult[0].meeting_status === "running"){
-                                var redirectUrlOnRunning = 'https://15.206.115.114/'+checkGlobalPwdResult[0].title+'#userInfo.displayName="'+checkGlobalPwdResult[0].first_name+' '+checkGlobalPwdResult[0].last_name+'"';
+                                var redirectUrlOnRunning = APP_URL+'/'+checkGlobalPwdResult[0].title+'#userInfo.displayName="'+checkGlobalPwdResult[0].first_name+' '+checkGlobalPwdResult[0].last_name+'"';
                                 return res.redirect(redirectUrlOnRunning);
                             }else{
                                 res.render('meetingStatus',{
@@ -341,7 +343,7 @@ router.post('/checkMeeting', async(req, res)=>{
                     connection.query("SELECT *, REPLACE(meeting.title, ' ', '') AS title, DATE_FORMAT(meeting.meeting_date, '%a, %d %M %Y') as meeting_date FROM meeting WHERE meeting_id =?", [meetingId], (err, checkGlobalNoPwdResult)=>{
                         if(err) throw err;
                         if(checkGlobalNoPwdResult[0].meeting_status === "running"){
-                            var redirectUrlOnRunning = 'https://15.206.115.114/'+checkGlobalNoPwdResult[0].title+'#userInfo.displayName="'+checkGlobalNoPwdResult[0].first_name+' '+checkGlobalNoPwdResult[0].last_name+'"';
+                            var redirectUrlOnRunning = APP_URL+'/'+checkGlobalNoPwdResult[0].title+'#userInfo.displayName="'+checkGlobalNoPwdResult[0].first_name+' '+checkGlobalNoPwdResult[0].last_name+'"';
                             return res.redirect(redirectUrlOnRunning);
                         }else{
                             res.render('meetingStatus',{
@@ -358,7 +360,7 @@ router.post('/checkMeeting', async(req, res)=>{
                 connection.query("SELECT REPLACE(meeting.title, ' ', '') as title, meeting.meeting_id, meeting.type, DATE_FORMAT(meeting.meeting_date, '%a, %d %M %Y') as meeting_date, meeting.meeting_time, meeting.meeting_duration, meeting.meeting_status, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?", [meetingId], (err, checkJoinResult)=>{
                     if(err) throw err;
                     if(checkJoinResult[0].meeting_status === "running"){
-                        var redirectUrlOnRunning = 'https://15.206.115.114/'+checkJoinResult[0].title+'#userInfo.displayName="'+checkJoinResult[0].first_name+' '+checkJoinResult[0].last_name+'"';
+                        var redirectUrlOnRunning = APP_URL+'/'+checkJoinResult[0].title+'#userInfo.displayName="'+checkJoinResult[0].first_name+' '+checkJoinResult[0].last_name+'"';
                         return res.redirect(redirectUrlOnRunning);
                     }else{
                         res.render('meetingStatus',{
