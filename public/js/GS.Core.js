@@ -133,6 +133,11 @@
                     $("#setInstantMeetingPsd").modal('show');
                     $(".modal-backdrop.in").css('opacity', '0.5');
 
+                    $('input[name="setPwdOrNot"]').on('change', function(){
+                        var thisVal = $(this).val();
+                        if(thisVal === 'yes')$("#setMeetingPwd_container").removeClass('d-none');
+                    });
+
                     $('#setInstantMeetingPsd').on('hide.bs.modal', function (e) {
         
                         var instantMeetPwd = $("#instantMeetPwd").val();
