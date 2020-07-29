@@ -275,6 +275,16 @@ body {
 .intro h1{
   font-weight: 350;
 }
+@media (max-width: 768px){
+  .intro .border-right{
+    border-right: transparent !important;
+  }
+}
+@media (max-width: 872px){
+  .introPic img {
+    width: 100%;
+  }
+}
 #signInContainer .form-control{
   width: 100%;
   height: 45px;
