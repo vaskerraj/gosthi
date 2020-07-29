@@ -284,7 +284,7 @@ router.get('/global/:id', async (req, res, next)=>{
             if(err) throw err;
             if(relResultOnInstant.length){
                 // update on join meeting
-                
+            
                 if(relResultOnInstant[0].meeting_password === null){
                     res.redirect('/?re=global/'+req.params.id);
                 }else{
@@ -310,14 +310,16 @@ router.post('/checkMeeting', async(req, res)=>{
         meeterName = req.body.globalName,
         meetingPassword = req.body.globalPassword;
 
-    connection.query("SELECT id FROM meeting WHERE meeting_id = ?", [meetingId], (err, checkGlobalResult)=>{
+    connection.query("SELECT id, meeting_password FROM meeting WHERE meeting_id = ?", [meetingId], (err, checkGlobalResult)=>{
         if(err) throw err;
+        
         // prevent url edit and hack
         if(!checkGlobalResult.length){
             req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
             res.redirect('/?error=global');
         }else{
             if(meetingType === 'global'){
+                console.log(checkGlobalResult[0].meeting_password);
                 if(checkGlobalResult[0].meeting_password !== null){
                     connection.query("SELECT *, REPLACE(meeting.title, ' ', '') AS title, DATE_FORMAT(meeting.meeting_date, '%a, %d %M %Y') as meeting_date FROM meeting WHERE meeting_id =? AND meeting_password =?", [meetingId, meetingPassword], (err, checkGlobalPwdResult)=>{
                         if(err) throw err;
