@@ -1,6 +1,6 @@
-FROM node:14
+FROM node:latest
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src/gosthi
 
 COPY package*.json ./
 
