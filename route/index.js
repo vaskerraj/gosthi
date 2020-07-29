@@ -319,7 +319,6 @@ router.post('/checkMeeting', async(req, res)=>{
             res.redirect('/?error=global');
         }else{
             if(meetingType === 'global'){
-                console.log(checkGlobalResult[0].meeting_password);
                 if(checkGlobalResult[0].meeting_password !== null){
                     connection.query("SELECT *, REPLACE(meeting.title, ' ', '') AS title, DATE_FORMAT(meeting.meeting_date, '%a, %d %M %Y') as meeting_date FROM meeting WHERE meeting_id =? AND meeting_password =?", [meetingId, meetingPassword], (err, checkGlobalPwdResult)=>{
                         if(err) throw err;
