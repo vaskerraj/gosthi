@@ -1,9 +1,36 @@
 version: '3.8'
 services: 
     web:
-        container_name: nodejs
-        restart: always
+        container_name: gosthi_online
+        restart: on-failure 
         build: .
         ports: 
-            - '80:3000'
+            - '3000:3000'
+        links: 
+            - mysql
     mysql:
+        image: mysql:5.7.30
+        restart: unless-stopped
+        environment:
+            MYSQL_ROOT_PASSWORD : Smart@123
+            MYSQL_DATABASE : gosthi
+            MYSQL_USER : smart
+            MYSQL_PASSWORD : Smart@123
+        ports: 
+            - "3307:3307"
+        volumes:
+            - ./db:/var/lib/mysql
+    phpmyadmin :
+        depends_on:
+            - mysql
+        image: phpmyadmin/phpmyadmin
+        restart: always
+        ports:
+            - 8080:80
+        environment:
+            PMA_HOST: mysql
+            MYSQL_USER: smart
+            MYSQL_PASSWORD: Smart@123
+            MYSQL_ROOT_PASSWORD: Smart@123
+volumes:
+    persistent:
