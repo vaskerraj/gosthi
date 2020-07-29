@@ -407,7 +407,7 @@
                         document.querySelector('.meeting-share-id').innerHTML = splitMeetingId;
                         
                         // 
-                        document.querySelector('#inviteUser_meetingId').value = response.id;
+                        document.querySelector('#inviteUser_meetingId').value = response.meeting_id;
                         document.querySelector('#inviteUser_meetingTitle').value = response.title;
                         document.querySelector('#inviteUser_meetingDate').value = meetingDateTime;
                         document.querySelector('#inviteUser_meetingLink').value = joinMeetingHref;

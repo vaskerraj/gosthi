@@ -154,6 +154,8 @@ router.post('/inviteUsers', ensureAuthenticated, checkRole(['admin']),
         selectedMeetingTitle = req.body.selectedMeetingTitle,
         selectedMeetingDate = req.body.selectedMeetingDate,
         selectedMeetingLink = req.body.selectedMeetingLink;
+    
+    console.log(`selectedMeetingDate: ${selectedMeetingDate}`);
     emailHandler(invitedEmails, selectedMeetingId, selectedMeetingTitle, selectedMeetingDate, selectedMeetingLink);
     
     res.location('/admin/');

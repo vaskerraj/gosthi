@@ -1,5 +1,8 @@
 <div><%-title%></div>
-<div><%-meeting_DateTime%></div><br>
+<% if(inv_date){ %>
+<div><%-inv_date%></div>
+<% } %>
+<br>
 <div><strong>Please join my meeting from your computer, tablet or smartphone.</strong></div>
 <a href="<%-link%>"><%-link%></a><br><br>
 <strong>Meeting ID : <%-id%></strong>

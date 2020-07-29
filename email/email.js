@@ -6,7 +6,7 @@ app.set('views', __dirname  + '/views');
 
 const { EMAIL_SMTP_ADD, EMAIL_SMTP_PORT, EMAIL_SMTP_USER, EMAIL_SMTP_PASS } = require('../config/index');
 
-const emailHandler = async (emails, meeting_id, meeting_title, meeting_link)=> {
+const emailHandler = async (emails, meeting_id, meeting_title, meeting_DateTime, meeting_link)=> {
   
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
@@ -32,7 +32,7 @@ const emailHandler = async (emails, meeting_id, meeting_title, meeting_link)=> {
     let info = await transporter.sendMail({
         from: '"Gosthi" <no-reply@gosthi.com>', // sender address
         to: emails, // list of receivers
-        subject: `Invitation: ${meeting_title}@Gosthi.com`, // Subject line
+        subject: `Invitation: ${meeting_title}@Gosthi.online`, // Subject line
         html: emailBody, // html body
       });
     
