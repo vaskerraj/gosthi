@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    <nav class="navbar navbar-expand fixed-top navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light">
         <div class="container clearfix">
         <a class="navbar-brand" href="/">
             <img src="/img/logo.png" alt="Gosthi logo" height="45px">
@@ -11,36 +11,36 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav ml-auto">
-            <% if(page !== 'waitMeeting') { %>
-            <% if(currentUser.role === 'user'){ %>
-                <a href="javascript:void(0)" class="nav-item nav-link text-primary" id="joinMeeting">JOIN A MEETING</a>
-            <% } %>
+            <% if (currentUser === 'notLogin') { %>
+                <a href="/join" class="nav-item nav-link text-primary">JOIN A MEETING</a>
+            <% }else if(currentUser.role === 'user'){ %>
+            <a href="javascript:void(0)" class="nav-item nav-link text-primary" id="joinMeeting">JOIN A MEETING</a>
+            <% } else if(currentUser.role === 'client'){ %>
+            <a href="javascript:void(0)" class="nav-item nav-link text-primary">JOIN A MEETING</a>
             <% } %>
 
             <% if (currentUser != 'notLogin') { %>
-                <div class="dropdown">
-                <a href="javascript:void(0)" role="button" class="profileImage" id="profileImage" data-toggle="dropdown">
-                    <img src="/img/blank_user.png" alt="">
+            <div class="dropdown">
+            <a href="javascript:void(0)" role="button" class="profileImage" id="profileImage" data-toggle="dropdown">
+                <img src="/img/blank_user.png" alt="">
+            </a>
+            <div class="profileDetails dropdown-menu" role="menu">
+                <span class="profileType text-uppercase txt-gray"><%-currentUser.role%></span>
+                <a href="" class="profileMainInfo dropdown-item">
+                <div class="d-block fontb font18 font-weight-normal"><%-currentUser.first_name +' '+currentUser.last_name %></div>
+                <div class="d-block"><%-currentUser.username %></div>
                 </a>
-                <div class="profileDetails dropdown-menu" role="menu">
-                    <span class="profileType text-uppercase txt-gray"><%-currentUser.role%></span>
-                    <a href="" class="profileMainInfo dropdown-item">
-                    <div class="d-block fontb font18 font-weight-normal"><%-currentUser.first_name +' '+currentUser.last_name %></div>
-                    <div class="d-block"><%-currentUser.username %></div>
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a href="/logout" class="singOut dropdown-item">
-                    SIGN OUT
-                    </a>
-                </div>
-                </div>
+                <div class="dropdown-divider"></div>
+                <a href="/logout" class="singOut dropdown-item">
+                SIGN OUT
+                </a>
+            </div>
+            </div>
             <% }else{ %>
-                <% if(page !== 'waitMeeting') { %>
-                <a href="javascript:void(0)" class="nav-item nav-link text-primary" id="signIn">SIGN IN</a>
-                <% } %>
+            <a href="signin" class="nav-item nav-link text-primary">SIGN IN</a>
             <% } %>
             </div>
         </div>
         </div>
     </nav>
-</div>
+</div> 
