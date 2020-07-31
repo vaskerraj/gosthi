@@ -407,6 +407,8 @@ router.post('/meetingStatus', (req, res)=>{
         }
     });
 });
+
+
 // join meeting
 router.get('/join', (req, res, next)=>{
     const refereGlobalTitle = req.originalUrl.split('=')[0];
