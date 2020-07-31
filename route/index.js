@@ -90,7 +90,7 @@ router.get('/',  (req, res, next)=>{
 router.get('/signin',  (req, res, next)=>{
     const refereUrlTitle = req.originalUrl.split('=')[0];
     const refereUrlSeond = req.originalUrl.split('=')[1];
-    if(refereUrlTitle === "/?rel"){
+    if(refereUrlTitle === "/signin?rel"){
         var relOrError = "rel";
         var meetingJoinId = refereUrlSeond.split('/')[1];
     }else if(refereUrlTitle === "/?error"){
@@ -100,6 +100,8 @@ router.get('/signin',  (req, res, next)=>{
         var relOrError = "";
         var meetingJoinId = undefined;
     }
+    console.log(meetingJoinId);
+    console.log(relOrError);
 
     // if not logged in
     if(req.user === undefined){
@@ -114,8 +116,8 @@ router.get('/signin',  (req, res, next)=>{
                 rel : 'undefined'
             });
         }else{
-            res.render('index', {
-                title: "Index | Gosthi",
+            res.render('auth/login', {
+                title: "Sign In | Gosthi",
                 page : 'index',
                 loginPage : false,
                 currentUser : req.user || "notLogin",
@@ -126,8 +128,9 @@ router.get('/signin',  (req, res, next)=>{
     }else{
         if(meetingJoinId === undefined){
             const adminIdAfterLoginAsUser = req.user.admin_id;
-            connection.query("SELECT * FROM meeting WHERE admin_id = ?",[ adminIdAfterLoginAsUser ], (err, relResultOnLoginIn)=>{
-                res.render('signin', {
+            connection.query("SELECT meeting.title, meeting.meeting_id, meeting.type, meeting.meeting_status, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting.admin_id = ? AND meeting.type != ?",[ adminIdAfterLoginAsUser, 'instant'], (err, relResultOnLoginIn)=>{
+                if(err) throw err;
+                res.render('index', {
                     title: "Index | Gosthi",
                     page : 'index',
                     loginPage : false,
@@ -138,12 +141,21 @@ router.get('/signin',  (req, res, next)=>{
                 });
             });
         }else{
-            connection.query("SELECT * FROM meeting WHERE meeting_id = ?", [meetingJoinId], (err, relResultOnLoginIn)=>{
-                if(relResultOnLoginIn.length){
-                    res.redirect(APP_URL+'/'+relResultOnLoginIn[0].title);
+            connection.query("SELECT REPLACE(meeting.title, ' ', '') AS title, meeting.meeting_status, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?", [meetingJoinId], (err, relResultLoginIn)=>{
+                if(relResultLoginIn.length){
+                    if(relResultLoginIn[0].meeting_status === 'running'){
+                        var redirectUrlOnRunning = APP_URL+'/'+relResultLoginIn[0].title+'#userInfo.displayName="'+relResultLoginIn[0].first_name+' '+relResultLoginIn[0].last_name+'"'
+                        return res.redirect(redirectUrlOnRunning);
+                    }else{
+                        res.render('preMeeting', {
+                            title: "Check join meeting | Gosthi",
+                            page : 'preMeeting',
+                            meetingId : meetingJoinId
+                        });
+                    }
                 }else{
-                    req.flash("rel_error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
-                    res.redirect('/');
+                    req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
+                    res.redirect('/joinMeeting');
                 }
             });
         }
@@ -151,7 +163,7 @@ router.get('/signin',  (req, res, next)=>{
 });
 
 router.post('/login',
-    passport.authenticate('local', { failureRedirect : '/', failureFlash: '<span class="fas fa-exclamation-circle marL10 marR4"></span> Invalid username or password'}),
+    passport.authenticate('local', { failureRedirect : '/signin', failureFlash: '<span class="fas fa-exclamation-circle marL10 marR4"></span> Invalid username or password'}),
     (req, res, next)=>{
         req.flash = "Successfull Login";
         if(req.user.role === 'superadmin'){
@@ -180,11 +192,12 @@ router.post('/login',
                     }
                 });
             }else{
-                res.redirect('/');
+                res.redirect('/signin');
             }
         }
 });
 
+// user meeting join at front page
 router.post('/checkMeetingOnJoin', async(req, res)=>{
     connection.query("SELECT REPLACE(meeting.title, ' ', '') AS title, meeting.meeting_status, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?", [req.body.join_meetingId], (err, relResultOnJoin)=>{
         if(relResultOnJoin.length){
@@ -242,7 +255,7 @@ router.get('/join/:id', async (req, res, next)=>{
                 }else{
                     if(joinMeetingReferer === undefined){
                         req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
-                        res.redirect('/');
+                        res.redirect('/joinMeeting');
                     }else{
                         req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.")
                         res.redirect(joinMeetingReferer);
@@ -251,7 +264,7 @@ router.get('/join/:id', async (req, res, next)=>{
             });
         }
     }else{
-        return res.redirect('/?rel=join/'+req.params.id);
+        return res.redirect('/signin?rel=join/'+req.params.id);
     }
 });
 
@@ -268,7 +281,7 @@ router.get('/global/:id', async (req, res, next)=>{
                 if(err) throw err;
                 if(!signInMeetingJoinResult.length){
                     req.flash("global_invalid", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
-                    res.redirect('/?error=global');
+                    res.redirect('/joinMeeting/?error=global');
                 }else{
                     var redirectUrl = APP_URL+'/'+signInMeetingJoinResult[0].title+'#userInfo.displayName="'+signInMeetingJoinResult[0].first_name+' '+signInMeetingJoinResult[0].last_name+'"'
                     // res.location(redirectUrl);
@@ -277,7 +290,7 @@ router.get('/global/:id', async (req, res, next)=>{
             });
         }else{
             req.flash("global_invalid", "<span class='fa fa-fw fa-exclamation-circle'></span>Unauthorize meeting ID.");
-            res.redirect('/?error=global');
+            res.redirect('/joinMeeting/?error=global');
         }
     }else{
         connection.query("SELECT title, meeting_password FROM meeting WHERE meeting_id =?", [req.params.id], (err, relResultOnInstant)=>{
@@ -286,14 +299,14 @@ router.get('/global/:id', async (req, res, next)=>{
                 // update on join meeting
             
                 if(relResultOnInstant[0].meeting_password === null){
-                    res.redirect('/?re=global/'+req.params.id);
+                    res.redirect('/join/?re=global/'+req.params.id);
                 }else{
-                    res.redirect('/?rep=global/'+req.params.id);
+                    res.redirect('/join/?rep=global/'+req.params.id);
                 }
             }else{
                 if(instantMeetingReferer === undefined){
                     req.flash("global_invalid", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
-                    res.redirect('/?error=global');
+                    res.redirect('/join/?error=global');
                 }else{
                     req.flash("global_invalid", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
                     res.redirect(instantMeetingReferer+'?error=global');
@@ -337,7 +350,7 @@ router.post('/checkMeeting', async(req, res)=>{
                             }
                         }else{
                             req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting password.");
-                            return res.redirect('/?rep=global/'+meetingId);
+                            return res.redirect('/join/?rep=global/'+meetingId);
                         }
                     });
                 }else{
@@ -377,6 +390,7 @@ router.post('/checkMeeting', async(req, res)=>{
         }
     });
 });
+
 // check meeting status using ajax
 router.post('/meetingStatus', (req, res)=>{
     const meetingStatus_meetingId = req.body.id;
@@ -394,13 +408,65 @@ router.post('/meetingStatus', (req, res)=>{
     });
 });
 // join meeting
-router.get('/joinMeeting', (req, res, next)=>{
-    res.render('joinMeeting',{
-        title: "Index | Gosthi",
-        page : 'joinmeeting',
-        loginPage : false,
-        currentUser : req.user || "notLogin"
-    })
+router.get('/join', (req, res, next)=>{
+    const refereGlobalTitle = req.originalUrl.split('=')[0];
+    const refereGlobalSecond = req.originalUrl.split('=')[1];
+
+    if(refereGlobalTitle === "/join/?re"){
+        var relOrError = "check";
+        var meetingJoinId = refereGlobalSecond.split('/')[1];
+    }else if(refereGlobalTitle === "/join/?rep"){
+        var relOrError = "checkPwd";
+        var meetingJoinId = refereGlobalSecond.split('/')[1];
+    }else{
+        var relOrError = "";
+        var meetingJoinId = undefined;
+    }
+    if(meetingJoinId === undefined){
+        res.render('joinMeeting',{
+            title: "Join Meeting | Gosthi",
+            page : 'joinmeeting',
+            loginPage : false,
+            currentUser : req.user || "notLogin",
+            relOrError : relOrError,
+            rel : 'undefined'
+        })
+    }else{
+        connection.query("SELECT id FROM meeting WHERE meeting_id = ?", [meetingJoinId], (err, relResultJoinMeeting)=>{
+            if(relResultJoinMeeting.length){
+                
+                res.render('joinMeeting',{
+                    title: "Join Meeting | Gosthi",
+                    page : 'joinmeeting',
+                    loginPage : false,
+                    currentUser : req.user || "notLogin",
+                    relOrError : relOrError,
+                    rel : meetingJoinId
+                });
+
+            }else{
+                req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
+                res.redirect('/join');
+            }
+        });
+        
+    }
+});
+
+router.post('/join', (req, res, next)=>{
+    const joinMeeting_id = req.body.meetingId;
+    const joinMeeting_meetingId = joinMeeting_id.replace(/\s/g,"");
+    connection.query("SELECT id FROM meeting WHERE meeting_id = ?", [joinMeeting_meetingId], (err, joinMeetingResult)=>{
+        if(joinMeetingResult.length){
+            
+            res.redirect('/global/'+joinMeeting_meetingId);
+            return;
+            
+        }else{
+            req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
+            res.redirect('/join');
+        }
+    });
 });
 
 router.get('/logout', (req, res, next) => {

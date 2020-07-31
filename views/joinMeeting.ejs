@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
+    <% if (messages) { %>
+        <%- messages -%>
+    <% } %>
     <%- include('partials/frontHeader')%>
     <div class="container mt-5">
         <div class="row align-items-center">
@@ -20,7 +23,7 @@
                         <h2>Join a Meeting</h2>
                     </div>
                     <div class="d-block mt-4">
-                        <input type="text" class="form-control input-lg input-meetingId" placeholder="Meeting ID" maxlength="11">
+                        <input type="text" name="meetingId" class="form-control input-lg input-meetingId" placeholder="Meeting ID" maxlength="11" autocomplete="off">
                     </div>
                     <div class="d-block mt-3">
                         <button type="submit" class="btn btn-block btn-warning btn-lg">JOIN</button>
@@ -28,8 +31,48 @@
                 </form>
             </div>
         </div>
-    </div>    
+    </div>
+    <%=relOrError%>
+    <%=rel%>
+    <% if(relOrError === 'check' || relOrError === 'checkPwd' && rel !== 'undefined'){ %>
+        <div class="modal fade show" id="checkGlobalMeet" role="dialog" data-backdrop="static" data-keyboard="false">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              
+              <div class="modal-body">
+                <form action="/checkMeeting" method="post" id="form_checkGlobal">
+                  <div class="font16 fontb" style="font-weight: 500;">
+                    Please enter you name <% if(relOrError === 'checkPwd') { %>and the meeting password<% } %>
+                  </div>
+                  <div class="clearfix mt-3">
+                    <input type="text" name="globalName" class="form-control" placeholder="Name" autocomplete="off">
+                  </div>
+                  <div class="clearfix marT25 <% if( relOrError === 'check' ){ %> d-none <% } %>">              <input type="text" name="globalPassword" class="form-control" placeholder="Password" autocomplete="off">
+                  </div>
+                  <div class="row marT30 mb-2">
+      
+                    <input type="hidden" name="meetingType" value="global">
+                    <input type="hidden" name="meetingId" value="<%=rel%>">
+                    <div class="col-md-6 col-6 border-right">
+                      <a href="/" class="btn btn-block btn-info">Cancel</a>
+                    </div>
+                    <div class="col-md-6 col-6"><button type="submit" class="btn btn-block btn-warning">OK</button></div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+    <% } %>
   <%-include('partials/frontJs')-%>
   <script src="/js/GS.Front.js"></script>
+    <%
+    if(relOrError === 'check' || relOrError === 'checkPwd' && rel !== 'undefined'){
+    %>
+      <script>
+        $("#checkGlobalMeet").modal('show');
+        $(".modal-backdrop.in").css('opacity', '1');
+      </script>
+    <% } %>
 </body>
 </html>
