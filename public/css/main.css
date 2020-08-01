@@ -185,7 +185,7 @@ body {
 #messages .success,
 #messages .meeting_del_success,
 #messages .global_invalid {
-    padding: 18px 0px;
+    padding: 22px 0px;
     color: #fff;
 }
 #messages .error,
