@@ -159,12 +159,12 @@ body {
 .navbar-light .navbar-brand:hover {
   color: rgb(95 95 95);
 }
-.navbar-expand-lg .navbar-nav .nav-link {
+.navbar-expand .navbar-nav .nav-link {
   padding: 15px 15px;
   font-size: 14px;
   font-weight: 600;
 }
-.navbar-expand-lg .navbar-nav .nav-link button {
+.navbar-expand .navbar-nav .nav-link button {
   margin: -5px 15px 0px 15px;
 }
 
