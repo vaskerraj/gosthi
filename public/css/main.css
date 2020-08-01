@@ -271,6 +271,12 @@ body {
   width: 79%;
   padding-left: 15px;
 }
+@media(max-width : 632px){
+  .mainContainer .description{
+    width: 95%;
+    margin-bottom: 30px;
+  }
+}
 
 .profileImage img {
   height: 40px;
