@@ -5,8 +5,14 @@
 }
 
 body {
-  background: #fafafa;
+  background: #fefefe;
 }
+@font-face {
+  font-family: 'Caviar Dreams';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Caviar Dreams'), url('/fonts/CaviarDreams.woff') format('woff');
+  }
 .marT3{margin-top:3px;}
 .marT5{margin-top:5px;}
 .marT7{margin-top:7px;}
@@ -145,8 +151,10 @@ body {
   box-shadow: 0 0 3px rgba(0,0,0,0.2);
 }
 .navbar-light .navbar-brand {
+  font-family: 'Caviar Dreams';
+  font-size: 26px;
   font-weight: 700;
-  color: rgb(95 95 95);
+  color: #f58e83;
 }
 .navbar-light .navbar-brand:hover {
   color: rgb(95 95 95);
@@ -220,6 +228,50 @@ body {
 .modal .modal-header .close:focus{
   outline: none;
 }
+
+.bkContainer{
+    margin-top: 100px;
+    background: no-repeat url('../img/video-conferance.png') right;
+    background-size: 550px;
+    min-height: 450px;
+}
+@media(max-width : 1092px){
+  .bkContainer{
+    margin-top: 20px;
+    background-size: 400px;
+    opacity: 0.5;
+  }
+}
+.mainContainer .about{
+  width: 55%;
+  position: absolute;
+  top: 50px;
+  padding-top: 30px;
+  text-align: center;
+}
+@media(max-width : 932px){
+  .mainContainer .about{
+    width: 70%;
+  }
+}
+@media(max-width : 632px){
+  .mainContainer .about{
+    width: 95%;
+  }
+  .bkContainer{
+    opacity: 0.3;
+  }
+}
+.mainContainer h1{
+  font-family: 'Caviar Dreams';
+  font-weight: normal;
+}
+
+.mainContainer .description{
+  width: 79%;
+  padding-left: 15px;
+}
+
 .profileImage img {
   height: 40px;
   margin-top: 5px;
