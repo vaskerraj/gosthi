@@ -236,7 +236,8 @@ body, html {
 
 @media(max-width : 767px){
   .mainContent{
-    height: auto
+    height: auto;
+    margin-top: 100px;
   }
 }
 .mainContainer h1{
