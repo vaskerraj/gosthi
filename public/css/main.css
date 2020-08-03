@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 
-body {
+body, html {
   background: #fefefe;
 }
 @font-face {
@@ -229,53 +229,24 @@ body {
   outline: none;
 }
 
-.bkContainer{
-    margin-top: 100px;
-    background: no-repeat url('../img/video-conferance.png') right;
-    background-size: 550px;
-    min-height: 450px;
+.mainContent{
+  
 }
-@media(max-width : 1092px){
-  .bkContainer{
-    margin-top: 20px;
-    background-size: 400px;
-    opacity: 0.5;
-  }
-}
-.mainContainer .about{
-  width: 55%;
-  position: absolute;
-  top: 50px;
+
+.mainContainer{
+  margin-top: 100px;
   padding-top: 30px;
   text-align: center;
 }
-@media(max-width : 932px){
-  .mainContainer .about{
-    width: 70%;
-  }
-}
-@media(max-width : 632px){
-  .mainContainer .about{
-    width: 95%;
-  }
-  .bkContainer{
-    opacity: 0.3;
-  }
-}
+
 .mainContainer h1{
   font-family: 'Caviar Dreams';
   font-weight: normal;
 }
 
 .mainContainer .description{
-  width: 79%;
+  font-size: 18px;
   padding-left: 15px;
-}
-@media(max-width : 632px){
-  .mainContainer .description{
-    width: 95%;
-    margin-bottom: 30px;
-  }
 }
 
 .profileImage img {

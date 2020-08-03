@@ -19,20 +19,30 @@
   <% } %>
   <%- include('partials/frontHeader')%>
   <!-- style="min-height: 100vh; background: no-repeat url('img/body.png'); background-size: contain;" -->
-  <div class="container mt-5">
-    
-    <div class="mainContainer">
-      <div class="bkContainer"></div>
-      <div class="clearfix about mt-5">
+  <div class="container mainContent mt-5">
+    <div class="row mainContainer">
+      <div class="col-md-8 col-sm-12 text-center ">
         <h1>Gosthi is powerful browser-based video  conferencing solution suitable for organization of all sizes</h1>
-        <div class="description mt-5">
-          Go ahead, video chat with whole team, in fact, invite everyone you know.
-          Gosthi is fully end to end encrypted video conferancing solution that
-          you can use all day every day.
+        <div class="row">
+          <div class="col-md-2"></div>
+          <div class="col-md-8 text-center mt-5">
+            Go ahead, video chat with whole team, in fact, invite everyone you know.
+            Gosthi is fully end to end encrypted video conferancing solution that
+            you can use all day every day.
+          </div>
+          <div class="col-md-8"></div>
         </div>
+      </div><!--/.col-->
+      <div class="col-md-4 col-sm-12 mb-4">
+        <img src="/img/video-conferance.png" alt="Gosthi Online" width="100%">
       </div>
     </div>
   </div>
+  <footer class="footer container-fluid">
+    <div class="clearfix text-right mr-5">
+     &copy; Copyright 2020 Smart Insights Pvt. Ltd
+    </div>
+  </footer>
   <% if(currentUser !== 'notLogin' && rel !== 'undefined') {%>
   <div class="modal fade show" id="meetingRefereModal" tabindex="-1" role="dialog"
     aria-labelledby="newMeetingTitle" aria-hidden="true">
