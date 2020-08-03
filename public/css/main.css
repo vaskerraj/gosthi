@@ -6,6 +6,7 @@
 
 body, html {
   background: #fefefe;
+  height: 100%;
 }
 @font-face {
   font-family: 'Caviar Dreams';
@@ -230,13 +231,7 @@ body, html {
 }
 
 .mainContent{
-  min-height: calc(100vh - 150px);
-}
-
-.mainContainer{
-  margin-top: 100px;
-  padding-top: 30px;
-  text-align: center;
+  height: calc(100% - 50px)
 }
 
 .mainContainer h1{
