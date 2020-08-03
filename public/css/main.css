@@ -230,7 +230,7 @@ body, html {
 }
 
 .mainContent{
-  
+  min-height: calc(100vh - 150px);
 }
 
 .mainContainer{
