@@ -231,9 +231,14 @@ body, html {
 }
 
 .mainContent{
-  height: calc(100% - 50px)
+  height: calc(100vh - 50px)
 }
 
+@media(max-width : 767px){
+  .mainContent{
+    height: auto
+  }
+}
 .mainContainer h1{
   font-family: 'Caviar Dreams';
   font-weight: normal;
