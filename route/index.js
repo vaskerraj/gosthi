@@ -100,8 +100,6 @@ router.get('/signin',  (req, res, next)=>{
         var relOrError = "";
         var meetingJoinId = undefined;
     }
-    console.log(meetingJoinId);
-    console.log(relOrError);
 
     // if not logged in
     if(req.user === undefined){
@@ -337,7 +335,7 @@ router.post('/checkMeeting', async(req, res)=>{
                         if(err) throw err;
                         if(checkGlobalPwdResult.length){
                             if(checkGlobalPwdResult[0].meeting_status === "running"){
-                                var redirectUrlOnRunning = APP_URL+'/'+checkGlobalPwdResult[0].title+'#userInfo.displayName="'+checkGlobalPwdResult[0].first_name+' '+checkGlobalPwdResult[0].last_name+'"';
+                                var redirectUrlOnRunning = APP_URL+'/'+checkGlobalPwdResult[0].title+'#userInfo.displayName="'+meeterName+'"';
                                 return res.redirect(redirectUrlOnRunning);
                             }else{
                                 res.render('meetingStatus',{
@@ -357,7 +355,7 @@ router.post('/checkMeeting', async(req, res)=>{
                     connection.query("SELECT *, REPLACE(meeting.title, ' ', '') AS title, DATE_FORMAT(meeting.meeting_date, '%a, %d %M %Y') as meeting_date FROM meeting WHERE meeting_id =?", [meetingId], (err, checkGlobalNoPwdResult)=>{
                         if(err) throw err;
                         if(checkGlobalNoPwdResult[0].meeting_status === "running"){
-                            var redirectUrlOnRunning = APP_URL+'/'+checkGlobalNoPwdResult[0].title+'#userInfo.displayName="'+checkGlobalNoPwdResult[0].first_name+' '+checkGlobalNoPwdResult[0].last_name+'"';
+                            var redirectUrlOnRunning = APP_URL+'/'+checkGlobalNoPwdResult[0].title+'#userInfo.displayName="'+meeterName+'"';
                             return res.redirect(redirectUrlOnRunning);
                         }else{
                             res.render('meetingStatus',{
