@@ -75,10 +75,7 @@
 			});
         },
         disableBackHandler : function(){
-            console.log(location.href);
-            console.log(window.location.origin);
             if(location.href === window.location.origin+'/admin/'){
-                console.log("skkskkdskdk");
                 history.pushState(null, null, location.href);
                 window.onpopstate = function () {
                     history.go(1);
