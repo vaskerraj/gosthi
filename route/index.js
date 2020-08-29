@@ -172,7 +172,9 @@ router.post('/login',
             // if user
             // if having meeting room refere
             if(req.body.joinRel !== 'undefined'){
-                connection.query("SELECT REPLACE(meeting.title, ' ', '') AS title, meeting.meeting_status, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?", [req.body.joinRel], (err, relResult)=>{
+                
+                let relIdAtLogin = req.user.user_id; // user_id not relId
+                connection.query("SELECT REPLACE(meeting.title, ' ', '') AS title, meeting.meeting_status, users.first_name, users.last_name FROM meeting INNER JOIN users ON meeting.admin_id = users.admin_id WHERE meeting.meeting_id = ? AND users.id = ?", [req.body.joinRel, relIdAtLogin], (err, relResult)=>{
                     if(relResult.length){
                         if(relResult[0].meeting_status === 'running'){
                         var redirectUrlOnRunning = APP_URL+'/'+relResult[0].title+'#userInfo.displayName="'+relResult[0].first_name+' '+relResult[0].last_name+'"'
@@ -197,7 +199,10 @@ router.post('/login',
 
 // user meeting join at front page
 router.post('/checkMeetingOnJoin', async(req, res)=>{
-    connection.query("SELECT REPLACE(meeting.title, ' ', '') AS title, meeting.meeting_status, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?", [req.body.join_meetingId], (err, relResultOnJoin)=>{
+
+    var relId = req.user.relId;
+
+    connection.query("SELECT REPLACE(meeting.title, ' ', '') AS title, meeting.meeting_status, users.first_name, users.last_name FROM meeting INNER JOIN users ON meeting.admin_id = users.admin_id WHERE meeting.meeting_id = ? AND users.id = ?", [req.body.join_meetingId, relId], (err, relResultOnJoin)=>{
         if(relResultOnJoin.length){
             if(relResultOnJoin[0].meeting_status === 'running'){
             var redirectUrlOnRunning = APP_URL+'/'+relResultOnJoin[0].title+'#userInfo.displayName="'+relResultOnJoin[0].first_name+' '+relResultOnJoin[0].last_name+'"'
@@ -220,12 +225,15 @@ router.get('/join/:id', async (req, res, next)=>{
     // console.log(req.headers.referer);
     const joinMeetingReferer = req.headers.referer;
     if(req.user !==  undefined){
+        
+        let relIdAtjoinId = req.user.relId;
         if(req.user.role === 'admin'){
             connection.query("UPDATE meeting SET meeting_status = ?, start_at = ? WHERE meeting_id= ?", ['running', new Date(), req.params.id], (err)=>{
                 if(err) throw err;
                 
             });
-            connection.query("SELECT REPLACE(meeting.title, ' ', '') AS title, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?",[req.params.id], (err, relResultOnJoinAsAdmin)=>{
+            connection.query("SELECT REPLACE(meeting.title, ' ', '') AS title, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting.meeting_id = ? AND admin_user.id = ?",[req.params.id,relIdAtjoinId], (err, relResultOnJoinAsAdmin)=>{
+                // console.log(relResultOnJoinAsAdmin);
                 if(err) throw err;
                 if(!relResultOnJoinAsAdmin.length){
                     req.flash("error", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.")
@@ -237,7 +245,7 @@ router.get('/join/:id', async (req, res, next)=>{
             });
         }else{
             // if role is user
-            connection.query("SELECT REPLACE(meeting.title, ' ', '') AS title, meeting.meeting_status, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?", [req.params.id], (err, relResultOnJoin)=>{
+            connection.query("SELECT REPLACE(meeting.title, ' ', '') AS title, meeting.meeting_status, users.first_name, users.last_name FROM meeting INNER JOIN users ON meeting.admin_id = users.admin_id WHERE meeting_id = ? AND users.id = ?", [req.params.id,relIdAtjoinId], (err, relResultOnJoin)=>{
                 if(err) throw err;
                 if(relResultOnJoin.length){
                     if(relResultOnJoin[0].meeting_status === 'running'){
@@ -270,12 +278,14 @@ router.get('/global/:id', async (req, res, next)=>{
     // console.log(req.headers.referer);
     const instantMeetingReferer = req.headers.referer;
     if(req.user !==  undefined){
+
+        let relIdAtGlobalId = req.user.relId;
         if(req.user.role === 'admin'){
             connection.query("UPDATE meeting SET meeting_status = ?, start_at = ? WHERE meeting_id= ?", ['running', new Date(), req.params.id], (err)=>{
                 if(err) throw err;
                 
             });
-            connection.query("SELECT REPLACE(meeting.title, ' ', '') AS title, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?",[req.params.id], (err, signInMeetingJoinResult)=>{
+            connection.query("SELECT REPLACE(meeting.title, ' ', '') AS title, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting.meeting_id = ? AND admin_user.id = ?",[req.params.id, relIdAtGlobalId], (err, signInMeetingJoinResult)=>{
                 if(err) throw err;
                 if(!signInMeetingJoinResult.length){
                     req.flash("global_invalid", "<span class='fa fa-fw fa-exclamation-circle'></span>Invalid meeting ID.");
@@ -320,6 +330,7 @@ router.post('/checkMeeting', async(req, res)=>{
         meetingId = req.body.meetingId,
         meeterName = req.body.globalName,
         meetingPassword = req.body.globalPassword;
+        
 
     connection.query("SELECT id, meeting_password FROM meeting WHERE meeting_id = ?", [meetingId], (err, checkGlobalResult)=>{
         if(err) throw err;
@@ -331,7 +342,7 @@ router.post('/checkMeeting', async(req, res)=>{
         }else{
             if(meetingType === 'global'){
                 if(checkGlobalResult[0].meeting_password !== null){
-                    connection.query("SELECT *, REPLACE(meeting.title, ' ', '') AS title, DATE_FORMAT(meeting.meeting_date, '%a, %d %M %Y') as meeting_date FROM meeting WHERE meeting_id =? AND meeting_password =?", [meetingId, meetingPassword], (err, checkGlobalPwdResult)=>{
+                    connection.query("SELECT *, REPLACE(meeting.title, ' ', '') AS title, DATE_FORMAT(meeting.meeting_date, '%a, %d %M %Y') as meeting_date FROM meeting WHERE meeting_id =? AND meeting_password = ?", [meetingId, meetingPassword], (err, checkGlobalPwdResult)=>{
                         if(err) throw err;
                         if(checkGlobalPwdResult.length){
                             if(checkGlobalPwdResult[0].meeting_status === "running"){
@@ -369,7 +380,10 @@ router.post('/checkMeeting', async(req, res)=>{
                     });
                 }
             }else{
-                connection.query("SELECT REPLACE(meeting.title, ' ', '') as title, meeting.meeting_id, meeting.type, DATE_FORMAT(meeting.meeting_date, '%a, %d %M %Y') as meeting_date, meeting.meeting_time, meeting.meeting_duration, meeting.meeting_status, admin_user.first_name, admin_user.last_name FROM meeting INNER JOIN admin_user ON meeting.admin_id = admin_user.id WHERE meeting_id = ?", [meetingId], (err, checkJoinResult)=>{
+                
+                let relIdAtCheckMeeting = req.user.relId;
+
+                connection.query("SELECT REPLACE(meeting.title, ' ', '') as title, meeting.meeting_id, meeting.type, DATE_FORMAT(meeting.meeting_date, '%a, %d %M %Y') as meeting_date, meeting.meeting_time, meeting.meeting_duration, meeting.meeting_status, users.first_name, users.last_name FROM meeting INNER JOIN users ON meeting.admin_id = users.admin_id WHERE meeting.meeting_id = ? AND users.id = ?", [meetingId, relIdAtCheckMeeting], (err, checkJoinResult)=>{
                     if(err) throw err;
                     if(checkJoinResult[0].meeting_status === "running"){
                         var redirectUrlOnRunning = APP_URL+'/'+checkJoinResult[0].title+'#userInfo.displayName="'+checkJoinResult[0].first_name+' '+checkJoinResult[0].last_name+'"';
@@ -391,6 +405,7 @@ router.post('/checkMeeting', async(req, res)=>{
 
 // check meeting status using ajax
 router.post('/meetingStatus', (req, res)=>{
+    
     const meetingStatus_meetingId = req.body.id;
     connection.query("SELECT id FROM meeting WHERE meeting_id = ? AND meeting_status = ?", [meetingStatus_meetingId, 'running'],(err, checkMeetingStatuResult)=>{
         if(err) throw err;
