@@ -328,7 +328,7 @@
                         }
                 });              
                 });
-                $('#userEdit_modal').on('show.bs.modal', function (e) {
+                $('#userEdit_modal, #adminEdit_modal').on('show.bs.modal', function (e) {
                     var button = $(e.relatedTarget);
                     var modal = $(this);
                     modal.find('.modal-body').load(button.data("remote"));
